@@ -1,0 +1,19 @@
+{
+    "name": "Integer Property",
+    "description": "Adds a simple integer property",
+    "packType": "bp",
+    "fileType": "json",
+    "folder": "entities",
+    "insertions": [
+        {
+            "path": [ "minecraft:entity", "description", "properties" ],
+            "data": {
+                "x:i": {
+                    "type": "int",
+                    "range": [ 0, 2 ],
+                    "default": 0
+                }
+            }
+        }
+    ]
+}

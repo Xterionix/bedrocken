@@ -1,0 +1,29 @@
+{
+    "name": "Instant Despawn",
+    "description": "An event and component group to instantly despawn an entity",
+    "packType": "bp",
+    "fileType": "json",
+    "folder": "entities",
+    "insertions": [
+        {
+            "path": [ "minecraft:entity", "events" ],
+            "data": {
+                "depsawn": {
+                    "add": {
+                        "component_groups": [
+                            "despawn"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "path": [ "minecraft:entity", "component_groups" ],
+            "data": {
+                "despawn": {
+                    "minecraft:instant_despawn": { }
+                }
+            }
+        }
+    ]
+}

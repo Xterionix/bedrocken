@@ -1,0 +1,54 @@
+{
+    "name": "Default Entity Components",
+    "description": "Adds health, collision, physics, pushable, loot, breathable and hurt on condition components to the entity.",
+    "packType": "bp",
+    "fileType": "json",
+    "folder": "entities",
+    "insertions": [
+        {
+            "path": [ "minecraft:entity", "components" ],
+            "data": {
+                "minecraft:health": {
+                    "value": 20,
+                    "max": 20
+                },
+                "minecraft:collision_box": {
+                    "width": 1,
+                    "height": 1
+                },
+                "minecraft:physics": { },
+                "minecraft:pushable": {
+                    "is_pushable": true,
+                    "is_pushable_by_piston": true
+                },
+                "minecraft:loot": {
+                    "table": { }
+                },
+                "minecraft:breathable": {
+                    "total_supply": 15,
+                    "suffocate_time": 0,
+                    "breathes_air": true,
+                    "breathes_water": false
+                },
+                "minecraft:type_family": {
+                    "family": [
+                        "mob",
+                        ""
+                    ]
+                },
+                "minecraft:hurt_on_condition": {
+                    "damage_conditions": [ {
+                            "filters": {
+                                "test": "in_lava",
+                                "subject": "self",
+                                "operator": "==",
+                                "value": true
+                            },
+                            "cause": "lava",
+                            "damage_per_tick": 4
+                        } ]
+                }
+            }
+        }
+    ]
+}

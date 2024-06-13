@@ -1,0 +1,19 @@
+{
+    "name": "Float Property",
+    "description": "Adds a simple float property",
+    "packType": "bp",
+    "fileType": "json",
+    "folder": "entities",
+    "insertions": [
+        {
+            "path": [ "minecraft:entity", "description", "properties" ],
+            "data": {
+                "x:f": {
+                    "type": "float",
+                    "range": [ 0.0, 1.0 ],
+                    "default": 0.0
+                }
+            }
+        }
+    ]
+}

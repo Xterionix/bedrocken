@@ -1,0 +1,19 @@
+{
+    "name": "Enum Property",
+    "description": "Adds a simple enum property",
+    "packType": "bp",
+    "fileType": "json",
+    "folder": "entities",
+    "insertions": [
+        {
+            "path": [ "minecraft:entity", "description", "properties" ],
+            "data": {
+                "x:z": {
+                    "type": "enum",
+                    "values": [ "", "" ],
+                    "default": ""
+                }
+            }
+        }
+    ]
+}

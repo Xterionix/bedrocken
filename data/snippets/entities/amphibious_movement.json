@@ -1,0 +1,166 @@
+{
+    "name": "Amphibious Movement",
+    "description": "Allows the entity to walk and swim",
+    "packType": "bp",
+    "fileType": "json",
+    "folder": "entities",
+    "insertions": [
+        {
+            "path": [ "minecraft:entity", "events" ],
+            "data": {
+                "remove_land": {
+                    "remove": {
+                        "component_groups": [
+                            "move_to_land"
+                        ]
+                    }
+                },
+                "remove_water": {
+                    "remove": {
+                        "component_groups": [
+                            "move_to_water"
+                        ]
+                    }
+                },
+                "go_to_water": {
+                    "add": {
+                        "component_groups": [
+                            "move_to_water"
+                        ]
+                    },
+                    "remove": {
+                        "component_groups": [
+                            "move_to_land"
+                        ]
+                    }
+                },
+                "go_to_land": {
+                    "add": {
+                        "component_groups": [
+                            "move_to_land"
+                        ]
+                    },
+                    "remove": {
+                        "component_groups": [
+                            "move_to_water"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "path": [ "minecraft:entity", "component_groups" ],
+            "data": {
+                "move_to_land": {
+                    "minecraft:behavior.move_to_land": {
+                        "priority": 1,
+                        "search_range": 16,
+                        "search_height": 10,
+                        "goal_radius": 0
+                    },
+                    "minecraft:environment_sensor": {
+                        "triggers": {
+                            "filters": {
+                                "all_of": [ {
+                                        "test": "in_water",
+                                        "operator": "!="
+                                    },
+                                    {
+                                        "test": "on_ground"
+                                    }
+                                ]
+                            },
+                            "event": "remove_land"
+                        }
+                    },
+                    "minecraft:timer": {
+                        "looping": true,
+                        "time": [
+                            0.5,
+                            30
+                        ],
+                        "time_down_event": {
+                            "event": "go_to_water",
+                            "filters": {
+                                "all_of": [ {
+                                        "test": "has_component",
+                                        "operator": "!=",
+                                        "value": "minecraft:is_tamed"
+                                    } ]
+                            }
+                        },
+                        "randomInterval": true
+                    }
+                },
+                "move_to_water": {
+                    "minecraft:behavior.move_to_water": {
+                        "priority": 1,
+                        "search_range": 16,
+                        "search_height": 10,
+                        "search_count": 1,
+                        "goal_radius": 0.1
+                    },
+                    "minecraft:environment_sensor": {
+                        "triggers": {
+                            "filters": {
+                                "test": "in_water"
+                            },
+                            "event": "remove_water"
+                        }
+                    },
+                    "minecraft:timer": {
+                        "looping": true,
+                        "time": [
+                            0.5,
+                            30
+                        ],
+                        "time_down_event": {
+                            "event": "go_to_land",
+                            "filters": {
+                                "all_of": [ {
+                                        "test": "has_component",
+                                        "operator": "!=",
+                                        "value": "minecraft:is_tamed"
+                                    } ]
+                            }
+                        },
+                        "randomInterval": true
+                    }
+                },
+                "roam": {
+                    "minecraft:behavior.swim_idle": {
+                        "priority": 5,
+                        "idle_time": 5,
+                        "success_rate": 0.2
+                    },
+                    "minecraft:behavior.random_stroll": {
+                        "priority": 5
+                    },
+                    "minecraft:behavior.swim_wander": {
+                        "priority": 5,
+                        "look_ahead": 10,
+                        "wander_time": 5
+                    }
+                }
+            }
+        },
+        {
+            "path": [ "minecraft:entity", "components" ],
+            "data": {
+                "minecraft:behavior.swim_idle": {
+                    "priority": 5,
+                    "idle_time": 5,
+                    "success_rate": 0.2
+                },
+                "minecraft:behavior.random_stroll": {
+                    "priority": 5
+                },
+                "minecraft:behavior.swim_wander": {
+                    "priority": 5,
+                    "look_ahead": 10,
+                    "wander_time": 5
+                }
+            }
+        }
+    ]
+}
