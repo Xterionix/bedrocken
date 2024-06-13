@@ -1,0 +1,154 @@
+{
+  "name": "bedrocken",
+  "publisher": "Xterionix",
+  "displayName": "Bedrocken",
+  "description": "A simple extension to help with bedrock addon development",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.87.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onLanguage:json"
+  ],
+  "main": "dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "bedrocken.switch_projects",
+        "title": "Bedrocken: Switch Projects"
+      },
+      {
+        "command": "bedrocken.clear_project_cache",
+        "title": "Bedrocken: Clear Project Cache"
+      },
+      {
+        "command": "bedrocken.presets",
+        "title": "Bedrocken: Presets"
+      },
+      {
+        "command": "bedrocken.snippets",
+        "title": "Bedrocken: Snippets"
+      },
+      {
+        "command": "bedrocken.create_project",
+        "title": "Bedrocken: Create Project"
+      },
+      {
+        "command": "bedrocken.export_bp",
+        "title": "Bedrocken: Export Behavior Pack"
+      },
+      {
+        "command": "bedrocken.export_rp",
+        "title": "Bedrocken: Export Resource Pack"
+      },
+      {
+        "command": "bedrocken.export_project",
+        "title": "Bedrocken: Export Project"
+      },
+      {
+        "command": "bedrocken.open_exports_folder",
+        "title": "Bedrocken: Open Exports Folder"
+      },
+      {
+        "command": "bedrocken.project_prefix",
+        "title": "Bedrocken: Set Project Prefix"
+      },
+      {
+        "command": "bedrocken.link_manifests",
+        "title": "Bedrocken: Link Maniefsts",
+        "enablement": "bedrocken.can_link_manifests"
+      },
+      {
+        "command": "bedrocken.add_scripts_manifests",
+        "title": "Bedrocken: Add Scripts to Manifest",
+        "enablement": "bedrocken.can_add_scripts"
+      },
+      {
+        "command": "bedrocken.reset_manifest_commands",
+        "title": "Bedrocken: Reset Manifest Commands (Link,AddingScripts)"
+      },
+      {
+        "command": "bedrocken.update_items",
+        "title": "Bedrocken: Update Items"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "Bedrocken",
+        "properties": {
+          "bedrocken.folders": {
+            "title": "Folders",
+            "type": "array",
+            "description": "Folders where it reads projects from",
+            "items": {
+              "type": "string"
+            }
+          },
+          "bedrocken.export.file_type": {
+            "title": "Export File Type",
+            "type": "string",
+            "description": "Exports project files with this file extension",
+            "default": "zip",
+            "enum": [
+              "zip",
+              "mcpack/mcaddon"
+            ]
+          },
+          "bedrocken.export.location": {
+            "title": "Export Location",
+            "type": "string",
+            "description": "Exports project files to this location"
+          },
+          "bedrocken.project_prefix": {
+            "title": "Project Prefix",
+            "type": "string",
+            "description": "Your project's namespace like `minecraft`"
+          }
+        }
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "bedrocken.link_manifests",
+          "when": "resourceFilename == 'manifest.json'",
+          "group": "bedrocken"
+        },
+        {
+          "command": "bedrocken.add_scripts_manifests",
+          "when": "resourceFilename == 'manifest.json'",
+          "group": "bedrocken"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test",
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "esbuild-base": "esbuild ./src/extension.js --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --main-fields=module,main",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.87.0",
+    "@vscode/test-cli": "^0.0.8",
+    "@vscode/test-electron": "^2.3.9",
+    "esbuild": "^0.20.2",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "comment-json": "^4.2.3",
+    "jsonc-parser": "^3.2.1",
+    "uuid": "^9.0.1"
+  }
+}
