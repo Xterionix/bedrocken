@@ -20,12 +20,20 @@
 			"preLaunchTask": "npm: esbuild"
 		},
 		{
-			"name": "Run Extension",
+			"name": "Run Extension (Extensions Disabled)",
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
 				"--disable-extensions"
+			]
+		},
+		{
+			"name": "Run Extension (Extensions Enabled)",
+			"type": "extensionHost",
+			"request": "launch",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}"
 			]
 		}
 	]
