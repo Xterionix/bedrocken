@@ -661,26 +661,6 @@ function getAllFilePaths(folderPath) {
 	return filePaths;
 }
 
-function merge(target, ...sources) {
-	for (const source of sources) {
-		for (const key in source) {
-			if (Object.prototype.hasOwnProperty.call(source, key)) {
-				const sourceVal = source[key];
-				const targetVal = target[key];
-
-				if (Array.isArray(sourceVal) && Array.isArray(targetVal)) {
-					target[key] = targetVal.concat(sourceVal);
-				} else if (typeof sourceVal === 'object' && typeof targetVal === 'object') {
-					target[key] = merge({}, targetVal, sourceVal);
-				} else {
-					target[key] = sourceVal;
-				}
-			}
-		}
-	}
-	return target;
-}
-
 function innerMostValue(json) {
 	const values = Object.values(json)
 	if (typeof values[0] == 'string') return values[0]
