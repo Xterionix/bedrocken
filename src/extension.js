@@ -43,6 +43,10 @@ const cache = {
 	block: {
 		ids: [],
 		custom_components: []
+	},
+	textures: {
+		items: [],
+		terrain: []
 	}
 }
 
@@ -54,6 +58,7 @@ function activate(context) {
 	console.log("Bedrocken is Active!")
 
 	const bpPath = vscode.workspace.workspaceFolders[0].uri.fsPath
+	const rpPath = vscode.workspace.workspaceFolders[1]?.uri.fsPath
 
 	if (fs.existsSync(path.join(bpPath, 'manifest.json'))) {
 		const manifest = parse(fs.readFileSync(path.join(bpPath, 'manifest.json')).toString())
@@ -98,6 +103,17 @@ function activate(context) {
 				const content = parse(text)
 				if (content["minecraft:block"]["description"]["identifier"]) cache.block.ids.push(content["minecraft:block"]["description"]["identifier"])
 			})
+		}
+		if (rpPath) {
+			if (fs.existsSync(path.join(rpPath, 'textures/item_texture.json'))) {
+				const content = parse(fs.readFileSync(path.join(rpPath, 'textures/item_texture.json')).toString())
+				cache.textures.items = Object.keys(content["texture_data"]).sort()
+			}
+			if (fs.existsSync(path.join(rpPath, 'textures/terrain_texture.json'))) {
+				const content = parse(fs.readFileSync(path.join(rpPath, 'textures/terrain_texture.json')).toString())
+				cache.textures.terrain = Object.keys(content["texture_data"]).sort()
+			}
+
 		}
 	}
 
@@ -259,7 +275,6 @@ function activate(context) {
 
 		const presets = fs.readdirSync(path.join(context.extensionPath, 'data/presets'))
 
-		console.log(presets)
 	})
 
 	let snippetsCommand = vscode.commands.registerCommand('bedrocken.snippets', () => {
@@ -527,7 +542,8 @@ function activate(context) {
 						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					},
 					"components": {
-						"minecraft:custom_components": cache.item.custom_components
+						"minecraft:custom_components": cache.item.custom_components,
+						"minecraft:icon": cache.textures.items
 					}
 				},
 				"minecraft:feature_rules": {
@@ -560,11 +576,16 @@ function activate(context) {
 						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					},
 					"components": {
-						"minecraft:custom_components": cache.block.custom_components
+						"minecraft:custom_components": cache.block.custom_components,
+						"minecraft:material_instances": {
+							"*": {
+								"texture": cache.textures.terrain
+							}
+						}
+					}
 					}
 				}
-			}
-			const jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number')
+				const jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number').join('[|]').replace('minecraft:icon[|]textures[|]default', 'minecraft:icon').replace('permutations[|]', '').replace(/minecraft:material_instances\[[^\]]*\]([^[]*)texture/, 'minecraft:material_instances[|]*[|]texture').split('[|]')
 				let value = [];
 				let inQuotes = false;
 			visit(document.getText(), {
@@ -584,11 +605,11 @@ function activate(context) {
 					default:
 						value = jsonPath.reduce((acc, key) => acc && acc[key], dynamicAutocomplete)
 						const valueInDoc = jsonPath.reduce((acc, key) => acc && acc[key], parse(document.getText()))
-						if (valueInDoc instanceof Array && typeof value != 'string') value = value.filter(x => !valueInDoc.includes(x))			
+						if (valueInDoc instanceof Array && typeof value != 'string') value = value.filter(x => !valueInDoc.includes(x))
 						break;
-				}
-			if (typeof value == 'string') value = [value]
-			if (value.length > 0) value.forEach(x => { suggestions.push(new vscode.CompletionItem(x, vscode.CompletionItemKind.Enum)); })
+				};
+				if (typeof value == 'string') value = [value];
+				if (value.length > 0) value.forEach(x => suggestions.push(Object.assign(new vscode.CompletionItem(x, vscode.CompletionItemKind.Enum), { sortText: '!' })))
 			return suggestions
 		}
 	})
