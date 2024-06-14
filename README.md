@@ -22,7 +22,7 @@ Clicking on a `manifest.json` allows you to easily add scripts.
 
 ### Dynamic Autocomplete
 
-Currently only shows file name based completions for identifiers, and block/item custom components.
+Currently only shows file name based completions for identifiers, `minecraft:icon`, `minecraft:material_instance`, `blocks.json`, `minecraft:custom_components`, `block.json` and `.lang` files.
 
 ### Snippets
 
