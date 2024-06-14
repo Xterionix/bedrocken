@@ -13,7 +13,7 @@ const archiver = require('archiver')
 // TODO: Make snippets not automatically save the file
 // TODO: Add support for ignoring .git folder on export
 // TODO: Add support for regolith exports
-// TODO: Add support for new project
+// TODO: Add support for new project 
 
 const appData = process.env.APPDATA
 const downloadsFolder = path.join(os.homedir(), 'Downloads')
@@ -30,8 +30,21 @@ const explorerCommand = {
 	"linux": "xdg-open"
 }
 
-const blockComponents = []
-const itemComponents = []
+const cache = {
+	entity: {
+		ids: [],
+		spawnable_ids: [],
+		rideable_ids: []
+	},
+	item: {
+		ids: [],
+		custom_components: []
+	},
+	block: {
+		ids: [],
+		custom_components: []
+	}
+}
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -40,20 +53,50 @@ function activate(context) {
 
 	console.log("Bedrocken is Active!")
 
-	if (fs.existsSync(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'manifest.json'))) {
-		const manifest = parse(fs.readFileSync(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'manifest.json')).toString())
+	const bpPath = vscode.workspace.workspaceFolders[0].uri.fsPath
+
+	if (fs.existsSync(path.join(bpPath, 'manifest.json'))) {
+		const manifest = parse(fs.readFileSync(path.join(bpPath, 'manifest.json')).toString())
 		if (!manifest["modules"]?.map(obj => obj.type).includes('script')) vscode.commands.executeCommand('setContext', 'bedrocken.can_add_scripts', true)
 		if (!manifest["dependencies"]?.map(obj => obj.version instanceof Array).includes(true)) vscode.commands.executeCommand('setContext', 'bedrocken.can_link_manifests', true)
-		if (fs.existsSync(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'scripts'))) {
-			const files = getAllFilePaths(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'scripts'))
+		if (fs.existsSync(path.join(bpPath, 'scripts'))) {
+			const files = getAllFilePaths(path.join(bpPath, 'scripts'))
 			files.forEach(file => {
 				const content = fs.readFileSync(file).toString();
 				(content.match(/(?:blockComponentRegistry|event\.blockTypeRegistry|blockTypeRegistry)\.registerCustomComponent\(['"]([^'"]*)['"]/g) || []).forEach(match => {
-					blockComponents.push(match.match(/['"]([^'"]*)['"]/)[1]);
+					cache.block.custom_components.push(match.match(/['"]([^'"]*)['"]/)[1]);
 				});
 				(content.match(/(?:itemComponentRegistry|event\.itemTypeRegistry|itemTypeRegistry)\.registerCustomComponent\(['"]([^'"]*)['"]/g) || []).forEach(match => {
-					itemComponents.push(match.match(/['"]([^'"]*)['"]/)[1]);
+					cache.item.custom_components.push(match.match(/['"]([^'"]*)['"]/)[1]);
 				});
+			})
+		}
+		if (fs.existsSync(path.join(bpPath, 'entities'))) {
+			const files = getAllFilePaths(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'entities'))
+			files.forEach(file => {
+				const text = fs.readFileSync(file).toString()
+				const content = parse(text)
+				if (!content["minecraft:entity"]["description"]["identifier"]) return;
+				const id = content["minecraft:entity"]["description"]["identifier"];
+				cache.entity.ids.push(id)
+				if (text.includes('minecraft:rideable')) cache.entity.rideable_ids.push(id)
+				if (content["minecraft:entity"]["description"]["is_spawnable"]) cache.entity.spawnable_ids.push(id)
+			})
+		}
+		if (fs.existsSync(path.join(bpPath, 'items'))) {
+			const files = getAllFilePaths(path.join(bpPath, 'items'))
+			files.forEach(file => {
+				const text = fs.readFileSync(file).toString()
+				const content = parse(text)
+				if (content["minecraft:item"]["description"]["identifier"]) cache.item.ids.push(content["minecraft:item"]["description"]["identifier"])
+			})
+		}
+		if (fs.existsSync(path.join(bpPath, 'blocks'))) {
+			const files = getAllFilePaths(path.join(bpPath, 'blocks'))
+			files.forEach(file => {
+				const text = fs.readFileSync(file).toString()
+				const content = parse(text)
+				if (content["minecraft:block"]["description"]["identifier"]) cache.block.ids.push(content["minecraft:block"]["description"]["identifier"])
 			})
 		}
 	}
@@ -482,6 +525,9 @@ function activate(context) {
 				"minecraft:item": {
 					"description": {
 						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					},
+					"components": {
+						"minecraft:custom_components": cache.item.custom_components
 					}
 				},
 				"minecraft:feature_rules": {
@@ -514,7 +560,7 @@ function activate(context) {
 						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					},
 					"components": {
-						"minecraft:custom_components": blockComponents
+						"minecraft:custom_components": cache.block.custom_components
 					}
 				}
 			}
@@ -536,7 +582,46 @@ function activate(context) {
 		}
 	})
 
+	vscode.workspace.onDidChangeTextDocument(event => {
+		if (!event.document.fileName.endsWith('.lang')) return;
+		if (event.contentChanges.some(x => x.text.includes('='))) vscode.commands.executeCommand('editor.action.triggerSuggest');
+	})
+
+	let langAutocomplete = vscode.languages.registerCompletionItemProvider(
+		[
+			{ scheme: 'file', language: 'bc-minecraft-language' },
+			{ scheme: 'file', language: 'plaintext' }
+		], {
+		provideCompletionItems(document, position) {
+			const suggestions = []
+			const line = document.getText(new vscode.Range(new vscode.Position(position.line, 0), position)).replace('.name', '')
+			if (line.includes('=')) return [Object.assign(new vscode.CompletionItem(
+				line.split('=')[0].split(':').pop().split('_').map(str => str[0].toUpperCase() + str.slice(1)).join(' '),
+				vscode.CompletionItemKind.EnumMember
+			), { sortText: '0' })];
+			if (!document.fileName.endsWith('.lang')) return
+			const text = document.getText().split('\n')
+			cache.entity.ids.forEach(id => {
+				if (!text.some(x => x.startsWith(`entity.${id}.name`))) suggestions.push(new vscode.CompletionItem(`entity.${id}.name`, vscode.CompletionItemKind.Class))
+			})
+			cache.entity.spawnable_ids.forEach(id => {
+				if (!text.some(x => x.startsWith(`item.spawn_egg.entity.${id}.name`))) suggestions.push(new vscode.CompletionItem(`item.spawn_egg.entity.${id}.name`, vscode.CompletionItemKind.Class))
+			})
+			cache.entity.rideable_ids.forEach(id => {
+				if (!text.some(x => x.startsWith(`action.hint.exit.${id}`))) suggestions.push(new vscode.CompletionItem(`action.hint.exit.${id}`, vscode.CompletionItemKind.Class))
+			})
+			cache.item.ids.forEach(id => {
+				if (!text.some(x => x.startsWith(`item.${id}`))) suggestions.push(new vscode.CompletionItem(`item.${id}`, vscode.CompletionItemKind.Class))
+			})
+			cache.block.ids.forEach(id => {
+				if (!text.some(x => x.startsWith(`tile.${id}`))) suggestions.push(new vscode.CompletionItem(`tile.${id}.name`, vscode.CompletionItemKind.Class))
+			})
+			return suggestions
+		}
+	})
+
 	context.subscriptions.push(
+		langAutocomplete,
 		dynamicAutocomplete,
 		projectSwitcherCommand,
 		clearProjectCacheCommand,
