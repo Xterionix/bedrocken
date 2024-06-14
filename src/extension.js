@@ -291,7 +291,6 @@ function activate(context) {
 					current = current[arr[i]];
 				}
 				Object.assign(current, insertion.data)
-				console.log(toStringWithComments(fileContent, null, 2))
 			})
 			fs.writeFileSync(document.fileName, toStringWithComments(fileContent, null, 4))
 		})
@@ -416,7 +415,6 @@ function activate(context) {
 		const command = explorerCommand[userOS]
 
 		exec(`${command} ${path.join(location)}`, (err, stdout, stderr) => {
-			console.log(stdout)
 			if (err || stderr) {
 				console.log('Err: ' + err, 'Std err: ' + stderr)
 				return;
@@ -508,6 +506,8 @@ function activate(context) {
 
 	})
 
+	let x = new Set()
+
 	let dynamicAutocomplete = vscode.languages.registerCompletionItemProvider(
 		[
 			{ scheme: 'file', language: 'json' },
@@ -565,17 +565,28 @@ function activate(context) {
 				}
 			}
 			const jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number')
-			let value = []
-			let inQuotes = false
+				let value = [];
+				let inQuotes = false;
 			visit(document.getText(), {
 				onLiteralValue: (value, offset, length) => {
 					if (document.offsetAt(position) > offset && document.offsetAt(position) < offset + length) inQuotes = true
+				},
+				onObjectProperty: (value, offset, length) => {
+					if (document.offsetAt(position) > offset && document.offsetAt(position) < offset + length) inQuotes = true
+
 				}
-			})
-			if (!inQuotes) return;
-			value = jsonPath.reduce((acc, key) => acc && acc[key], dynamicAutocomplete)
-			const valueInDoc = jsonPath.reduce((acc, key) => acc && acc[key], parse(document.getText()))
-			if (valueInDoc instanceof Array && typeof value != 'string') value = value.filter(x => !valueInDoc.includes(x))
+			});
+				if (!inQuotes) return;
+				switch (document.fileName.split('\\').pop()) {
+					case 'blocks.json':
+						value = cache.block.ids.filter(id => !parse(document.getText())[id])
+						break;
+					default:
+						value = jsonPath.reduce((acc, key) => acc && acc[key], dynamicAutocomplete)
+						const valueInDoc = jsonPath.reduce((acc, key) => acc && acc[key], parse(document.getText()))
+						if (valueInDoc instanceof Array && typeof value != 'string') value = value.filter(x => !valueInDoc.includes(x))			
+						break;
+				}
 			if (typeof value == 'string') value = [value]
 			if (value.length > 0) value.forEach(x => { suggestions.push(new vscode.CompletionItem(x, vscode.CompletionItemKind.Enum)); })
 			return suggestions
