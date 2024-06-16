@@ -1,3 +1,5 @@
+const { CacheSystem, getAllFilePaths } = require('./sub/cacheSystem');
+
 const path = require('path')
 const vscode = require('vscode');
 const fs = require('fs')
@@ -30,99 +32,45 @@ const explorerCommand = {
 	"linux": "xdg-open"
 }
 
-const cache = {
-	entity: {
-		ids: [],
-		spawnable_ids: [],
-		rideable_ids: []
-	},
-	item: {
-		ids: [],
-		custom_components: []
-	},
-	block: {
-		ids: [],
-		custom_components: []
-	},
-	textures: {
-		items: [],
-		terrain: []
-	}
-}
+const system = new CacheSystem()
 
 /**
  * @param {vscode.ExtensionContext} context
  */
-function activate(context) {
+async function activate(context) {
 
 	console.log("Bedrocken is Active!")
 
 	const bpPath = vscode.workspace.workspaceFolders[0].uri.fsPath
 	const rpPath = vscode.workspace.workspaceFolders[1]?.uri.fsPath
 
-	if (fs.existsSync(path.join(bpPath, 'manifest.json'))) {
-		const manifest = parse(fs.readFileSync(path.join(bpPath, 'manifest.json')).toString())
-		if (!manifest["modules"]?.map(obj => obj.type).includes('script')) vscode.commands.executeCommand('setContext', 'bedrocken.can_add_scripts', true)
-		if (!manifest["dependencies"]?.map(obj => obj.version instanceof Array).includes(true)) vscode.commands.executeCommand('setContext', 'bedrocken.can_link_manifests', true)
-		if (fs.existsSync(path.join(bpPath, 'scripts'))) {
-			const files = getAllFilePaths(path.join(bpPath, 'scripts'))
-			files.forEach(file => {
-				const content = fs.readFileSync(file).toString();
-				(content.match(/(?:blockComponentRegistry|event\.blockTypeRegistry|blockTypeRegistry)\.registerCustomComponent\(['"]([^'"]*)['"]/g) || []).forEach(match => {
-					cache.block.custom_components.push(match.match(/['"]([^'"]*)['"]/)[1]);
-				});
-				(content.match(/(?:itemComponentRegistry|event\.itemTypeRegistry|itemTypeRegistry)\.registerCustomComponent\(['"]([^'"]*)['"]/g) || []).forEach(match => {
-					cache.item.custom_components.push(match.match(/['"]([^'"]*)['"]/)[1]);
-				});
-			})
-		}
-		if (fs.existsSync(path.join(bpPath, 'entities'))) {
-			const files = getAllFilePaths(path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'entities'))
-			files.forEach(file => {
-				const text = fs.readFileSync(file).toString()
-				const content = parse(text)
-				if (!content["minecraft:entity"]["description"]["identifier"]) return;
-				const id = content["minecraft:entity"]["description"]["identifier"];
-				cache.entity.ids.push(id)
-				if (text.includes('minecraft:rideable')) cache.entity.rideable_ids.push(id)
-				if (content["minecraft:entity"]["description"]["is_spawnable"]) cache.entity.spawnable_ids.push(id)
-			})
-		}
-		if (fs.existsSync(path.join(bpPath, 'items'))) {
-			const files = getAllFilePaths(path.join(bpPath, 'items'))
-			files.forEach(file => {
-				const text = fs.readFileSync(file).toString()
-				const content = parse(text)
-				if (content["minecraft:item"]["description"]["identifier"]) cache.item.ids.push(content["minecraft:item"]["description"]["identifier"])
-			})
-		}
-		if (fs.existsSync(path.join(bpPath, 'blocks'))) {
-			const files = getAllFilePaths(path.join(bpPath, 'blocks'))
-			files.forEach(file => {
-				const text = fs.readFileSync(file).toString()
-				const content = parse(text)
-				if (content["minecraft:block"]["description"]["identifier"]) cache.block.ids.push(content["minecraft:block"]["description"]["identifier"])
-			})
-		}
-		if (rpPath) {
-			if (fs.existsSync(path.join(rpPath, 'textures/item_texture.json'))) {
-				const content = parse(fs.readFileSync(path.join(rpPath, 'textures/item_texture.json')).toString())
-				cache.textures.items = Object.keys(content["texture_data"]).sort()
-			}
-			if (fs.existsSync(path.join(rpPath, 'textures/terrain_texture.json'))) {
-				const content = parse(fs.readFileSync(path.join(rpPath, 'textures/terrain_texture.json')).toString())
-				cache.textures.terrain = Object.keys(content["texture_data"]).sort()
-			}
+	if (!fs.existsSync(path.join(bpPath, 'manifest.json'))) return;
 
-		}
-	}
+	const manifest = parse(fs.readFileSync(path.join(bpPath, 'manifest.json')).toString())
+	if (!manifest["modules"]?.map(obj => obj.type).includes('script')) vscode.commands.executeCommand('setContext', 'bedrocken.can_add_scripts', true)
+	if (!manifest["dependencies"]?.map(obj => obj.version instanceof Array).includes(true)) vscode.commands.executeCommand('setContext', 'bedrocken.can_link_manifests', true)
 
-	let resetManifestsCommandsCommands = vscode.commands.registerCommand('bedrocken.reset_manifest_commands', () => {
+	await system.processDirectory(path.join(bpPath, 'scripts'), 'script')
+	await system.processDirectory(path.join(bpPath, 'entities'), 'entity');
+	await system.processDirectory(path.join(bpPath, 'items'), 'item');
+	await system.processDirectory(path.join(bpPath, 'blocks'), 'block');
+	await system.processFile(path.join(rpPath, 'textures/item_texture.json'), 'item_texture')
+	await system.processFile(path.join(rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
+
+	const fileWatcher = vscode.workspace.createFileSystemWatcher('**/**/*.json', false, false, false)
+	fileWatcher.onDidDelete(e => {
+		console.log(path.basename(path.dirname(e.fsPath)))
+	})
+	fileWatcher.onDidCreate(e => {
+		console.log(path.basename(path.dirname(e.fsPath)))
+	})
+
+	const resetManifestsCommandsCommands = vscode.commands.registerCommand('bedrocken.reset_manifest_commands', () => {
 		vscode.commands.executeCommand('setContext', 'bedrocken.can_add_scripts', true)
 		vscode.commands.executeCommand('setContext', 'bedrocken.can_link_manifests', true)
 	})
 
-	let updateItemsCommands = vscode.commands.registerCommand('bedrocken.update_items', () => {
+	const updateItemsCommands = vscode.commands.registerCommand('bedrocken.update_items', () => {
 		const itemsPath = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'items');
 		if (!fs.existsSync(itemsPath)) return;
 
@@ -167,7 +115,7 @@ function activate(context) {
 		});
 	});
 
-	let projectSwitcherCommand = vscode.commands.registerCommand('bedrocken.switch_projects', async () => {
+	const projectSwitcherCommand = vscode.commands.registerCommand('bedrocken.switch_projects', async () => {
 
 		try {
 			const root = vscode.workspace.getConfiguration('bedrocken').get('folders', [`${appData.replace(/\\/g, '').replace('Roaming', '')}//Local/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang`])
@@ -259,7 +207,7 @@ function activate(context) {
 
 	})
 
-	let clearProjectCacheCommand = vscode.commands.registerCommand('bedrocken.clear_project_cache', () => {
+	const clearProjectCacheCommand = vscode.commands.registerCommand('bedrocken.clear_project_cache', () => {
 
 		fs.readdir(path.join(context.extensionPath, 'data/workspaces'), (err, files) => {
 			files.filter(x => !x.includes(vscode.workspace.name.split(' (Workspace)')[0])).forEach(file => {
@@ -271,13 +219,13 @@ function activate(context) {
 
 	})
 
-	let presetsCommand = vscode.commands.registerCommand('bedrocken.presets', () => {
+	const presetsCommand = vscode.commands.registerCommand('bedrocken.presets', () => {
 
 		const presets = fs.readdirSync(path.join(context.extensionPath, 'data/presets'))
 
 	})
 
-	let snippetsCommand = vscode.commands.registerCommand('bedrocken.snippets', () => {
+	const snippetsCommand = vscode.commands.registerCommand('bedrocken.snippets', () => {
 
 		const snippetFiles = getAllFilePaths(path.join(context.extensionPath, 'data/snippets'))
 		let snippets = snippetFiles.map(snippet => JSON.parse(fs.readFileSync(snippet).toString()))
@@ -312,7 +260,7 @@ function activate(context) {
 
 	})
 
-	let exportBpCommand = vscode.commands.registerCommand('bedrocken.export_bp', async () => {
+	const exportBpCommand = vscode.commands.registerCommand('bedrocken.export_bp', async () => {
 
 		let location = vscode.workspace.getConfiguration('bedrocken').get('export.location')
 		if (!location) vscode.workspace.getConfiguration('bedrocken').update('export.location', downloadsFolder)
@@ -345,7 +293,7 @@ function activate(context) {
 
 	})
 
-	let exportRpCommand = vscode.commands.registerCommand('bedrocken.export_rp', async () => {
+	const exportRpCommand = vscode.commands.registerCommand('bedrocken.export_rp', async () => {
 
 		if (vscode.workspace.workspaceFolders.length == 1) {
 			vscode.window.showErrorMessage('No resource pack found')
@@ -382,7 +330,7 @@ function activate(context) {
 
 	})
 
-	let exportProjectCommand = vscode.commands.registerCommand('bedrocken.export_project', async () => {
+	const exportProjectCommand = vscode.commands.registerCommand('bedrocken.export_project', async () => {
 
 		let location = vscode.workspace.getConfiguration('bedrocken').get('export.location')
 		if (!location) vscode.workspace.getConfiguration('bedrocken').update('export.location', downloadsFolder)
@@ -414,7 +362,7 @@ function activate(context) {
 
 	})
 
-	let openExportsFolderCommand = vscode.commands.registerCommand('bedrocken.open_exports_folder', () => {
+	const openExportsFolderCommand = vscode.commands.registerCommand('bedrocken.open_exports_folder', () => {
 
 		let location = vscode.workspace.getConfiguration('bedrocken').get('export.location')
 		if (!location) vscode.workspace.getConfiguration('bedrocken').update('export.location', downloadsFolder)
@@ -438,7 +386,7 @@ function activate(context) {
 
 	})
 
-	let linkManifestsCommand = vscode.commands.registerCommand('bedrocken.link_manifests', async () => {
+	const linkManifestsCommand = vscode.commands.registerCommand('bedrocken.link_manifests', async () => {
 
 		if (vscode.workspace.workspaceFolders.length == 1) {
 			vscode.window.showErrorMessage('No resource pack found')
@@ -468,7 +416,7 @@ function activate(context) {
 
 	})
 
-	let addScriptsManifestCommand = vscode.commands.registerCommand('bedrocken.add_scripts_manifests', async () => {
+	const addScriptsManifestCommand = vscode.commands.registerCommand('bedrocken.add_scripts_manifests', async () => {
 
 		const manifestPath = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'manifest.json')
 
@@ -512,7 +460,7 @@ function activate(context) {
 		vscode.commands.executeCommand("setContext", 'bedrocken.can_add_scripts', false)
 	})
 
-	let setProjectPrefixCommand = vscode.commands.registerCommand('bedrocken.project_prefix', async () => {
+	const setProjectPrefixCommand = vscode.commands.registerCommand('bedrocken.project_prefix', async () => {
 
 		vscode.window.showInputBox({ title: 'Project Prefix' }).then(value => {
 			vscode.workspace.getConfiguration('bedrocken').update('project_prefix', value, vscode.ConfigurationTarget.Workspace)
@@ -521,9 +469,7 @@ function activate(context) {
 
 	})
 
-	let x = new Set()
-
-	let dynamicAutocomplete = vscode.languages.registerCompletionItemProvider(
+	const dynamicAutocomplete = vscode.languages.registerCompletionItemProvider(
 		[
 			{ scheme: 'file', language: 'json' },
 			{ scheme: 'file', language: 'jsonc' }
@@ -542,8 +488,8 @@ function activate(context) {
 						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					},
 					"components": {
-						"minecraft:custom_components": cache.item.custom_components,
-						"minecraft:icon": cache.textures.items
+						"minecraft:custom_components": system.getCache().item.custom_components,
+						"minecraft:icon": system.getCache().textures.items
 					}
 				},
 				"minecraft:feature_rules": {
@@ -576,10 +522,10 @@ function activate(context) {
 						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					},
 					"components": {
-						"minecraft:custom_components": cache.block.custom_components,
+						"minecraft:custom_components": system.getCache().block.custom_components,
 						"minecraft:material_instances": {
 							"*": {
-								"texture": cache.textures.terrain
+								"texture": system.getCache().textures.terrain
 							}
 						}
 					}
@@ -600,7 +546,7 @@ function activate(context) {
 				if (!inQuotes) return;
 				switch (document.fileName.split('\\').pop()) {
 					case 'blocks.json':
-						value = cache.block.ids.filter(id => !parse(document.getText())[id])
+						value = system.getCache().block.ids.filter(id => !parse(document.getText())[id])
 						break;
 					default:
 						value = jsonPath.reduce((acc, key) => acc && acc[key], dynamicAutocomplete)
@@ -619,7 +565,7 @@ function activate(context) {
 		if (event.contentChanges.some(x => x.text.includes('='))) vscode.commands.executeCommand('editor.action.triggerSuggest');
 	})
 
-	let langAutocomplete = vscode.languages.registerCompletionItemProvider(
+	const langAutocomplete = vscode.languages.registerCompletionItemProvider(
 		[
 			{ scheme: 'file', language: 'bc-minecraft-language' },
 			{ scheme: 'file', language: 'plaintext' }
@@ -633,19 +579,19 @@ function activate(context) {
 			), { sortText: '0' })];
 			if (!document.fileName.endsWith('.lang')) return
 			const text = document.getText().split('\n')
-			cache.entity.ids.forEach(id => {
+				system.getCache().entity.ids.forEach(id => {
 				if (!text.some(x => x.startsWith(`entity.${id}.name`))) suggestions.push(new vscode.CompletionItem(`entity.${id}.name`, vscode.CompletionItemKind.Class))
 			})
-			cache.entity.spawnable_ids.forEach(id => {
+				system.getCache().entity.spawnable_ids.forEach(id => {
 				if (!text.some(x => x.startsWith(`item.spawn_egg.entity.${id}.name`))) suggestions.push(new vscode.CompletionItem(`item.spawn_egg.entity.${id}.name`, vscode.CompletionItemKind.Class))
 			})
-			cache.entity.rideable_ids.forEach(id => {
+				system.getCache().entity.rideable_ids.forEach(id => {
 				if (!text.some(x => x.startsWith(`action.hint.exit.${id}`))) suggestions.push(new vscode.CompletionItem(`action.hint.exit.${id}`, vscode.CompletionItemKind.Class))
 			})
-			cache.item.ids.forEach(id => {
+				system.getCache().item.ids.forEach(id => {
 				if (!text.some(x => x.startsWith(`item.${id}`))) suggestions.push(new vscode.CompletionItem(`item.${id}`, vscode.CompletionItemKind.Class))
 			})
-			cache.block.ids.forEach(id => {
+				system.getCache().block.ids.forEach(id => {
 				if (!text.some(x => x.startsWith(`tile.${id}`))) suggestions.push(new vscode.CompletionItem(`tile.${id}.name`, vscode.CompletionItemKind.Class))
 			})
 			return suggestions
@@ -653,6 +599,7 @@ function activate(context) {
 	})
 
 	context.subscriptions.push(
+		fileWatcher,
 		langAutocomplete,
 		dynamicAutocomplete,
 		projectSwitcherCommand,
@@ -670,27 +617,6 @@ function activate(context) {
 		updateItemsCommands
 	);
 
-}
-
-function getAllFilePaths(folderPath) {
-	let filePaths = [];
-
-	function readFolder(currentPath) {
-		const entries = fs.readdirSync(currentPath, { withFileTypes: true });
-
-		entries.forEach(entry => {
-			const entryPath = path.join(currentPath, entry.name);
-
-			if (entry.isDirectory()) {
-				readFolder(entryPath); // Recursively read subfolders
-			} else if (entry.isFile()) {
-				filePaths.push(entryPath); // Collect file paths
-			}
-		});
-	}
-
-	readFolder(folderPath);
-	return filePaths;
 }
 
 function innerMostValue(json) {
