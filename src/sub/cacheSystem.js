@@ -58,13 +58,13 @@ class CacheSystem {
             const json = parse(text)
 
             switch (type) {
-                case 'entity': this.processEntityFiles(text, json)
+                case 'entity': this.processEntityFile(text, json)
                     break;
-                case 'item': this.proceessItemFiles(json)
+                case 'item': this.proceessItemFile(json)
                     break;
-                case 'block': this.processBlockFiles(json)
+                case 'block': this.processBlockFile(json)
                     break;
-                case 'script': this.processScriptFiles(text)
+                case 'script': this.processScriptFile(text)
                     break;
                 case 'item_texture': this.processItemTextures(json)
                     break;
@@ -86,7 +86,7 @@ class CacheSystem {
     processTerrainTextures(json) {
         this.#cache.textures.terrain = Object.keys(json["texture_data"]).sort()
     }
-    processEntityFiles(text, json) {
+    processEntityFile(text, json) {
         const description = json["minecraft:entity"]?.["description"]
         if (!description || !description["identifier"]) return;
         const identifier = description["identifier"]
@@ -94,15 +94,15 @@ class CacheSystem {
         if (text.includes('minecraft:rideable')) this.#cache.entity.rideable_ids.push(identifier)
         if (description["is_spawnable"]) this.#cache.entity.spawnable_ids.push(identifier)
     }
-    proceessItemFiles(json) {
+    proceessItemFile(json) {
         const identifier = json["minecraft:item"]["description"]["identifier"]
         if (identifier) this.#cache.item.ids.push(identifier)
     }
-    processBlockFiles(json) {
+    processBlockFile(json) {
         const identifier = json["minecraft:block"]["description"]["identifier"]
         if (identifier) this.#cache.block.ids.push(identifier)
     }
-    processScriptFiles(text) {
+    processScriptFile(text) {
         (text.match(/(?:blockComponentRegistry|event\.blockTypeRegistry|blockTypeRegistry)\.registerCustomComponent\(['"]([^'"]*)['"]/g) || []).forEach(match => {
             this.#cache.block.custom_components.push(match.match(/['"]([^'"]*)['"]/)[1]);
         });
