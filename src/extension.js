@@ -13,6 +13,7 @@ const archiver = require('archiver')
 // TODO: Presets
 // TODO: More dynamic autocomplete
 // TODO: Make snippets not automatically save the file
+// TODO: Add support for opening BP only projects
 // TODO: Add support for ignoring .git folder on export
 // TODO: Add support for regolith exports
 // TODO: Add support for new project 
