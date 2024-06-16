@@ -59,11 +59,61 @@ async function activate(context) {
 	await system.processFile(path.join(rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
 
 	const fileWatcher = vscode.workspace.createFileSystemWatcher('**/**/*.json', false, false, false)
-	fileWatcher.onDidDelete(e => {
-		console.log(path.basename(path.dirname(e.fsPath)))
+
+	fileWatcher.onDidChange(e => {
+
+		if (e.fsPath.includes(' copy.json')) return;
+
+		const workspace = vscode.workspace.workspaceFolders.find(folder => e.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? bpPath : rpPath
+		const folderName = path.relative(workspace, e.fsPath).split('\\')[0]
+
+		switch (folderName) {
+			case 'items': system.processFile(e.fsPath, 'item')
+				break;
+			case 'entities': system.processFile(e.fsPath, 'entity')
+				break;
+			case 'blocks': system.processFile(e.fsPath, 'block')
+				break
+		}
+
 	})
+
+	fileWatcher.onDidDelete(e => {
+
+		if (e.fsPath.includes(' copy.json')) return;
+
+		const workspace = vscode.workspace.workspaceFolders.find(folder => e.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? bpPath : rpPath
+		const folderName = path.relative(workspace, e.fsPath).split('\\')[0]
+
+		const readPath = path.join(workspace, folderName)
+
+		switch (folderName) {
+			case 'items': system.getCache().item.ids = []; system.processDirectory(readPath, 'item');
+				break;
+			case 'entities': system.getCache().entity = { ids: [], rideable_ids: [], spawnable_ids: [] }; system.processDirectory(readPath, 'entity');
+				break;
+			case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
+				break;
+		}
+
+	})
+
 	fileWatcher.onDidCreate(e => {
-		console.log(path.basename(path.dirname(e.fsPath)))
+
+		if (e.fsPath.includes(' copy.json')) return;
+
+		const workspace = vscode.workspace.workspaceFolders.find(folder => e.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? bpPath : rpPath
+		const folderName = path.relative(workspace, e.fsPath).split('\\')[0]
+
+		switch (folderName) {
+			case 'items': system.processFile(e.fsPath, 'item')
+				break;
+			case 'entities': system.processFile(e.fsPath, 'entity')
+				break;
+			case 'blocks': system.processFile(e.fsPath, 'block')
+				break
+		}
+
 	})
 
 	const resetManifestsCommandsCommands = vscode.commands.registerCommand('bedrocken.reset_manifest_commands', () => {
