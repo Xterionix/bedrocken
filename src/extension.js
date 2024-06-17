@@ -56,10 +56,11 @@ async function activate(context) {
 	await system.processDirectory(path.join(bpPath, 'entities'), 'entity');
 	await system.processDirectory(path.join(bpPath, 'items'), 'item');
 	await system.processDirectory(path.join(bpPath, 'blocks'), 'block');
+	await system.processDirectory(path.join(bpPath, 'structures'), 'structure');
 	await system.processFile(path.join(rpPath, 'textures/item_texture.json'), 'item_texture')
 	await system.processFile(path.join(rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
 
-	const fileWatcher = vscode.workspace.createFileSystemWatcher('**/**/*.json', false, false, false)
+	const fileWatcher = vscode.workspace.createFileSystemWatcher('**/*.{json,mcstructure}', false, false, false)
 
 	fileWatcher.onDidDelete(e => {
 
@@ -583,6 +584,12 @@ async function activate(context) {
 					"description": {
 						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					}
+				},
+				"minecraft:structure_template_feature": {
+					"description": {
+						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					},
+					"structure_name": system.getCache().structures
 				},
 				"minecraft:block": {
 					"description": {

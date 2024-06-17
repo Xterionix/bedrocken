@@ -21,10 +21,11 @@ class CacheSystem {
         textures: {
             items: [],
             terrain: []
-        }
+        },
+        structures: []
     }
 
-    /** * @typedef {'entity'|'item'|'block'|'script'|'item_texture'|'terrain_texture'} FileType */
+    /** * @typedef {'entity'|'item'|'block'|'script'|'structure'|'item_texture'|'terrain_texture'} FileType */
 
     getCache() {
         return this.#cache
@@ -56,6 +57,7 @@ class CacheSystem {
 
             const text = (await fs.promises.readFile(file)).toString()
             const json = parse(text)
+            const fileName = path.basename(file)
 
             switch (type) {
                 case 'entity': this.processEntityFile(text, json)
@@ -65,6 +67,8 @@ class CacheSystem {
                 case 'block': this.processBlockFile(json)
                     break;
                 case 'script': this.processScriptFile(text)
+                    break;
+                case 'structure': this.processStructureFile(fileName)
                     break;
                 case 'item_texture': this.processItemTextures(json)
                     break;
@@ -80,6 +84,9 @@ class CacheSystem {
 
     }
 
+    processStructureFile(name) {
+        this.#cache.structures.push('mystructure:' + name.split('.')[0])
+    }
     processItemTextures(json) {
         this.#cache.textures.items = Object.keys(json["texture_data"]).sort()
     }
