@@ -13,6 +13,7 @@ const archiver = require('archiver')
 // TODO: Presets
 // TODO: More dynamic autocomplete
 // TODO: Make snippets not automatically save the file
+// TODO: Improve cache system
 // TODO: Add support for opening BP only projects
 // TODO: Add support for ignoring .git folder on export
 // TODO: Add support for regolith exports
@@ -60,31 +61,12 @@ async function activate(context) {
 
 	const fileWatcher = vscode.workspace.createFileSystemWatcher('**/**/*.json', false, false, false)
 
-	fileWatcher.onDidChange(e => {
-
-		if (e.fsPath.includes(' copy.json')) return;
-
-		const workspace = vscode.workspace.workspaceFolders.find(folder => e.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? bpPath : rpPath
-		const folderName = path.relative(workspace, e.fsPath).split('\\')[0]
-
-		switch (folderName) {
-			case 'items': system.processFile(e.fsPath, 'item')
-				break;
-			case 'entities': system.processFile(e.fsPath, 'entity')
-				break;
-			case 'blocks': system.processFile(e.fsPath, 'block')
-				break
-		}
-
-	})
-
 	fileWatcher.onDidDelete(e => {
 
 		if (e.fsPath.includes(' copy.json')) return;
 
 		const workspace = vscode.workspace.workspaceFolders.find(folder => e.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? bpPath : rpPath
 		const folderName = path.relative(workspace, e.fsPath).split('\\')[0]
-
 		const readPath = path.join(workspace, folderName)
 
 		switch (folderName) {
@@ -93,6 +75,37 @@ async function activate(context) {
 			case 'entities': system.getCache().entity = { ids: [], rideable_ids: [], spawnable_ids: [] }; system.processDirectory(readPath, 'entity');
 				break;
 			case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
+				break;
+			case 'scripts': system.getCache().block.custom_components = []; system.getCache().item.custom_components = []; system.processDirectory(readPath, 'script');
+				break;
+		}
+
+	})
+
+	fileWatcher.onDidChange(e => {
+
+		if (e.fsPath.includes(' copy.json')) return;
+
+		const workspace = vscode.workspace.workspaceFolders.find(folder => e.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? bpPath : rpPath
+		const folderName = path.relative(workspace, e.fsPath).split('\\')[0]
+		const readPath = path.join(workspace, folderName)
+		const fileName = path.basename(e.fsPath)
+
+		switch (folderName) {
+			case 'items': system.getCache().item.ids = []; system.processDirectory(readPath, 'item');
+				break;
+			case 'entities': system.getCache().entity = { ids: [], rideable_ids: [], spawnable_ids: [] }; system.processDirectory(readPath, 'entity');
+				break;
+			case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
+				break;
+			case 'scripts': system.getCache().block.custom_components = []; system.getCache().item.custom_components = []; system.processDirectory(readPath, 'script');
+				break;
+		}
+
+		switch (fileName) {
+			case 'item_texture.json': system.getCache().textures.items = []; system.processFile(path.join(rpPath, 'textures/item_texture.json'), 'item_texture')
+				break;
+			case 'terrain_texture.json': system.getCache().textures.terrain = []; system.processFile(path.join(rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
 				break;
 		}
 
@@ -104,14 +117,17 @@ async function activate(context) {
 
 		const workspace = vscode.workspace.workspaceFolders.find(folder => e.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? bpPath : rpPath
 		const folderName = path.relative(workspace, e.fsPath).split('\\')[0]
+		const readPath = path.join(workspace, folderName)
 
 		switch (folderName) {
-			case 'items': system.processFile(e.fsPath, 'item')
+			case 'items': system.getCache().item.ids = []; system.processDirectory(readPath, 'item');
 				break;
-			case 'entities': system.processFile(e.fsPath, 'entity')
+			case 'entities': system.getCache().entity = { ids: [], rideable_ids: [], spawnable_ids: [] }; system.processDirectory(readPath, 'entity');
 				break;
-			case 'blocks': system.processFile(e.fsPath, 'block')
-				break
+			case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
+				break;
+			case 'scripts': system.getCache().block.custom_components = []; system.getCache().item.custom_components = []; system.processDirectory(readPath, 'script');
+				break;
 		}
 
 	})
