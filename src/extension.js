@@ -629,7 +629,19 @@ async function activate(context) {
 					break;
 			};
 			if (typeof value == 'string') value = [value];
-			if (value.length > 0) value.forEach(x => suggestions.push(Object.assign(new vscode.CompletionItem(x, vscode.CompletionItemKind.Enum), { sortText: '!' })))
+			const line = document.getText(new vscode.Range(new vscode.Position(position.line, 0), position)).trim()
+			value.forEach(x => {
+				const item =new vscode.CompletionItem(x, vscode.CompletionItemKind.Enum)
+				let overlapLength = 0;
+				for (let i = 1; i <= x.length; i++) {
+					if (line.endsWith(x.slice(0, i))) {
+						overlapLength = i;
+					}
+				}
+				item.sortText = '0'
+				item.range= new vscode.Range(new vscode.Position(position.line, position.character - overlapLength), position);
+				suggestions.push(item)
+			})
 			return suggestions
 		}
 	})
