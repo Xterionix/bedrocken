@@ -90,6 +90,7 @@ class CacheSystem {
         const description = json["minecraft:entity"]?.["description"]
         if (!description || !description["identifier"]) return;
         const identifier = description["identifier"]
+        if (identifier.includes('minecraft:')) return;
         this.#cache.entity.ids.push(identifier)
         if (text.includes('minecraft:rideable')) this.#cache.entity.rideable_ids.push(identifier)
         if (description["is_spawnable"]) this.#cache.entity.spawnable_ids.push(identifier)
