@@ -547,64 +547,64 @@ async function activate(context) {
 			const prefix = vscode.workspace.getConfiguration('bedrocken').get('project_prefix', 'bedrocken')
 			const dynamicAutocomplete = {
 				"minecraft:entity": {
-					"description": {
-						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					}
 				},
 				"minecraft:item": {
-					"description": {
-						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					},
-					"components": {
+					components: {
 						"minecraft:custom_components": system.getCache().item.custom_components,
 						"minecraft:icon": system.getCache().textures.items
 					}
 				},
 				"minecraft:feature_rules": {
-					"description": {
-						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					}
 				},
 				"minecraft:single_block_feature": {
-					"description": {
-						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					}
 				},
 				"minecraft:weighted_random_feature": {
-					"description": {
-						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					}
 				},
 				"minecraft:scatter_feature": {
-					"description": {
-						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					}
 				},
 				"minecraft:aggregate_feature": {
-					"description": {
-						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					}
 				},
 				"minecraft:structure_template_feature": {
-					"description": {
-						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					},
-					"structure_name": system.getCache().structures
+					structure_name: system.getCache().structures
 				},
 				"minecraft:block": {
-					"description": {
-						"identifier": prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					},
-					"components": {
+					components: {
 						"minecraft:custom_components": system.getCache().block.custom_components,
 						"minecraft:material_instances": {
 							"*": {
-								"texture": system.getCache().textures.terrain
+								texture: system.getCache().textures.terrain
 							}
 						}
 					}
 					}
-				}
+			};
 				const jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number').join('[|]').replace('minecraft:icon[|]textures[|]default', 'minecraft:icon').replace('permutations[|]', '').replace(/minecraft:material_instances\[[^\]]*\]([^[]*)texture/, 'minecraft:material_instances[|]*[|]texture').split('[|]')
 				let value = [];
 				let inQuotes = false;
