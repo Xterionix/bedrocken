@@ -60,19 +60,19 @@ class CacheSystem {
             const fileName = path.basename(file)
 
             switch (type) {
-                case 'entity': this.processEntityFile(text, json)
+                case 'entity': this.#processEntityFile(text, json)
                     break;
-                case 'item': this.proceessItemFile(json)
+                case 'item': this.#proceessItemFile(json)
                     break;
-                case 'block': this.processBlockFile(json)
+                case 'block': this.#processBlockFile(json)
                     break;
-                case 'script': this.processScriptFile(text)
+                case 'script': this.#processScriptFile(text)
                     break;
-                case 'structure': this.processStructureFile(fileName)
+                case 'structure': this.#processStructureFile(fileName)
                     break;
-                case 'item_texture': this.processItemTextures(json)
+                case 'item_texture': this.#processItemTextures(json)
                     break;
-                case 'terrain_texture': this.processTerrainTextures(json)
+                case 'terrain_texture': this.#processTerrainTextures(json)
                     break;
                 default: console.warn(`Unknown file type: ${type}`)
                     break;
@@ -84,16 +84,16 @@ class CacheSystem {
 
     }
 
-    processStructureFile(name) {
+    #processStructureFile(name) {
         this.#cache.structures.push('mystructure:' + name.split('.')[0])
     }
-    processItemTextures(json) {
+    #processItemTextures(json) {
         this.#cache.textures.items = Object.keys(json["texture_data"]).sort()
     }
-    processTerrainTextures(json) {
+    #processTerrainTextures(json) {
         this.#cache.textures.terrain = Object.keys(json["texture_data"]).sort()
     }
-    processEntityFile(text, json) {
+    #processEntityFile(text, json) {
         const description = json["minecraft:entity"]?.["description"]
         if (!description || !description["identifier"]) return;
         const identifier = description["identifier"]
@@ -102,15 +102,15 @@ class CacheSystem {
         if (text.includes('minecraft:rideable')) this.#cache.entity.rideable_ids.push(identifier)
         if (description["is_spawnable"]) this.#cache.entity.spawnable_ids.push(identifier)
     }
-    proceessItemFile(json) {
+    #proceessItemFile(json) {
         const identifier = json["minecraft:item"]["description"]["identifier"]
         if (identifier) this.#cache.item.ids.push(identifier)
     }
-    processBlockFile(json) {
+    #processBlockFile(json) {
         const identifier = json["minecraft:block"]["description"]["identifier"]
         if (identifier) this.#cache.block.ids.push(identifier)
     }
-    processScriptFile(text) {
+    #processScriptFile(text) {
         (text.match(/(?:blockComponentRegistry|event\.blockTypeRegistry|blockTypeRegistry)\.registerCustomComponent\(['"]([^'"]*)['"]/g) || []).forEach(match => {
             this.#cache.block.custom_components.push(match.match(/['"]([^'"]*)['"]/)[1]);
         });
