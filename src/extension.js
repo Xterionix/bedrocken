@@ -603,11 +603,11 @@ async function activate(context) {
 							}
 						}
 					}
-					}
-			};
-				const jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number').join('[|]').replace('minecraft:icon[|]textures[|]default', 'minecraft:icon').replace('permutations[|]', '').replace(/minecraft:material_instances\[[^\]]*\]([^[]*)texture/, 'minecraft:material_instances[|]*[|]texture').split('[|]')
-				let value = [];
-				let inQuotes = false;
+				}
+			}
+			const jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number').join('[|]').replace('minecraft:icon[|]textures[|]default', 'minecraft:icon').replace('permutations[|]', '').replace(/minecraft:material_instances\[[^\]]*\]([^[]*)texture/, 'minecraft:material_instances[|]*[|]texture').split('[|]')
+			let value = [];
+			let inQuotes = false;
 			visit(document.getText(), {
 				onLiteralValue: (value, offset, length) => {
 					if (document.offsetAt(position) > offset && document.offsetAt(position) < offset + length) inQuotes = true
@@ -617,19 +617,19 @@ async function activate(context) {
 
 				}
 			});
-				if (!inQuotes) return;
-				switch (document.fileName.split('\\').pop()) {
-					case 'blocks.json':
-						value = system.getCache().block.ids.filter(id => !parse(document.getText())[id])
-						break;
-					default:
-						value = jsonPath.reduce((acc, key) => acc && acc[key], dynamicAutocomplete)
-						const valueInDoc = jsonPath.reduce((acc, key) => acc && acc[key], parse(document.getText()))
-						if (valueInDoc instanceof Array && typeof value != 'string') value = value.filter(x => !valueInDoc.includes(x))
-						break;
-				};
-				if (typeof value == 'string') value = [value];
-				if (value.length > 0) value.forEach(x => suggestions.push(Object.assign(new vscode.CompletionItem(x, vscode.CompletionItemKind.Enum), { sortText: '!' })))
+			if (!inQuotes) return;
+			switch (document.fileName.split('\\').pop()) {
+				case 'blocks.json':
+					value = system.getCache().block.ids.filter(id => !parse(document.getText())[id])
+					break;
+				default:
+					value = jsonPath.reduce((acc, key) => acc && acc[key], dynamicAutocomplete)
+					const valueInDoc = jsonPath.reduce((acc, key) => acc && acc[key], parse(document.getText()))
+					if (valueInDoc instanceof Array && typeof value != 'string') value = value.filter(x => !valueInDoc.includes(x))
+					break;
+			};
+			if (typeof value == 'string') value = [value];
+			if (value.length > 0) value.forEach(x => suggestions.push(Object.assign(new vscode.CompletionItem(x, vscode.CompletionItemKind.Enum), { sortText: '!' })))
 			return suggestions
 		}
 	})
@@ -653,19 +653,19 @@ async function activate(context) {
 			), { sortText: '0' })];
 			if (!document.fileName.endsWith('.lang')) return
 			const text = document.getText().split('\n')
-				system.getCache().entity.ids.forEach(id => {
+			system.getCache().entity.ids.forEach(id => {
 				if (!text.some(x => x.startsWith(`entity.${id}.name`))) suggestions.push(new vscode.CompletionItem(`entity.${id}.name`, vscode.CompletionItemKind.Class))
 			})
-				system.getCache().entity.spawnable_ids.forEach(id => {
+			system.getCache().entity.spawnable_ids.forEach(id => {
 				if (!text.some(x => x.startsWith(`item.spawn_egg.entity.${id}.name`))) suggestions.push(new vscode.CompletionItem(`item.spawn_egg.entity.${id}.name`, vscode.CompletionItemKind.Class))
 			})
-				system.getCache().entity.rideable_ids.forEach(id => {
+			system.getCache().entity.rideable_ids.forEach(id => {
 				if (!text.some(x => x.startsWith(`action.hint.exit.${id}`))) suggestions.push(new vscode.CompletionItem(`action.hint.exit.${id}`, vscode.CompletionItemKind.Class))
 			})
-				system.getCache().item.ids.forEach(id => {
+			system.getCache().item.ids.forEach(id => {
 				if (!text.some(x => x.startsWith(`item.${id}`))) suggestions.push(new vscode.CompletionItem(`item.${id}`, vscode.CompletionItemKind.Class))
 			})
-				system.getCache().block.ids.forEach(id => {
+			system.getCache().block.ids.forEach(id => {
 				if (!text.some(x => x.startsWith(`tile.${id}`))) suggestions.push(new vscode.CompletionItem(`tile.${id}.name`, vscode.CompletionItemKind.Class))
 			})
 			return suggestions
