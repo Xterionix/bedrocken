@@ -13,7 +13,7 @@ const archiver = require('archiver')
 // TODO: Presets
 // TODO: More dynamic autocomplete
 // TODO: Improve cache system
-// TODO: Add support for regolith exports
+// TODO: Add support for regolith autocomplete
 // TODO: Add support for new project 
 
 const appData = process.env.APPDATA
