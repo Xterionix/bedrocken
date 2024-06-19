@@ -27,7 +27,8 @@ Supports the following:
 - File name based identifiers
 - Structure names with a structure feature
 - Item components `minecraft:icon` and `minecraft:custom_components`
-- Block components `minecraft:material_instance` and `minecraft:custo_components`
+- Block components `minecraft:material_instance`, `minecraft:custo_components` and `minecraft:loot`
+- Entity components `minecraft:loot` and `minecraft:trade_table`
 - Feature names within feature rules and features that place other features
 - `blocks.json` file
 ` .lang files
