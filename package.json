@@ -152,6 +152,7 @@
   "dependencies": {
     "archiver": "^7.0.1",
     "comment-json": "^4.2.3",
+    "glob": "^10.4.2",
     "jsonc-parser": "^3.2.1",
     "uuid": "^9.0.1"
   }
