@@ -52,6 +52,7 @@ async function activate(context) {
 	await system.processDirectory(path.join(bpPath, 'entities'), 'entity');
 	await system.processDirectory(path.join(bpPath, 'items'), 'item');
 	await system.processDirectory(path.join(bpPath, 'blocks'), 'block');
+	await system.processDirectory(path.join(bpPath, 'features'), 'feature');
 	await system.processDirectory(path.join(bpPath, 'structures'), 'structure');
 	await system.processFile(path.join(rpPath, 'textures/item_texture.json'), 'item_texture')
 	await system.processFile(path.join(rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
@@ -641,37 +642,6 @@ async function activate(context) {
 						"minecraft:icon": system.getCache().textures.items
 					}
 				},
-				"minecraft:feature_rules": {
-					description: {
-						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
-					}
-				},
-				"minecraft:single_block_feature": {
-					description: {
-						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
-					}
-				},
-				"minecraft:weighted_random_feature": {
-					description: {
-						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
-					}
-				},
-				"minecraft:scatter_feature": {
-					description: {
-						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
-					}
-				},
-				"minecraft:aggregate_feature": {
-					description: {
-						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
-					}
-				},
-				"minecraft:structure_template_feature": {
-					description: {
-						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
-					},
-					structure_name: system.getCache().structures
-				},
 				"minecraft:block": {
 					description: {
 						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
@@ -683,6 +653,113 @@ async function activate(context) {
 								texture: system.getCache().textures.terrain
 							}
 						}
+					}
+				},
+				"minecraft:feature_rules": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5),
+						places_feature: system.getCache().features
+					}
+				},
+				"minecraft:aggregate_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:cave_carver_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:fossil_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:geode_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:growing_plant_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:multiface_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:nether_cave_carver_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:ore_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:partially_exposed_blob_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:scatter_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:search_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:sequence_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:single_block_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:snap_to_surface_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:structure_template_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					},
+					structure_name: system.getCache().structures
+				},
+				"minecraft:surface_relative_threshold_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:tree_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:underwater_cave_carver_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:vegetation_patch_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					}
+				},
+				"minecraft:weighted_random_feature": {
+					description: {
+						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
 					}
 				}
 			}

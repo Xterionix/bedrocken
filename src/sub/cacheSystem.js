@@ -22,10 +22,11 @@ class CacheSystem {
             items: [],
             terrain: []
         },
-        structures: []
+        structures: [],
+        features: []
     }
 
-    /** * @typedef {'entity'|'item'|'block'|'script'|'structure'|'item_texture'|'terrain_texture'} FileType */
+    /** * @typedef {'entity'|'item'|'block'|'script'|'structure'|'feature'|'item_texture'|'terrain_texture'} FileType */
 
     getCache() {
         return this.#cache
@@ -66,6 +67,8 @@ class CacheSystem {
                     break;
                 case 'block': this.#processBlockFile(json)
                     break;
+                case 'feature': this.#processFeaturefile(json)
+                    break;
                 case 'script': this.#processScriptFile(text)
                     break;
                 case 'structure': this.#processStructureFile(fileName)
@@ -84,6 +87,11 @@ class CacheSystem {
 
     }
 
+    #processFeaturefile(json) {
+        const identifier = json["minecraft:weighted_random_feature"]?.["description"]?.["identifier"] || json["minecraft:aggregate_feature"]?.["description"]?.["identifier"] || json["minecraft:cave_carver_feature"]?.["description"]?.["identifier"] || json["minecraft:fossil_feature"]?.["description"]?.["identifier"] || json["minecraft:geode_feature"]?.["description"]?.["identifier"] || json["minecraft:growing_plant_feature"]?.["description"]?.["identifier"] || json["minecraft:multiface_feature"]?.["description"]?.["identifier"] || json["minecraft:nether_cave_carver_feature"]?.["description"]?.["identifier"] || json["minecraft:ore_feature"]?.["description"]?.["identifier"] || json["minecraft:partially_exposed_blob_feature"]?.["description"]?.["identifier"] || json["minecraft:scatter_feature"]?.["description"]?.["identifier"] || json["minecraft:search_feature"]?.["description"]?.["identifier"] || json["minecraft:sequence_feature"]?.["description"]?.["identifier"] || json["minecraft:single_block_feature"]?.["description"]?.["identifier"] || json["minecraft:snap_to_surface_feature"]?.["description"]?.["identifier"] || json["minecraft:structure_template_feature"]?.["description"]?.["identifier"] || json["minecraft:surface_relative_threshold_feature"]?.["description"]?.["identifier"] || json["minecraft:tree_feature"]?.["description"]?.["identifier"] || json["minecraft:underwater_cave_carver_feature"]?.["description"]?.["identifier"] || json["minecraft:vegetation_patch_feature"]?.["description"]?.["identifier"]
+        if (!identifier || identifier.includes('minecraft:')) return;
+        this.#cache.features.push(identifier)
+    }
     #processStructureFile(name) {
         this.#cache.structures.push('mystructure:' + name.split('.')[0])
     }
