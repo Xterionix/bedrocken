@@ -12,7 +12,6 @@ const archiver = require('archiver')
 
 // TODO: Presets
 // TODO: More dynamic autocomplete
-// TODO: Make snippets not automatically save the file
 // TODO: Improve cache system
 // TODO: Add support for opening BP only projects
 // TODO: Add support for ignoring .git folder on export
@@ -323,7 +322,9 @@ async function activate(context) {
 				}
 				Object.assign(current, insertion.data)
 			})
-			fs.writeFileSync(document.fileName, toStringWithComments(fileContent, null, 4))
+			const edit = new vscode.WorkspaceEdit()
+			edit.replace(document.uri, new vscode.Range(document.positionAt(0), document.positionAt(document.getText().length)), toStringWithComments(fileContent, null, 4))
+			vscode.workspace.applyEdit(edit)
 		})
 
 	})
