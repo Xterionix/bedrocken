@@ -13,7 +13,7 @@ const archiver = require('archiver')
 // TODO: Presets
 // TODO: More dynamic autocomplete
 // TODO: Improve cache system
-// TODO: Add support for opening BP only projects
+// TODO: Improve project switcher including adding support for opening bp/rp only projects
 // TODO: Add support for regolith exports
 // TODO: Add support for new project 
 
