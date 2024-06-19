@@ -11,6 +11,7 @@ const { v4: uuidv4 } = require('uuid');
 const archiver = require('archiver')
 
 // TODO: More dynamic autocomplete
+// TODO: Make enum_property filter return enum specific values
 // TODO: Improve cache system
 // TODO: Add support for regolith autocomplete
 // TODO: Add support for new project 
