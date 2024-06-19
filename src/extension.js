@@ -664,7 +664,8 @@ async function activate(context) {
 				"minecraft:aggregate_feature": {
 					description: {
 						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
-					}
+					},
+					features: system.getCache().features
 				},
 				"minecraft:cave_carver_feature": {
 					description: {
@@ -709,17 +710,20 @@ async function activate(context) {
 				"minecraft:scatter_feature": {
 					description: {
 						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
-					}
+					},
+					places_feature: system.getCache().features
 				},
 				"minecraft:search_feature": {
 					description: {
 						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
-					}
+					},
+					places_feature: system.getCache().features
 				},
 				"minecraft:sequence_feature": {
 					description: {
 						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
-					}
+					},
+					features: system.getCache().features
 				},
 				"minecraft:single_block_feature": {
 					description: {
@@ -729,7 +733,8 @@ async function activate(context) {
 				"minecraft:snap_to_surface_feature": {
 					description: {
 						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
-					}
+					},
+					feature_to_snap: system.getCache().features
 				},
 				"minecraft:structure_template_feature": {
 					description: {
@@ -740,7 +745,8 @@ async function activate(context) {
 				"minecraft:surface_relative_threshold_feature": {
 					description: {
 						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
-					}
+					},
+					feature_to_place: system.getCache().features
 				},
 				"minecraft:tree_feature": {
 					description: {
@@ -755,15 +761,18 @@ async function activate(context) {
 				"minecraft:vegetation_patch_feature": {
 					description: {
 						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
-					}
+					},
+					vegetation_feature: system.getCache().features
 				},
 				"minecraft:weighted_random_feature": {
 					description: {
 						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
-					}
+					},
+					features: system.getCache().features
 				}
 			}
 			const jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number').join('[|]').replace('minecraft:icon[|]textures[|]default', 'minecraft:icon').replace('permutations[|]', '').replace(/minecraft:material_instances\[[^\]]*\]([^[]*)texture/, 'minecraft:material_instances[|]*[|]texture').split('[|]')
+			console.log(jsonPath)
 			let value = [];
 			let inQuotes = false;
 			visit(document.getText(), {
