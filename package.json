@@ -126,6 +126,10 @@
       ]
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Xterionix/bedrocken.git"
+  },
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
