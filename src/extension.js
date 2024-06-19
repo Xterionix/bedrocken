@@ -72,7 +72,7 @@ async function activate(context) {
 		switch (folderName) {
 			case 'items': system.getCache().item.ids = []; system.processDirectory(readPath, 'item');
 				break;
-			case 'entities': system.getCache().entity = { ids: [], rideable_ids: [], spawnable_ids: [] }; system.processDirectory(readPath, 'entity');
+			case 'entities': system.resetEntityCache(); system.processDirectory(readPath, 'entity');
 				break;
 			case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
 				break;
@@ -102,7 +102,7 @@ async function activate(context) {
 		switch (folderName) {
 			case 'items': system.getCache().item.ids = []; system.processDirectory(readPath, 'item');
 				break;
-			case 'entities': system.getCache().entity = { ids: [], rideable_ids: [], spawnable_ids: [] }; system.processDirectory(readPath, 'entity');
+			case 'entities': system.resetEntityCache(); system.processDirectory(readPath, 'entity');
 				break;
 			case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
 				break;
@@ -132,7 +132,7 @@ async function activate(context) {
 		switch (folderName) {
 			case 'items': system.getCache().item.ids = []; system.processDirectory(readPath, 'item');
 				break;
-			case 'entities': system.getCache().entity = { ids: [], rideable_ids: [], spawnable_ids: [] }; system.processDirectory(readPath, 'entity');
+			case 'entities': system.resetEntityCache(); system.processDirectory(readPath, 'entity');
 				break;
 			case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
 				break;
@@ -272,7 +272,7 @@ async function activate(context) {
 				}
 			});
 		} catch (error) {
-			console.log(error)
+			console.warn(error)
 		}
 
 	})
@@ -282,7 +282,7 @@ async function activate(context) {
 		fs.readdir(path.join(context.extensionPath, 'data/workspaces'), (err, files) => {
 			files.filter(x => !x.includes(vscode.workspace.name.split(' (Workspace)')[0])).forEach(file => {
 				fs.unlink(path.join(context.extensionPath, 'data/workspaces', file), (err) => {
-					if (err) console.log(err)
+					if (err) console.warn(err)
 				})
 			})
 		})
@@ -549,7 +549,7 @@ async function activate(context) {
 
 		exec(`${command} ${path.join(location)}`, (err, stdout, stderr) => {
 			if (err || stderr) {
-				console.log('Err: ' + err, 'Std err: ' + stderr)
+				console.warn('Err: ' + err, 'Std err: ' + stderr)
 				return;
 			}
 		})
@@ -658,6 +658,18 @@ async function activate(context) {
 						},
 						'minecraft:trade_table': {
 							table: system.getCache().trade_tables
+						}
+					},
+					filters: {
+						value: {
+							enum_property: system.getCache().entity.enum_properties.values,
+							bool_property: [true, false]
+						},
+						domain: {
+							bool_property: system.getCache().entity.boolean_properties,
+							int_property: system.getCache().entity.integer_properties,
+							float_property: system.getCache().entity.float_properties,
+							enum_property: system.getCache().entity.enum_properties.ids
 						}
 					}
 				},
@@ -800,7 +812,7 @@ async function activate(context) {
 					features: system.getCache().features
 				}
 			}
-			const jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number').join('[|]').replace('minecraft:icon[|]textures[|]default', 'minecraft:icon').replace('permutations[|]', '').replace(/minecraft:material_instances\[[^\]]*\]([^[]*)texture/, 'minecraft:material_instances[|]*[|]texture').replace(/_groups\[\|\][a-zA-Z0-9$!_]+/g, 's').split('[|]')
+			let jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number').join('[|]').replace('minecraft:icon[|]textures[|]default', 'minecraft:icon').replace('permutations[|]', '').replace(/minecraft:material_instances\[[^\]]*\]([^[]*)texture/, 'minecraft:material_instances[|]*[|]texture').replace(/_groups\[\|\][a-zA-Z0-9$!_]+/g, 's').replace(/(?<=minecraft:entity).*?(?=filters)/g, '[|]').replace(/\[\|\](all_of|any_of|none_of)/g, '').split('[|]')
 			let value = [];
 			let inQuotes = false;
 			visit(document.getText(), {
@@ -813,6 +825,13 @@ async function activate(context) {
 				}
 			});
 			if (!inQuotes) return;
+			if	 (jsonPath.includes('minecraft:entity') && jsonPath.includes('filters')) {
+				const testPath = getLocation(document.getText(), document.offsetAt(position)).path.slice(0, -1)
+				testPath.push("test")
+				const test = testPath.reduce((acc, key) => acc && acc[key], parse(document.getText()))
+				if (!test) return;
+				jsonPath.push(test)
+			}
 			switch (document.fileName.split('\\').pop()) {
 				case 'blocks.json':
 					value = system.getCache().block.ids.filter(id => !parse(document.getText())[id])
