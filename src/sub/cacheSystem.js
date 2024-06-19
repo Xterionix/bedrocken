@@ -10,10 +10,13 @@ class CacheSystem {
             ids: [],
             spawnable_ids: [],
             rideable_ids: [],
-            boolean_property: [],
-            integer_property: [],
-            float_property: [],
-            enum_property: []
+            boolean_properties: [],
+            integer_properties: [],
+            float_properties: [],
+            enum_properties: {
+                ids: [],
+                values: []
+            }
         },
         item: {
             ids: [],
@@ -118,10 +121,12 @@ class CacheSystem {
             ids: [],
             spawnable_ids: [],
             rideable_ids: [],
-            boolean_property: [],
-            integer_property: [],
-            float_property: [],
-            enum_property: []
+            boolean_properties: [],
+            integer_properties: [],
+            float_properties: [],
+            enum_properties: {
+                ids: [], values: []
+            }
         }
     }
 
@@ -151,15 +156,14 @@ class CacheSystem {
         const properties = description["properties"]
         for (const property in properties) {
             const type = properties[property]['type']
-            if (type) continue;
             switch (type) {
-                case 'bool': this.#cache.entity.boolean_property.push(property)
+                case 'bool': this.#cache.entity.boolean_properties.push(property)
                     break;
-                case 'int': this.#cache.entity.integer_property.push(property)
+                case 'int': this.#cache.entity.integer_properties.push(property)
                     break;
-                case 'float': this.#cache.entity.float_property.push(property)
+                case 'float': this.#cache.entity.float_properties.push(property)
                     break;
-                case 'enum': this.#cache.entity.enum_property.push({id: property, values: properties[property]['values'] || []})
+                case 'enum': this.#cache.entity.enum_properties.ids.push(property); if (properties[property]['values']) this.#cache.entity.enum_properties.values.push(...properties[property]['values'])
                     break;
             }
         }
