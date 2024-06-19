@@ -14,7 +14,6 @@ const archiver = require('archiver')
 // TODO: More dynamic autocomplete
 // TODO: Improve cache system
 // TODO: Add support for opening BP only projects
-// TODO: Add support for ignoring .git folder on export
 // TODO: Add support for regolith exports
 // TODO: Add support for new project 
 
@@ -349,11 +348,14 @@ async function activate(context) {
 			const zip = archiver('zip', { zlib: { level: 9 } })
 
 			zip.pipe(output)
-			zip.directory(vscode.workspace.workspaceFolders[0].uri.fsPath, '')
+			zip.glob('**/*', {
+				cwd: vscode.workspace.workspaceFolders[0].uri.fsPath,
+				ignore: ['.git/**']
+			});
 			return zip.finalize()
 
 		}).then(() => {
-			vscode.window.showInformationMessage('BP Exported successfully', 'View in Folder').then(value => {
+			vscode.window.showInformationMessage('Behavior Pack exported successfully', 'View in Folder').then(value => {
 				if (value != 'View in Folder') return;
 				vscode.commands.executeCommand('bedrocken.open_exports_folder')
 			})
@@ -387,11 +389,14 @@ async function activate(context) {
 			const zip = archiver('zip', { zlib: { level: 9 } })
 
 			zip.pipe(output)
-			zip.directory(vscode.workspace.workspaceFolders[1].uri.fsPath, '')
+			zip.glob('**/*', {
+				cwd: vscode.workspace.workspaceFolders[1].uri.fsPath,
+				ignore: ['.git/**']
+			});
 			return zip.finalize()
 
 		}).then(() => {
-			vscode.window.showInformationMessage('RP Exported successfully', 'View in Folder').then(value => {
+			vscode.window.showInformationMessage('Resource Pack exported successfully', 'View in Folder').then(value => {
 				if (value != 'View in Folder') return;
 				vscode.commands.executeCommand('bedrocken.open_exports_folder')
 			})
@@ -418,12 +423,16 @@ async function activate(context) {
 
 			const zip = archiver('zip', { zlib: { level: 9 } })
 			zip.pipe(output)
-			zip.directory(vscode.workspace.workspaceFolders[0].uri.fsPath, vscode.workspace.workspaceFolders[0].name)
-			if (vscode.workspace.workspaceFolders.length > 1) zip.directory(vscode.workspace.workspaceFolders[1].uri.fsPath, vscode.workspace.workspaceFolders[1].name)
+			vscode.workspace.workspaceFolders.forEach(folder => {
+				zip.glob('**/*', {
+					cwd: folder.uri.fsPath,
+					ignore: ['.git/**']
+				}, { prefix: folder.name });
+			});
 			return zip.finalize()
 
 		}).then(() => {
-			vscode.window.showInformationMessage('Project Exported successfully', 'View in Folder').then(value => {
+			vscode.window.showInformationMessage('Project exported successfully', 'View in Folder').then(value => {
 				if (value != 'View in Folder') return;
 				vscode.commands.executeCommand('bedrocken.open_exports_folder')
 			})
