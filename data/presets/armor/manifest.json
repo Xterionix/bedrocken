@@ -1,0 +1,111 @@
+{
+    "name": "Armor",
+    "description": "Creates the helmet, chestplate, leggings and boots item and attachable files.",
+    "packTypes": [ "bp", "rp" ],
+    "form": [
+        {
+            "id": "{{IDENTIFIER}}",
+            "label": "Enter file identifier",
+            "description": "identifier_helemt",
+            "type": "text"
+        }
+    ],
+    "createFiles": [
+        {
+            "packType": "bp",
+            "path": "items/armor/{{IDENTIFIER}}",
+            "files": [
+                {
+                    "name": "{{IDENTIFIER}}_helmet.json",
+                    "path": "./item_helmet.json"
+                },
+                {
+                    "name": "{{IDENTIFIER}}_boots.json",
+                    "path": "./item_boots.json"
+                },
+                {
+                    "name": "{{IDENTIFIER}}_leggings.json",
+                    "path": "./item_leggings.json"
+                },
+                {
+                    "name": "{{IDENTIFIER}}_chestplate.json",
+                    "path": "./item_chestplate.json"
+                }
+            ]
+        },
+        {
+            "packType": "rp",
+            "path": "attachables/armor/{{IDENTIFIER}}",
+            "files": [
+                {
+                    "name": "{{IDENTIFIER}}_helmet.json",
+                    "path": "./attachable_helmet.json"
+                },
+                {
+                    "name": "{{IDENTIFIER}}_boots.json",
+                    "path": "./attachable_boots.json"
+                },
+                {
+                    "name": "{{IDENTIFIER}}_leggings.json",
+                    "path": "./attachable_leggings.json"
+                },
+                {
+                    "name": "{{IDENTIFIER}}_chestplate.json",
+                    "path": "./attachable_chestplate.json"
+                }
+            ]
+        }
+    ],
+    "expandFiles": [
+        {
+            "type": "json",
+            "packType": "rp",
+            "path": "textures/item_texture.json",
+            "file": "./item_texture.json"
+        },
+        {
+            "type": "text",
+            "packType": "rp",
+            "path": "texts/en_US.lang",
+            "file": "./en_US.lang"
+        }
+    ],
+    "copyFiles": [
+        {
+            "packType": "rp",
+            "path": "textures/items/armor/{{IDENTIFIER}}",
+            "files": [
+                {
+                    "name": "{{IDENTIFIER}}_helmet.png",
+                    "path": "./icon_helmet.png"
+                },
+                {
+                    "name": "{{IDENTIFIER}}_.png",
+                    "path": "./icon_boots.png"
+                },
+                {
+                    "name": "{{IDENTIFIER}}_.png",
+                    "path": "./icon_leggings.png"
+                },
+                {
+                    "name": "{{IDENTIFIER}}_.png",
+                    "path": "./icon_chestplate.png"
+                }
+            ]
+        },
+        {
+            "packType": "rp",
+            "path": "textures/models/armor",
+            "files": [
+                {
+                    "name": "{{IDENTIFIER}}_1.png",
+                    "path": "./armor_1.png"
+                },
+                {
+                    "name": "{{IDENTIFIER}}_2.png",
+                    "path": "./armor_2.png"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "texture_data": {
+        "{{IDENTIFIER}}_helmet": {
+            "textures": [ "textures/items/armor/{{IDENTIFIER}}/helmet" ]
+        },
+        "{{IDENTIFIER}}_chestplate": {
+            "textures": [ "textures/items/armor/{{IDENTIFIER}}/chestplate" ]
+        },
+        "{{IDENTIFIER}}_leggings": {
+            "textures": [ "textures/items/armor/{{IDENTIFIER}}/leggings" ]
+        },
+        "{{IDENTIFIER}}_boots": {
+            "textures": [ "textures/items/armor/{{IDENTIFIER}}/boots" ]
+        }
+    }
+}

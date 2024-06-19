@@ -1,0 +1,41 @@
+{
+    "format_version": "1.20.80",
+    "minecraft:item": {
+        "description": {
+            "identifier": "{{PROJ_PREFIX}}:{{IDENTIFIER}}_chestplate",
+            "menu_category": {
+                "category": "equipment",
+                "group": "itemGroup.name.chestplate"
+            }
+        },
+        "components": {
+            "minecraft:max_stack_size": 1,
+            "minecraft:enchantable": {
+                "value": 10,
+                "slot": "armor_torso"
+            },
+            "minecraft:durability": {
+                "max_durability": 740,
+                "damage_chance": {
+                    "min": 60,
+                    "max": 100
+                }
+            },
+           "minecraft:repairable": {
+                "repair_items": [
+                    {
+                        "items": [
+                            "minecraft:{{IDENTIFIER}}"
+                        ],
+                        "repair_amount": "query.max_durability * 0.25"
+                    }
+                ]
+            },
+            "minecraft:icon": "{{IDENTIFIER}}_chestplate",
+            "minecraft:wearable": {
+                "slot": "slot.armor.chest",
+                "protection": 10
+            }
+        }
+    }
+}

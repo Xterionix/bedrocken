@@ -1,0 +1,4 @@
+item.{{IDENTIFIER}}_chestplate={{IDENTIFIER_CAPITALIZE}} Chestplate
+item.{{IDENTIFIER}}_leggings={{IDENTIFIER_CAPITALIZE}} Leggings
+item.{{IDENTIFIER}}_boots={{IDENTIFIER_CAPITALIZE}} Boots
+item.{{IDENTIFIER}}_helmet={{IDENTIFIER_CAPITALIZE}} Helmet
