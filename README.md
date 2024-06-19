@@ -24,6 +24,10 @@ Clicking on a `manifest.json` allows you to easily add scripts.
 
 Currently only shows file name based completions for identifiers, `structure_name` within a structure template feature, `minecraft:icon`, `minecraft:material_instance`, `blocks.json`, `minecraft:custom_components`, `block.json` and `.lang` files.
 
+### Presets
+
+`Control + P > Presets` allows you to quickly generate files
+
 ### Snippets
 
 `Control + P > Snippets` allows you to quickly do simple tasks within your files
