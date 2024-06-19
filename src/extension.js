@@ -54,6 +54,8 @@ async function activate(context) {
 	await system.processDirectory(path.join(bpPath, 'blocks'), 'block');
 	await system.processDirectory(path.join(bpPath, 'features'), 'feature');
 	await system.processDirectory(path.join(bpPath, 'structures'), 'structure');
+	await system.processGlob(bpPath, 'loot_tables/**/*.json', 'loot_table')
+	await system.processGlob(bpPath, 'trade_tables/**/*.json', 'trade_table')
 	await system.processFile(path.join(rpPath, 'textures/item_texture.json'), 'item_texture')
 	await system.processFile(path.join(rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
 
@@ -73,6 +75,14 @@ async function activate(context) {
 			case 'entities': system.getCache().entity = { ids: [], rideable_ids: [], spawnable_ids: [] }; system.processDirectory(readPath, 'entity');
 				break;
 			case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
+				break;
+			case 'features': system.getCache().features = []; system.processDirectory(readPath, 'feature')
+				break;
+			case 'loot_tables': system.getCache().loot_tables = []; system.processGlob(bpPath, 'loot_tables/**/*.json', 'loot_table');
+				break;
+			case 'trade_tables': system.getCache().trade_tables = []; system.processGlob(bpPath, 'trade_tables/**/*.json', 'trade_table');
+				break;
+			case 'structures': system.getCache().structures = []; system.processDirectory(readPath, 'structure')
 				break;
 			case 'scripts': system.getCache().block.custom_components = []; system.getCache().item.custom_components = []; system.processDirectory(readPath, 'script');
 				break;
@@ -95,6 +105,8 @@ async function activate(context) {
 			case 'entities': system.getCache().entity = { ids: [], rideable_ids: [], spawnable_ids: [] }; system.processDirectory(readPath, 'entity');
 				break;
 			case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
+				break;
+			case 'features': system.getCache().features = []; system.processDirectory(readPath, 'feature')
 				break;
 			case 'scripts': system.getCache().block.custom_components = []; system.getCache().item.custom_components = []; system.processDirectory(readPath, 'script');
 				break;
@@ -123,6 +135,14 @@ async function activate(context) {
 			case 'entities': system.getCache().entity = { ids: [], rideable_ids: [], spawnable_ids: [] }; system.processDirectory(readPath, 'entity');
 				break;
 			case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
+				break;
+			case 'features': system.getCache().features = []; system.processDirectory(readPath, 'feature')
+				break;
+			case 'loot_tables': system.getCache().loot_tables = []; system.processGlob(bpPath, 'loot_tables/**/*.json', 'loot_table');
+				break;
+			case 'trade_tables': system.getCache().trade_tables = []; system.processGlob(bpPath, 'trade_tables/**/*.json', 'trade_table');
+				break;
+			case 'structures': system.getCache().structures = []; system.processDirectory(readPath, 'structure')
 				break;
 			case 'scripts': system.getCache().block.custom_components = []; system.getCache().item.custom_components = []; system.processDirectory(readPath, 'script');
 				break;
@@ -334,9 +354,9 @@ async function activate(context) {
 				if (expandOptions.type == 'json') {
 					const expandContent = parseWithComments((await fs.promises.readFile(expandFile)).toString()) || {}
 					const sourceContent = JSON.parse(applyVariables((await fs.promises.readFile(sourceFile)).toString(), variables, answers))
-					await fs.promises.writeFile(expandFile, toStringWithComments(mergeDeep(expandContent, sourceContent), null, 4))	
+					await fs.promises.writeFile(expandFile, toStringWithComments(mergeDeep(expandContent, sourceContent), null, 4))
 				} else {
-					await fs.promises.appendFile(expandFile, applyVariables('\n' + (await fs.promises.readFile(sourceFile)).toString(), variables,answers))
+					await fs.promises.appendFile(expandFile, applyVariables('\n' + (await fs.promises.readFile(sourceFile)).toString(), variables, answers))
 				}
 			}
 
@@ -631,6 +651,14 @@ async function activate(context) {
 				"minecraft:entity": {
 					description: {
 						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
+					},
+					components: {
+						'minecraft:loot': {
+							table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
+						},
+						'minecraft:trade_table': {
+							table: system.getCache().trade_tables
+						}
 					}
 				},
 				"minecraft:item": {
@@ -652,7 +680,8 @@ async function activate(context) {
 							"*": {
 								texture: system.getCache().textures.terrain
 							}
-						}
+						},
+						"minecraft:loot": system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/block'))
 					}
 				},
 				"minecraft:feature_rules": {
@@ -771,8 +800,7 @@ async function activate(context) {
 					features: system.getCache().features
 				}
 			}
-			const jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number').join('[|]').replace('minecraft:icon[|]textures[|]default', 'minecraft:icon').replace('permutations[|]', '').replace(/minecraft:material_instances\[[^\]]*\]([^[]*)texture/, 'minecraft:material_instances[|]*[|]texture').split('[|]')
-			console.log(jsonPath)
+			const jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number').join('[|]').replace('minecraft:icon[|]textures[|]default', 'minecraft:icon').replace('permutations[|]', '').replace(/minecraft:material_instances\[[^\]]*\]([^[]*)texture/, 'minecraft:material_instances[|]*[|]texture').replace(/_groups\[\|\][a-zA-Z0-9$!_]+/g, 's').split('[|]')
 			let value = [];
 			let inQuotes = false;
 			visit(document.getText(), {
@@ -805,7 +833,6 @@ async function activate(context) {
 						overlapLength = i;
 					}
 				}
-				item.sortText = '0'
 				item.range = new vscode.Range(new vscode.Position(position.line, position.character - overlapLength), position);
 				suggestions.push(item)
 			})
