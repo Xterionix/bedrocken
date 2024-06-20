@@ -43,113 +43,117 @@ async function activate(context) {
 	const bpPath = vscode.workspace.workspaceFolders[0].uri.fsPath
 	const rpPath = vscode.workspace.workspaceFolders[1]?.uri.fsPath
 
-	if (!fs.existsSync(path.join(bpPath, 'manifest.json'))) return;
+	if (fs.existsSync(path.join(bpPath, 'manifest.json'))) {
 
-	const manifest = parse(fs.readFileSync(path.join(bpPath, 'manifest.json')).toString())
-	if (!manifest["modules"]?.map(obj => obj.type).includes('script')) vscode.commands.executeCommand('setContext', 'bedrocken.can_add_scripts', true)
-	if (!manifest["dependencies"]?.map(obj => obj.version instanceof Array).includes(true)) vscode.commands.executeCommand('setContext', 'bedrocken.can_link_manifests', true)
+		const manifest = parse(fs.readFileSync(path.join(bpPath, 'manifest.json')).toString())
+		if (!manifest["modules"]?.map(obj => obj.type).includes('script')) vscode.commands.executeCommand('setContext', 'bedrocken.can_add_scripts', true)
+		if (!manifest["dependencies"]?.map(obj => obj.version instanceof Array).includes(true)) vscode.commands.executeCommand('setContext', 'bedrocken.can_link_manifests', true)
 
-	await system.processDirectory(path.join(bpPath, 'scripts'), 'script')
-	await system.processDirectory(path.join(bpPath, 'entities'), 'entity');
-	await system.processDirectory(path.join(bpPath, 'items'), 'item');
-	await system.processDirectory(path.join(bpPath, 'blocks'), 'block');
-	await system.processDirectory(path.join(bpPath, 'features'), 'feature');
-	await system.processDirectory(path.join(bpPath, 'structures'), 'structure');
-	await system.processGlob(bpPath, 'loot_tables/**/*.json', 'loot_table')
-	await system.processGlob(bpPath, 'trade_tables/**/*.json', 'trade_table')
-	await system.processFile(path.join(rpPath, 'textures/item_texture.json'), 'item_texture')
-	await system.processFile(path.join(rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
+		await system.processDirectory(path.join(bpPath, 'scripts'), 'script')
+		await system.processDirectory(path.join(bpPath, 'entities'), 'entity');
+		await system.processDirectory(path.join(bpPath, 'items'), 'item');
+		await system.processDirectory(path.join(bpPath, 'blocks'), 'block');
+		await system.processDirectory(path.join(bpPath, 'features'), 'feature');
+		await system.processDirectory(path.join(bpPath, 'structures'), 'structure');
+		await system.processGlob(bpPath, 'loot_tables/**/*.json', 'loot_table')
+		await system.processGlob(bpPath, 'trade_tables/**/*.json', 'trade_table')
+		await system.processFile(path.join(rpPath, 'textures/item_texture.json'), 'item_texture')
+		await system.processFile(path.join(rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
 
-	const fileWatcher = vscode.workspace.createFileSystemWatcher('**/*.{json,mcstructure}', false, false, false)
+		const fileWatcher = vscode.workspace.createFileSystemWatcher('**/*.{json,mcstructure}', false, false, false)
 
-	fileWatcher.onDidDelete(e => {
+		fileWatcher.onDidDelete(e => {
 
-		if (e.fsPath.includes(' copy.json')) return;
+			if (e.fsPath.includes(' copy.json')) return;
 
-		const workspace = vscode.workspace.workspaceFolders.find(folder => e.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? bpPath : rpPath
-		const folderName = path.relative(workspace, e.fsPath).split('\\')[0]
-		const readPath = path.join(workspace, folderName)
+			const workspace = vscode.workspace.workspaceFolders.find(folder => e.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? bpPath : rpPath
+			const folderName = path.relative(workspace, e.fsPath).split('\\')[0]
+			const readPath = path.join(workspace, folderName)
 
-		switch (folderName) {
-			case 'items': system.getCache().item.ids = []; system.processDirectory(readPath, 'item');
-				break;
-			case 'entities': system.resetEntityCache(); system.processDirectory(readPath, 'entity');
-				break;
-			case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
-				break;
-			case 'features': system.getCache().features = []; system.processDirectory(readPath, 'feature')
-				break;
-			case 'loot_tables': system.getCache().loot_tables = []; system.processGlob(bpPath, 'loot_tables/**/*.json', 'loot_table');
-				break;
-			case 'trade_tables': system.getCache().trade_tables = []; system.processGlob(bpPath, 'trade_tables/**/*.json', 'trade_table');
-				break;
-			case 'structures': system.getCache().structures = []; system.processDirectory(readPath, 'structure')
-				break;
-			case 'scripts': system.getCache().block.custom_components = []; system.getCache().item.custom_components = []; system.processDirectory(readPath, 'script');
-				break;
-		}
+			switch (folderName) {
+				case 'items': system.getCache().item.ids = []; system.processDirectory(readPath, 'item');
+					break;
+				case 'entities': system.resetEntityCache(); system.processDirectory(readPath, 'entity');
+					break;
+				case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
+					break;
+				case 'features': system.getCache().features = []; system.processDirectory(readPath, 'feature')
+					break;
+				case 'loot_tables': system.getCache().loot_tables = []; system.processGlob(bpPath, 'loot_tables/**/*.json', 'loot_table');
+					break;
+				case 'trade_tables': system.getCache().trade_tables = []; system.processGlob(bpPath, 'trade_tables/**/*.json', 'trade_table');
+					break;
+				case 'structures': system.getCache().structures = []; system.processDirectory(readPath, 'structure')
+					break;
+				case 'scripts': system.getCache().block.custom_components = []; system.getCache().item.custom_components = []; system.processDirectory(readPath, 'script');
+					break;
+			}
 
-	})
+		})
 
-	fileWatcher.onDidChange(e => {
+		fileWatcher.onDidChange(e => {
 
-		if (e.fsPath.includes(' copy.json')) return;
+			if (e.fsPath.includes(' copy.json')) return;
 
-		const workspace = vscode.workspace.workspaceFolders.find(folder => e.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? bpPath : rpPath
-		const folderName = path.relative(workspace, e.fsPath).split('\\')[0]
-		const readPath = path.join(workspace, folderName)
-		const fileName = path.basename(e.fsPath)
+			const workspace = vscode.workspace.workspaceFolders.find(folder => e.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? bpPath : rpPath
+			const folderName = path.relative(workspace, e.fsPath).split('\\')[0]
+			const readPath = path.join(workspace, folderName)
+			const fileName = path.basename(e.fsPath)
 
-		switch (folderName) {
-			case 'items': system.getCache().item.ids = []; system.processDirectory(readPath, 'item');
-				break;
-			case 'entities': system.resetEntityCache(); system.processDirectory(readPath, 'entity');
-				break;
-			case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
-				break;
-			case 'features': system.getCache().features = []; system.processDirectory(readPath, 'feature')
-				break;
-			case 'scripts': system.getCache().block.custom_components = []; system.getCache().item.custom_components = []; system.processDirectory(readPath, 'script');
-				break;
-		}
+			switch (folderName) {
+				case 'items': system.getCache().item.ids = []; system.processDirectory(readPath, 'item');
+					break;
+				case 'entities': system.resetEntityCache(); system.processDirectory(readPath, 'entity');
+					break;
+				case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
+					break;
+				case 'features': system.getCache().features = []; system.processDirectory(readPath, 'feature')
+					break;
+				case 'scripts': system.getCache().block.custom_components = []; system.getCache().item.custom_components = []; system.processDirectory(readPath, 'script');
+					break;
+			}
 
-		switch (fileName) {
-			case 'item_texture.json': system.getCache().textures.items = []; system.processFile(path.join(rpPath, 'textures/item_texture.json'), 'item_texture')
-				break;
-			case 'terrain_texture.json': system.getCache().textures.terrain = []; system.processFile(path.join(rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
-				break;
-		}
+			switch (fileName) {
+				case 'item_texture.json': system.getCache().textures.items = []; system.processFile(path.join(rpPath, 'textures/item_texture.json'), 'item_texture')
+					break;
+				case 'terrain_texture.json': system.getCache().textures.terrain = []; system.processFile(path.join(rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
+					break;
+			}
 
-	})
+		})
 
-	fileWatcher.onDidCreate(e => {
+		fileWatcher.onDidCreate(e => {
 
-		if (e.fsPath.includes(' copy.json')) return;
+			if (e.fsPath.includes(' copy.json')) return;
 
-		const workspace = vscode.workspace.workspaceFolders.find(folder => e.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? bpPath : rpPath
-		const folderName = path.relative(workspace, e.fsPath).split('\\')[0]
-		const readPath = path.join(workspace, folderName)
+			const workspace = vscode.workspace.workspaceFolders.find(folder => e.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? bpPath : rpPath
+			const folderName = path.relative(workspace, e.fsPath).split('\\')[0]
+			const readPath = path.join(workspace, folderName)
 
-		switch (folderName) {
-			case 'items': system.getCache().item.ids = []; system.processDirectory(readPath, 'item');
-				break;
-			case 'entities': system.resetEntityCache(); system.processDirectory(readPath, 'entity');
-				break;
-			case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
-				break;
-			case 'features': system.getCache().features = []; system.processDirectory(readPath, 'feature')
-				break;
-			case 'loot_tables': system.getCache().loot_tables = []; system.processGlob(bpPath, 'loot_tables/**/*.json', 'loot_table');
-				break;
-			case 'trade_tables': system.getCache().trade_tables = []; system.processGlob(bpPath, 'trade_tables/**/*.json', 'trade_table');
-				break;
-			case 'structures': system.getCache().structures = []; system.processDirectory(readPath, 'structure')
-				break;
-			case 'scripts': system.getCache().block.custom_components = []; system.getCache().item.custom_components = []; system.processDirectory(readPath, 'script');
-				break;
-		}
+			switch (folderName) {
+				case 'items': system.getCache().item.ids = []; system.processDirectory(readPath, 'item');
+					break;
+				case 'entities': system.resetEntityCache(); system.processDirectory(readPath, 'entity');
+					break;
+				case 'blocks': system.getCache().block.ids = []; system.processDirectory(readPath, 'block');
+					break;
+				case 'features': system.getCache().features = []; system.processDirectory(readPath, 'feature')
+					break;
+				case 'loot_tables': system.getCache().loot_tables = []; system.processGlob(bpPath, 'loot_tables/**/*.json', 'loot_table');
+					break;
+				case 'trade_tables': system.getCache().trade_tables = []; system.processGlob(bpPath, 'trade_tables/**/*.json', 'trade_table');
+					break;
+				case 'structures': system.getCache().structures = []; system.processDirectory(readPath, 'structure')
+					break;
+				case 'scripts': system.getCache().block.custom_components = []; system.getCache().item.custom_components = []; system.processDirectory(readPath, 'script');
+					break;
+			}
 
-	})
+		})
+
+		context.subscriptions.push(fileWatcher)
+
+	}
 
 	const resetManifestsCommandsCommands = vscode.commands.registerCommand('bedrocken.reset_manifest_commands', () => {
 		vscode.commands.executeCommand('setContext', 'bedrocken.can_add_scripts', true)
@@ -826,7 +830,7 @@ async function activate(context) {
 				}
 			});
 			if (!inQuotes) return;
-			if	 (jsonPath.includes('minecraft:entity') && jsonPath.includes('filters')) {
+			if (jsonPath.includes('minecraft:entity') && jsonPath.includes('filters')) {
 				const testPath = getLocation(document.getText(), document.offsetAt(position)).path.slice(0, -1)
 				testPath.push("test")
 				const test = testPath.reduce((acc, key) => acc && acc[key], parse(document.getText()))
@@ -899,7 +903,6 @@ async function activate(context) {
 	})
 
 	context.subscriptions.push(
-		fileWatcher,
 		langAutocomplete,
 		dynamicAutocomplete,
 		projectSwitcherCommand,
