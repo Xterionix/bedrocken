@@ -679,6 +679,11 @@ async function activate(context) {
 						}
 					}
 				},
+				"minecraft:spawn_rules": {
+					description: {
+						identifier: system.getCache().entity.ids
+					}
+				},
 				"minecraft:item": {
 					description: {
 						identifier: prefix + ':' + document.fileName.split('\\').pop().slice(0, -5)
