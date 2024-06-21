@@ -1,0 +1,62 @@
+{
+    "name": "Log Rotation",
+    "description": "3 axis-aligned directions.",
+    "packType": "bp",
+    "fileType": "json",
+    "folder": "blocks",
+    "insertions": [
+        {
+            "path": [ "minecraft:block", "description", "traits" ],
+            "data": {
+                "minecraft:placement_position": {
+                    "enabled_states": [
+                        "minecraft:block_face"
+                    ]
+                }
+            }
+        },
+        {
+            "path": [ "minecraft:block" ],
+            "data": {
+                "permutations": [
+                    {
+                        "condition": "query.block_state('minecraft:block_face') == 'up' || query.block_state('minecraft:block_face') == 'down'",
+                        "components": {
+                            "minecraft:transformation": {
+                                "rotation": [
+                                    0,
+                                    0,
+                                    0
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "condition": "query.block_state('minecraft:block_face') == 'east' || query.block_state('minecraft:block_face') == 'west'",
+                        "components": {
+                            "minecraft:transformation": {
+                                "rotation": [
+                                    0,
+                                    0,
+                                    90
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "condition": "query.block_state('minecraft:block_face') == 'north' || query.block_state('minecraft:block_face') == 'south'",
+                        "components": {
+                            "minecraft:transformation": {
+                                "rotation": [
+                                    90,
+                                    0,
+                                    0
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
