@@ -33,7 +33,7 @@ Supports the following:
 - Feature names within feature rules and features that place other features
 - Spawn rule identifiers suggesting the names of entities in the project
 - `blocks.json` file
-` .lang files
+- .lang files
 
 ### Presets
 
