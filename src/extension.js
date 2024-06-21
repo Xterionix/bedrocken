@@ -365,18 +365,6 @@ async function activate(context) {
 				}
 			}
 
-			function mergeDeep(target, source) {
-				for (const key in source) {
-					if (source[key] instanceof Object && !Array.isArray(source[key])) {
-						if (!target[key]) target[key] = {};
-						mergeDeep(target[key], source[key]);
-					} else {
-						target[key] = source[key];
-					}
-				}
-				return target;
-			}
-
 			function applyVariables(inputString, variables, values) {
 				variables.forEach((variable, i) => {
 					inputString = inputString.replace(new RegExp(variable, 'g'), values[i])
@@ -417,7 +405,7 @@ async function activate(context) {
 					if (!current[arr[i]]) current[arr[i]] = {}
 					current = current[arr[i]];
 				}
-				Object.assign(current, insertion.data)
+				current = mergeDeep(current, insertion.data)
 			})
 			const edit = new vscode.WorkspaceEdit()
 			edit.replace(document.uri, new vscode.Range(document.positionAt(0), document.positionAt(document.getText().length)), toStringWithComments(fileContent, null, 4))
@@ -932,6 +920,21 @@ function innerMostValue(json) {
 	const values = Object.values(json)
 	if (typeof values[0] == 'string') return values[0]
 	else return innerMostValue(values[0])
+}
+
+function mergeDeep(target, source) {
+	for (const key in source) {
+		if (source[key] instanceof Object && !Array.isArray(source[key])) {
+			if (!target[key]) target[key] = {};
+			mergeDeep(target[key], source[key]);
+		} else if (Array.isArray(source[key])) {
+			if (!target[key]) target[key] = [];
+			target[key] = target[key].concat(source[key]);
+		} else {
+			target[key] = source[key];
+		}
+	}
+	return target;
 }
 
 function deactivate() { }
