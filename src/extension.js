@@ -57,8 +57,8 @@ async function activate(context) {
 		await system.processDirectory(path.join(bpPath, 'structures'), 'structure');
 		await system.processGlob(bpPath, 'loot_tables/**/*.json', 'loot_table')
 		await system.processGlob(bpPath, 'trade_tables/**/*.json', 'trade_table')
-		await system.processFile(path.join(rpPath, 'textures/item_texture.json'), 'item_texture')
-		await system.processFile(path.join(rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
+		if (rpPath) await system.processFile(path.join(rpPath, 'textures/item_texture.json'), 'item_texture')
+		if (rpPath) await system.processFile(path.join(rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
 
 		const fileWatcher = vscode.workspace.createFileSystemWatcher('**/*.{json,mcstructure}', false, false, false)
 
