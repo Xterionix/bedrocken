@@ -31,6 +31,7 @@ Supports the following:
 - Entity components `minecraft:loot` and `minecraft:trade_table`
 - Entity property filters
 - Feature names within feature rules and features that place other features
+- Spawn rule identifiers suggesting the names of entities in the project
 - `blocks.json` file
 ` .lang files
 
