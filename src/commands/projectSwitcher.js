@@ -31,34 +31,42 @@ async function projectSwitcher(context) {
          */
         const allData = {}
 
-        for (const location of root) {
+        await vscode.window.withProgress({
+            location: vscode.ProgressLocation.Notification,
+            title: "Reading directories",
+            cancellable: false
+        }, async () => {
 
-            const bpDirectory = path.join(location, "development_behavior_packs")
-            const rpDirectory = path.join(location, "development_resource_packs")
+            for (const location of root) {
 
-            const bpFiles = await fs.promises.readdir(bpDirectory, { withFileTypes: true })
+                const bpDirectory = path.join(location, "development_behavior_packs")
+                const rpDirectory = path.join(location, "development_resource_packs")
 
-            for (const bpFile of bpFiles) {
-                if (bpFile.isDirectory()) {
-                    options.push(bpFile.name)
-                    const manifest = parse((await fs.promises.readFile(path.join(bpFile.path, bpFile.name, 'manifest.json'))).toString())
-                    allData[bpFile.name] = { name: bpFile.name, bp: path.join(bpFile.path, bpFile.name), bpUuid: manifest?.header?.uuid || '', rp: '', rpUuid: manifest?.dependencies?.filter(x => Object.hasOwn(x, 'uuid'))[0]?.uuid || '' }
-                }
-            }
+                const bpFiles = await fs.promises.readdir(bpDirectory, { withFileTypes: true })
 
-            const rpfiles = await fs.promises.readdir(rpDirectory, { withFileTypes: true })
-
-            for (const rpFile of rpfiles) {
-                if (rpFile.isDirectory()) {
-                    const manifest = parse((await fs.promises.readFile(path.join(rpFile.path, rpFile.name, 'manifest.json'))).toString())
-                    const match = Object.values(allData).filter(packData => packData.rpUuid === manifest?.header?.uuid)[0]
-                    if (match) {
-                        allData[match.name].rp = path.join(rpFile.path, rpFile.name)
+                for (const bpFile of bpFiles) {
+                    if (bpFile.isDirectory()) {
+                        options.push(bpFile.name)
+                        const manifest = parse((await fs.promises.readFile(path.join(bpFile.path, bpFile.name, 'manifest.json'))).toString())
+                        allData[bpFile.name] = { name: bpFile.name, bp: path.join(bpFile.path, bpFile.name), bpUuid: manifest?.header?.uuid || '', rp: '', rpUuid: manifest?.dependencies?.filter(x => Object.hasOwn(x, 'uuid'))[0]?.uuid || '' }
                     }
                 }
+
+                const rpfiles = await fs.promises.readdir(rpDirectory, { withFileTypes: true })
+
+                for (const rpFile of rpfiles) {
+                    if (rpFile.isDirectory()) {
+                        const manifest = parse((await fs.promises.readFile(path.join(rpFile.path, rpFile.name, 'manifest.json'))).toString())
+                        const match = Object.values(allData).filter(packData => packData.rpUuid === manifest?.header?.uuid)[0]
+                        if (match) {
+                            allData[match.name].rp = path.join(rpFile.path, rpFile.name)
+                        }
+                    }
+                }
+
             }
 
-        }
+        })
 
         if (options.length == 0) { vscode.window.showErrorMessage('No directories found'); return; }
 
