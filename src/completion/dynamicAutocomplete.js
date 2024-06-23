@@ -204,13 +204,8 @@ function createJsonProvider(system) {
             let inQuotes = false;
 
             visit(document.getText(), {
-                onLiteralValue: (value, offset, length) => {
-                    if (document.offsetAt(position) > offset && document.offsetAt(position) < offset + length) inQuotes = true
-                },
-                onObjectProperty: (value, offset, length) => {
-                    if (document.offsetAt(position) > offset && document.offsetAt(position) < offset + length) inQuotes = true
-
-                }
+                onLiteralValue: (value, offset, length) => inQuotes = !inQuotes ? isInQuotes(value, offset, length, document, position) : true,
+                onObjectProperty: (value, offset, length) => inQuotes = !inQuotes ? isInQuotes(value, offset, length, document, position) : true
             });
 
             if (!inQuotes) return;
@@ -260,6 +255,12 @@ function createJsonProvider(system) {
 
 function valueFromJsonPath(path, object) {
     return path.reduce((acc, key) => acc && acc[key], object)
+}
+
+function isInQuotes(_, offset, length, document, position) {
+    if (document.offsetAt(position) > offset && document.offsetAt(position) < offset + length) return true
+    return false
+
 }
 
 module.exports = { createJsonProvider }
