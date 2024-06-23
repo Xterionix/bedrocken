@@ -22,10 +22,6 @@
         "title": "Bedrocken: Switch Projects"
       },
       {
-        "command": "bedrocken.clear_project_cache",
-        "title": "Bedrocken: Clear Project Cache"
-      },
-      {
         "command": "bedrocken.presets",
         "title": "Bedrocken: Presets"
       },
