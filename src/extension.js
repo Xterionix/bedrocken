@@ -9,6 +9,7 @@ const { linkManifests } = require('./commands/linkManifests');
 const { addScriptsToManifest } = require('./commands/addScriptsToManifest');
 const { chooseProjectPrefix } = require('./commands/chooseProjectPrefix');
 const { updateItems } = require('./commands/updateItems');
+const { generateTextureList } = require('./commands/generateTextureList');
 
 const { createJsonProvider } = require('./completion/dynamicAutocomplete')
 const { createLangProvider } = require('./completion/langAutocomplete')
@@ -71,6 +72,7 @@ async function activate(context) {
 	const openExportsFolderCommand = vscode.commands.registerCommand('bedrocken.open_exports_folder', () => openExportsFolder())
 
 	const updateItemsCommands = vscode.commands.registerCommand('bedrocken.update_items', () => updateItems());
+	const generateTextureListCommands = vscode.commands.registerCommand('bedrocken.generate_texture_list', () => generateTextureList(rpPath));
 
 	const projectSwitcherCommand = vscode.commands.registerCommand('bedrocken.switch_projects', () => projectSwitcher(context))
 	const presetsCommand = vscode.commands.registerCommand('bedrocken.presets', () => presets(context, bpPath, rpPath))
@@ -81,7 +83,7 @@ async function activate(context) {
 	const langAutocomplete = createLangProvider(system)
 
 	context.subscriptions.push(
-		langAutocomplete, dynamicAutocomplete, projectSwitcherCommand, snippetsCommand, presetsCommand, exportBpCommand, exportRpCommand, exportProjectCommand, openExportsFolderCommand, linkManifestsCommand, addScriptsManifestCommand, setProjectPrefixCommand, updateItemsCommands
+		langAutocomplete, dynamicAutocomplete, projectSwitcherCommand, snippetsCommand, presetsCommand, exportBpCommand, exportRpCommand, exportProjectCommand, openExportsFolderCommand, linkManifestsCommand, addScriptsManifestCommand, setProjectPrefixCommand, updateItemsCommands, generateTextureListCommands
 	);
 
 }

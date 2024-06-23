@@ -42,3 +42,9 @@ Supports the following:
 ### Snippets
 
 `Control + P > Snippets` allows you to quickly do simple tasks within your files
+
+### Generate Files
+
+`Control + P > Generate:`, supported files include the following:
+
+- `texture_list.json`

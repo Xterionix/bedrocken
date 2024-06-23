@@ -64,6 +64,10 @@
         "enablement": "bedrocken.can_add_scripts"
       },
       {
+        "command": "bedrocken.generate_texture_list",
+        "title": "Bedrocken: Generate texture_list.json"
+      },
+      {
         "command": "bedrocken.update_items",
         "title": "Bedrocken: Update Items"
       }
