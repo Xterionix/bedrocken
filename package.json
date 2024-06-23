@@ -68,10 +68,6 @@
         "enablement": "bedrocken.can_add_scripts"
       },
       {
-        "command": "bedrocken.reset_manifest_commands",
-        "title": "Bedrocken: Reset Manifest Commands (Link,AddingScripts)"
-      },
-      {
         "command": "bedrocken.update_items",
         "title": "Bedrocken: Update Items"
       }
