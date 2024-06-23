@@ -50,7 +50,7 @@ class CacheSystem {
     async processDirectory(folderPath, type) {
         if (!(await exists(folderPath))) return;
 
-        const files = getAllFilePaths(folderPath);
+        const files = await getAllFilePaths(folderPath);
 
         for (const file of files) {
             await this.processFile(file, type);
@@ -189,24 +189,26 @@ class CacheSystem {
 
 }
 
-function getAllFilePaths(folderPath) {
+async function getAllFilePaths(folderPath) {
     let filePaths = [];
 
     async function readFolder(currentPath) {
+
         const entries = await fs.promises.readdir(currentPath, { withFileTypes: true });
 
-        entries.forEach(entry => {
+        for (const entry of entries) {
             const entryPath = path.join(currentPath, entry.name);
 
             if (entry.isDirectory()) {
-                readFolder(entryPath); // Recursively read subfolders
+                await readFolder(entryPath); // Recursively read subfolders
             } else if (entry.isFile()) {
                 filePaths.push(entryPath); // Collect file paths
             }
-        });
+        }
+
     }
 
-    readFolder(folderPath);
+    await readFolder(folderPath);
     return filePaths;
 }
 
