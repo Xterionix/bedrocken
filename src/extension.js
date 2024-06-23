@@ -81,19 +81,7 @@ async function activate(context) {
 	const langAutocomplete = createLangProvider(system)
 
 	context.subscriptions.push(
-		langAutocomplete,
-		dynamicAutocomplete,
-		projectSwitcherCommand,
-		snippetsCommand,
-		presetsCommand,
-		exportBpCommand,
-		exportRpCommand,
-		exportProjectCommand,
-		openExportsFolderCommand,
-		linkManifestsCommand,
-		addScriptsManifestCommand,
-		setProjectPrefixCommand,
-		updateItemsCommands
+		langAutocomplete, dynamicAutocomplete, projectSwitcherCommand, snippetsCommand, presetsCommand, exportBpCommand, exportRpCommand, exportProjectCommand, openExportsFolderCommand, linkManifestsCommand, addScriptsManifestCommand, setProjectPrefixCommand, updateItemsCommands
 	);
 
 }
