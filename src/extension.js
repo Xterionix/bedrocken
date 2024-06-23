@@ -80,11 +80,6 @@ async function activate(context) {
 	const dynamicAutocomplete = createJsonProvider(system)
 	const langAutocomplete = createLangProvider(system)
 
-	vscode.workspace.onDidChangeTextDocument(event => {
-		if (!event.document.fileName.endsWith('.lang')) return;
-		if (event.contentChanges.some(x => x.text.includes('='))) vscode.commands.executeCommand('editor.action.triggerSuggest');
-	})
-
 	context.subscriptions.push(
 		langAutocomplete,
 		dynamicAutocomplete,
