@@ -39,9 +39,9 @@ async function activate(context) {
 	const bpPath = vscode.workspace.workspaceFolders[0].uri.fsPath
 	const rpPath = vscode.workspace.workspaceFolders[1]?.uri.fsPath
 
-	if (fs.existsSync(path.join(bpPath, 'manifest.json'))) {
+	try {
 
-		const manifest = parse(fs.readFileSync(path.join(bpPath, 'manifest.json')).toString())
+		const manifest = parse((await fs.promises.readFile(path.join(bpPath, 'manifest.json'))).toString())
 		if (!manifest["modules"]?.map(obj => obj.type).includes('script')) vscode.commands.executeCommand('setContext', 'bedrocken.can_add_scripts', true)
 		if (!manifest["dependencies"]?.map(obj => obj.version instanceof Array).includes(true)) vscode.commands.executeCommand('setContext', 'bedrocken.can_link_manifests', true)
 
@@ -60,7 +60,7 @@ async function activate(context) {
 
 		context.subscriptions.push(fileWatcher)
 
-	}
+	} catch (error) { }
 
 	const addScriptsManifestCommand = vscode.commands.registerCommand('bedrocken.add_scripts_manifests', () => addScriptsToManifest())
 	const linkManifestsCommand = vscode.commands.registerCommand('bedrocken.link_manifests', () => linkManifests())
