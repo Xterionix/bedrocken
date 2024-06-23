@@ -1,4 +1,4 @@
-const { mergeDeep } = require('../extension');
+const { mergeDeep } = require('../sub/util');
 const { getAllFilePaths } = require('../sub/cacheSystem');
 
 const vscode = require('vscode');
@@ -12,10 +12,10 @@ const { parse, stringify } = require('comment-json');
  * @param {string} bpPath
  * @param {string|undefined} rpPath
  */
-function snippets(context, bpPath, rpPath) {
+async function snippets(context, bpPath, rpPath) {
 
     const snippetFiles = getAllFilePaths(path.join(context.extensionPath, 'data/snippets'))
-    let snippets = snippetFiles.map(snippet => JSON.parse(fs.readFileSync(snippet).toString()))
+    let snippets = await Promise.all(snippetFiles.map(async snippet => JSON.parse((await fs.promises.readFile(snippet)).toString())))
 
     if (!vscode.window.activeTextEditor) { vscode.window.showErrorMessage('Snippets can only be run when you have a file open'); return };
 

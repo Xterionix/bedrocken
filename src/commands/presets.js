@@ -1,4 +1,4 @@
-const { mergeDeep } = require('../extension');
+const { mergeDeep } = require('../sub/util');
 const { getAllFilePaths } = require('../sub/cacheSystem');
 
 const vscode = require('vscode');
@@ -11,10 +11,10 @@ const { parse, stringify } = require('comment-json');
  * @param {string} bpPath
  * @param {string|undefined} rpPath
  */
-function presets(context, bpPath, rpPath) {
+async function presets(context, bpPath, rpPath) {
 
     const presetFiles = getAllFilePaths(path.join(context.extensionPath, 'data/presets')).filter(x => x.includes('manifest.json'))
-    let presets = presetFiles.map(preset => JSON.parse(fs.readFileSync(preset).toString()))
+    let presets = await Promise.all(presetFiles.map(async preset => JSON.parse((await fs.promises.readFile(preset)).toString())))
 
     if (presets.length == 0) { vscode.window.showErrorMessage('No presets found'); return };
 

@@ -1,3 +1,4 @@
+const { exists } = require('../sub/util');
 const { getAllFilePaths } = require('../sub/cacheSystem');
 
 const vscode = require('vscode');
@@ -8,7 +9,8 @@ const { parse, stringify } = require('comment-json');
 async function updateItems() {
 
     const itemsPath = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'items');
-    if (!fs.existsSync(itemsPath)) return;
+
+    if (!(await exists(itemsPath))) return;
 
     vscode.window.withProgress({
         location: vscode.ProgressLocation.Notification,
@@ -19,8 +21,8 @@ async function updateItems() {
             const filePaths = getAllFilePaths(itemsPath);
             const totalFiles = filePaths.length;
 
-            filePaths.forEach((filePath, index) => {
-                const fileContent = parse(fs.readFileSync(filePath).toString());
+            filePaths.forEach(async (filePath, index) => {
+                const fileContent = parse((await fs.promises.readFile(filePath)).toString());
 
                 delete fileContent["minecraft:item"]["events"];
 
@@ -41,7 +43,7 @@ async function updateItems() {
                 const icon = innerMostValue(fileContent["minecraft:item"]["components"]["minecraft:icon"]);
                 fileContent["minecraft:item"]["components"]["minecraft:icon"] = icon;
 
-                fs.writeFileSync(filePath, stringify(fileContent, null, 4));
+                await fs.promises.writeFile(filePath, stringify(fileContent, null, 4));
 
                 progress.report({ increment: (index + 1) / totalFiles * 100 });
             });

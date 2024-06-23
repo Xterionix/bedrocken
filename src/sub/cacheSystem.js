@@ -2,6 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const { glob } = require('glob');
 const { parse } = require('jsonc-parser')
+const { exists } = require('./util');
 
 class CacheSystem {
 
@@ -47,7 +48,7 @@ class CacheSystem {
      * @param {FileType} type
      */
     async processDirectory(folderPath, type) {
-        if (!fs.existsSync(folderPath)) return;
+        if (!(await exists(folderPath))) return;
 
         const files = getAllFilePaths(folderPath);
 
@@ -81,7 +82,7 @@ class CacheSystem {
      */
     async processFile(file, type) {
 
-        if (!fs.existsSync(file)) return;
+        if (!(await exists(file))) return;
 
         try {
 
@@ -191,8 +192,8 @@ class CacheSystem {
 function getAllFilePaths(folderPath) {
     let filePaths = [];
 
-    function readFolder(currentPath) {
-        const entries = fs.readdirSync(currentPath, { withFileTypes: true });
+    async function readFolder(currentPath) {
+        const entries = await fs.promises.readdir(currentPath, { withFileTypes: true });
 
         entries.forEach(entry => {
             const entryPath = path.join(currentPath, entry.name);

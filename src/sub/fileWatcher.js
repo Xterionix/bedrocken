@@ -20,7 +20,7 @@ class Filewatcher {
         this.watcher.dispose()
     }
 
-    #updateCache(e) {
+    async #updateCache(e) {
 
         if (e.fsPath.includes(' copy.json')) return;
 
@@ -54,7 +54,7 @@ class Filewatcher {
             case 'terrain_texture.json': this.system.getCache().textures.terrain = []; this.system.processFile(path.join(this.rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
                 break;
             case 'manifest.json': if (workspace != this.bpPath) return;
-                const manifest = parse(fs.readFileSync(path.join(this.bpPath, 'manifest.json')).toString())
+                const manifest = parse((await fs.promises.readFile(path.join(this.bpPath, 'manifest.json'))).toString())
                 vscode.commands.executeCommand('setContext', 'bedrocken.can_add_scripts', !manifest["modules"]?.map(obj => obj.type).includes('script'))
                 vscode.commands.executeCommand('setContext', 'bedrocken.can_link_manifests', !manifest["dependencies"]?.map(obj => obj.version instanceof Array).includes(true))
                 break;
