@@ -86,25 +86,9 @@ async function activate(context) {
 
 }
 
-function mergeDeep(target, source) {
-	for (const key in source) {
-		if (source[key] instanceof Object && !Array.isArray(source[key])) {
-			if (!target[key]) target[key] = {};
-			mergeDeep(target[key], source[key]);
-		} else if (Array.isArray(source[key])) {
-			if (!target[key]) target[key] = [];
-			target[key] = target[key].concat(source[key]);
-		} else {
-			target[key] = source[key];
-		}
-	}
-	return target;
-}
-
 function deactivate() { }
 
 module.exports = {
 	activate,
-	deactivate,
-	mergeDeep
+	deactivate
 }
