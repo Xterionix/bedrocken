@@ -43,6 +43,10 @@ Supports the following:
 
 `Control + P > Snippets` allows you to quickly do simple tasks within your files
 
+### Create Project
+
+`Control + P > Create New Project` creates a new `com.mojang` project. The RP description, by default is the same as the BP.
+
 ### Generate Files
 
 `Control + P > Generate:`, supported files include the following:
