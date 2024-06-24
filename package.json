@@ -64,6 +64,10 @@
         "enablement": "bedrocken.can_add_scripts"
       },
       {
+        "command": "bedrocken.new_project",
+        "title": "Bedrocken: Create New Project"
+      },
+      {
         "command": "bedrocken.generate_texture_list",
         "title": "Bedrocken: Generate texture_list.json"
       },

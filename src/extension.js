@@ -10,6 +10,7 @@ const { addScriptsToManifest } = require('./commands/addScriptsToManifest');
 const { chooseProjectPrefix } = require('./commands/chooseProjectPrefix');
 const { updateItems } = require('./commands/updateItems');
 const { generateTextureList } = require('./commands/generateTextureList');
+const { createNewProject } = require('./commands/createNewProject');
 
 const { createJsonProvider } = require('./completion/dynamicAutocomplete')
 const { createLangProvider } = require('./completion/langAutocomplete')
@@ -80,6 +81,7 @@ async function activate(context) {
 	const exportRpCommand = vscode.commands.registerCommand('bedrocken.export_rp', () => exportRp())
 	const exportProjectCommand = vscode.commands.registerCommand('bedrocken.export_project', () => exportProject())
 	const openExportsFolderCommand = vscode.commands.registerCommand('bedrocken.open_exports_folder', () => openExportsFolder())
+	const createNewProjectCommand = vscode.commands.registerCommand('bedrocken.new_project', () => createNewProject())
 
 	const updateItemsCommands = vscode.commands.registerCommand('bedrocken.update_items', () => updateItems());
 	const generateTextureListCommands = vscode.commands.registerCommand('bedrocken.generate_texture_list', () => generateTextureList(rpPath));
@@ -93,7 +95,7 @@ async function activate(context) {
 	const langAutocomplete = createLangProvider(system)
 
 	context.subscriptions.push(
-		langAutocomplete, dynamicAutocomplete, projectSwitcherCommand, snippetsCommand, presetsCommand, exportBpCommand, exportRpCommand, exportProjectCommand, openExportsFolderCommand, linkManifestsCommand, addScriptsManifestCommand, setProjectPrefixCommand, updateItemsCommands, generateTextureListCommands
+		langAutocomplete, dynamicAutocomplete, projectSwitcherCommand, snippetsCommand, presetsCommand, exportBpCommand, exportRpCommand, exportProjectCommand, openExportsFolderCommand, linkManifestsCommand, addScriptsManifestCommand, setProjectPrefixCommand, updateItemsCommands, generateTextureListCommands, createNewProjectCommand
 	);
 
 }
