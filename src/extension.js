@@ -17,6 +17,7 @@ const { createLangProvider } = require('./completion/langAutocomplete')
 const { CacheSystem } = require('./sub/cacheSystem');
 const { Filewatcher } = require('./sub/fileWatcher');
 
+const glob = require('glob');
 const path = require('path');
 const vscode = require('vscode');
 const fs = require('fs');
@@ -24,7 +25,6 @@ const { parse } = require('jsonc-parser');
 
 // TODO: More dynamic autocomplete
 // TODO: Improve cache system
-// TODO: Add support for regolith autocomplete
 // TODO: Add support for new project 
 
 const system = new CacheSystem()
@@ -36,8 +36,19 @@ async function activate(context) {
 
 	console.log("Bedrocken is Active!")
 
-	const bpPath = vscode.workspace.workspaceFolders[0].uri.fsPath
-	const rpPath = vscode.workspace.workspaceFolders[1]?.uri.fsPath
+	let bpPath = vscode.workspace.workspaceFolders[0].uri.fsPath
+	let rpPath = vscode.workspace.workspaceFolders[1]?.uri.fsPath
+
+	const config = path.join(bpPath, (await glob.glob("**/config.json", { cwd: bpPath }))[0])
+
+	if (config !== bpPath) {
+		const configContent = (await fs.promises.readFile(config)).toString()
+		if (configContent.includes('regolith')) {
+			const configJson = parse(configContent)
+			bpPath = path.join(config.split(path.sep).slice(0, -1).join(path.sep), configJson["packs"]["behaviorPack"])
+			rpPath = path.join(config.split(path.sep).slice(0, -1).join(path.sep), configJson["packs"]["resourcePack"])
+		}
+	}
 
 	try {
 
