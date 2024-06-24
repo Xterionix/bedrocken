@@ -19,6 +19,36 @@ function createJsonProvider(system) {
             const prefix = vscode.workspace.getConfiguration('bedrocken').get('project_prefix', 'bedrocken');
             const fileBasedIdentifier = prefix + ':' + document.fileName.split('\\').pop().slice(0, -5);
 
+            let jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number')
+                .join('[|]')
+                .replace('minecraft:icon[|]textures[|]default', 'minecraft:icon')
+                .replace('permutations[|]', '')
+                .replace(/minecraft:material_instances\[[^\]]*\]([^[]*)texture/, 'minecraft:material_instances[|]*[|]texture')
+                .replace(/_groups\[\|\][a-zA-Z0-9$!_]+/g, 's')
+                .replace(/(?<=minecraft:entity).*?(?=filters)/g, '[|]')
+                .replace(/\[\|\](all_of|any_of|none_of)/g, '')
+                .split('[|]')
+
+            let value = [];
+            let inQuotes = false;
+
+            visit(document.getText(), {
+                onLiteralValue: (value, offset, length) => inQuotes = !inQuotes ? isInQuotes(value, offset, length, document, position) : true,
+                onObjectProperty: (value, offset, length) => inQuotes = !inQuotes ? isInQuotes(value, offset, length, document, position) : true
+            });
+
+            if (!inQuotes) return;
+
+            const jsonInDoc = parse(document.getText())
+
+            if (jsonPath.includes('minecraft:entity') && jsonPath.includes('filters')) {
+                const testPath = getLocation(document.getText(), document.offsetAt(position)).path.slice(0, -1)
+                testPath.push("test")
+                const test = valueFromJsonPath(testPath, jsonInDoc)
+                if (!test) return;
+                jsonPath.push(test)
+            }
+
             const dynamicAutocomplete = {
                 "minecraft:entity": {
                     description: {
@@ -34,14 +64,14 @@ function createJsonProvider(system) {
                     },
                     filters: {
                         value: {
-                            enum_property: system.getCache().entity.enum_properties.values,
+                            enum_property: system.getCache().entity.enum_properties.filter(x => x.id == valueFromJsonPath(getLocation(document.getText(), document.offsetAt(position)).path.slice(0, -1).concat(["domain"]), jsonInDoc))[0]?.value,
                             bool_property: [true, false]
                         },
                         domain: {
                             bool_property: system.getCache().entity.boolean_properties,
                             int_property: system.getCache().entity.integer_properties,
                             float_property: system.getCache().entity.float_properties,
-                            enum_property: system.getCache().entity.enum_properties.ids
+                            enum_property: system.getCache().entity.enum_properties.map(x => x.id)
                         }
                     }
                 },
@@ -188,36 +218,6 @@ function createJsonProvider(system) {
                     },
                     features: system.getCache().features
                 }
-            }
-
-            let jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number')
-                .join('[|]')
-                .replace('minecraft:icon[|]textures[|]default', 'minecraft:icon')
-                .replace('permutations[|]', '')
-                .replace(/minecraft:material_instances\[[^\]]*\]([^[]*)texture/, 'minecraft:material_instances[|]*[|]texture')
-                .replace(/_groups\[\|\][a-zA-Z0-9$!_]+/g, 's')
-                .replace(/(?<=minecraft:entity).*?(?=filters)/g, '[|]')
-                .replace(/\[\|\](all_of|any_of|none_of)/g, '')
-                .split('[|]')
-
-            let value = [];
-            let inQuotes = false;
-
-            visit(document.getText(), {
-                onLiteralValue: (value, offset, length) => inQuotes = !inQuotes ? isInQuotes(value, offset, length, document, position) : true,
-                onObjectProperty: (value, offset, length) => inQuotes = !inQuotes ? isInQuotes(value, offset, length, document, position) : true
-            });
-
-            if (!inQuotes) return;
-
-            const jsonInDoc = parse(document.getText())
-
-            if (jsonPath.includes('minecraft:entity') && jsonPath.includes('filters')) {
-                const testPath = getLocation(document.getText(), document.offsetAt(position)).path.slice(0, -1)
-                testPath.push("test")
-                const test = valueFromJsonPath(testPath, jsonInDoc)
-                if (!test) return;
-                jsonPath.push(test)
             }
 
             switch (document.fileName.split('\\').pop()) {

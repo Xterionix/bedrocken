@@ -14,10 +14,7 @@ class CacheSystem {
             boolean_properties: [],
             integer_properties: [],
             float_properties: [],
-            enum_properties: {
-                ids: [],
-                values: []
-            }
+            enum_properties: []
         },
         item: {
             ids: [],
@@ -125,9 +122,7 @@ class CacheSystem {
             boolean_properties: [],
             integer_properties: [],
             float_properties: [],
-            enum_properties: {
-                ids: [], values: []
-            }
+            enum_properties: []
         }
     }
 
@@ -164,7 +159,7 @@ class CacheSystem {
                     break;
                 case 'float': this.#cache.entity.float_properties.push(property)
                     break;
-                case 'enum': this.#cache.entity.enum_properties.ids.push(property); if (properties[property]['values']) this.#cache.entity.enum_properties.values.push(...properties[property]['values'])
+                case 'enum': this.#cache.entity.enum_properties.push({ id: property, value: properties[property]['values'] || [] })
                     break;
             }
         }
