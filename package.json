@@ -30,10 +30,6 @@
         "title": "Bedrocken: Snippets"
       },
       {
-        "command": "bedrocken.create_project",
-        "title": "Bedrocken: Create Project"
-      },
-      {
         "command": "bedrocken.export_bp",
         "title": "Bedrocken: Export Behavior Pack"
       },

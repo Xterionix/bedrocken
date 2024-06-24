@@ -25,8 +25,7 @@ const fs = require('fs');
 const { parse } = require('jsonc-parser');
 
 // TODO: More dynamic autocomplete
-// TODO: Improve cache system
-// TODO: Add support for new project 
+// TODO: Improve cache system 
 
 const system = new CacheSystem()
 
@@ -40,7 +39,7 @@ async function activate(context) {
 	let bpPath = vscode.workspace.workspaceFolders[0].uri.fsPath
 	let rpPath = vscode.workspace.workspaceFolders[1]?.uri.fsPath
 
-	const config = path.join(bpPath, (await glob.glob("**/config.json", { cwd: bpPath }))[0])
+	const config = path.join(bpPath, (await glob.glob("**/config.json", { cwd: bpPath }))[0] || '')
 
 	if (config !== bpPath) {
 		const configContent = (await fs.promises.readFile(config)).toString()
@@ -81,7 +80,7 @@ async function activate(context) {
 	const exportRpCommand = vscode.commands.registerCommand('bedrocken.export_rp', () => exportRp())
 	const exportProjectCommand = vscode.commands.registerCommand('bedrocken.export_project', () => exportProject())
 	const openExportsFolderCommand = vscode.commands.registerCommand('bedrocken.open_exports_folder', () => openExportsFolder())
-	const createNewProjectCommand = vscode.commands.registerCommand('bedrocken.new_project', () => createNewProject())
+	const createNewProjectCommand = vscode.commands.registerCommand('bedrocken.new_project', () => createNewProject(context))
 
 	const updateItemsCommands = vscode.commands.registerCommand('bedrocken.update_items', () => updateItems());
 	const generateTextureListCommands = vscode.commands.registerCommand('bedrocken.generate_texture_list', () => generateTextureList(rpPath));
