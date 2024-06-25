@@ -17,7 +17,7 @@ function createJsonProvider(system) {
 
             const suggestions = [];
             const prefix = vscode.workspace.getConfiguration('bedrocken').get('project_prefix', 'bedrocken');
-            const fileBasedIdentifier = prefix + ':' + document.fileName.split('\\').pop().slice(0, -5);
+            const fileBasedIdentifier = prefix + ':' + document.fileName.split('\\').pop().replace('.json', '').split('.').slice(0, -1).join('.');
 
             let jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number')
                 .join('[|]')
@@ -28,6 +28,17 @@ function createJsonProvider(system) {
                 .replace(/(?<=minecraft:entity).*?(?=filters)/g, '[|]')
                 .replace(/\[\|\](all_of|any_of|none_of)/g, '')
                 .replace(/(?<=description\[\|\]animations).*/g, '')
+                .replace(/(?<=description\[\|\]geometry).*/g, '')
+                .replace(/(?<=description\[\|\]particle_effects).*/g, '')
+                .replace(/(?<=description\[\|\]textures).*/g, '')
+                .replace(/(?<=description\[\|\]scripts\[\|\]animate).*/g, '')
+                .replace(/(?<=description\[\|\]sound_effects).*/g, '')
+                .replace(/(?<=entity_sounds\[\|\]entities\[\|\]).*?(?=events)/g, '')
+                .replace(/(?<=entity_sounds\[\|\]entities\[\|\]events).*/g, '')
+                .replace(/(?<=sound_definitions\[\|\]).*?(?=sounds)/g, '')
+                .replace(/(?<=texture_data\[\|\]).*?(?=textures)/g, '')
+                .replace('entity_sounds[|]entities[|]events', 'entity_sounds[|]entities[|]events[|]sound')
+                .replace(/minecraft:geometry$/gm, 'minecraft:geometry[|]identifier')
                 .split('[|]')
 
             let value = [];
@@ -55,9 +66,9 @@ function createJsonProvider(system) {
                 "minecraft:entity": {
                     description: {
                         identifier: fileBasedIdentifier,
-                        animations: system.getCache().bp_animations.filter(x => !document.getText().includes(x) || actualValueInDoc.includes(x)).concat(system.getCache().bp_animationcontrollers.filter(x => !document.getText().includes(x) || actualValueInDoc.includes(x))),
+                        animations: system.getCache().bp_animations.concat(system.getCache().bp_animationcontrollers),
                         scripts: {
-                            animate: system.getCache().entity.animations.filter(x => Object.keys(jsonInDoc["minecraft:entity"]["description"]["animations"]).includes(x))
+                            animate: system.getCache().entity.animations.filter(x => (jsonInDoc["minecraft:entity"]?.["description"]?.["animations"] ? Object.keys(jsonInDoc["minecraft:entity"]["description"]["animations"]) : []).includes(x))
                         }
                     },
                     components: {
@@ -78,6 +89,37 @@ function createJsonProvider(system) {
                             int_property: system.getCache().entity.integer_properties,
                             float_property: system.getCache().entity.float_properties,
                             enum_property: system.getCache().entity.enum_properties.map(x => x.id)
+                        }
+                    }
+                },
+                "minecraft:client_entity": {
+                    description: {
+                        identifier: system.getCache().entity.ids,
+                        animations: system.getCache().rp_animations.concat(system.getCache().rp_animationcontrollers),
+                        geometry: system.getCache().models,
+                        sound_effects: system.getCache().sound_definitions,
+                        particle_effects: system.getCache().particles,
+                        textures: system.getCache().textures.paths,
+                        render_controllers: system.getCache().rendercontrollers,
+                        spawn_egg: {
+                            texture: system.getCache().textures.items
+                        },
+                        scripts: {
+                            animate: (jsonInDoc["minecraft:client_entity"]?.["description"]?.["animations"] ? Object.keys(jsonInDoc["minecraft:client_entity"]["description"]["animations"]) : [])
+                        }
+                    }
+                },
+                "minecraft:attachable": {
+                    description: {
+                        identifier: system.getCache().item.ids,
+                        animations: system.getCache().rp_animations.concat(system.getCache().rp_animationcontrollers),
+                        geometry: system.getCache().models,
+                        sound_effects: system.getCache().sound_definitions,
+                        particle_effects: system.getCache().particles,
+                        textures: system.getCache().textures.paths,
+                        render_controllers: system.getCache().rendercontrollers,
+                        scripts: {
+                            animate: (jsonInDoc["minecraft:client_entity"]?.["description"]?.["animations"] ? Object.keys(jsonInDoc["minecraft:client_entity"]["description"]["animations"]) : [])
                         }
                     }
                 },
@@ -105,6 +147,10 @@ function createJsonProvider(system) {
                             "*": {
                                 texture: system.getCache().textures.terrain
                             }
+                        },
+                        'minecraft:geometry': {
+                            identifier: system.getCache().models,
+                            culling: system.getCache().block_culling_rules
                         },
                         "minecraft:loot": system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/block'))
                     }
@@ -223,6 +269,27 @@ function createJsonProvider(system) {
                         identifier: fileBasedIdentifier
                     },
                     features: system.getCache().features
+                },
+                entity_sounds: {
+                    entities: {
+                        events: {
+                            sound: system.getCache().sound_definitions
+                        }
+                    }
+                },
+                sound_definitions: {
+                    sounds: system.getCache().sounds
+                },
+                texture_data: {
+                    textures: system.getCache().textures.paths
+                },
+                particle_effect: {
+                    description: {
+                        identifier: fileBasedIdentifier,
+                        basic_render_parameters: {
+                            texture: system.getCache().textures.paths
+                        }
+                    }
                 }
             }
 
