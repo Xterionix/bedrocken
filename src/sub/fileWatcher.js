@@ -1,3 +1,5 @@
+const { CacheSystem } = require('./cacheSystem');
+
 const vscode = require('vscode');
 const path = require('path');
 const fs = require('fs');
@@ -5,6 +7,12 @@ const { parse } = require('jsonc-parser');
 
 class Filewatcher {
 
+    /**
+     * 
+     * @param {CacheSystem} system 
+     * @param {string} bpPath 
+     * @param {string|undefined} rpPath 
+     */
     constructor(system, bpPath, rpPath) {
         this.system = system;
         this.bpPath = bpPath;
@@ -46,12 +54,36 @@ class Filewatcher {
                 break;
             case 'scripts': this.system.getCache().block.custom_components = []; this.system.getCache().item.custom_components = []; this.system.processDirectory(readPath, 'script');
                 break;
+            case 'animations':
+                if (readPath.startsWith(this.bpPath)) { this.system.getCache().bp_animations = []; this.system.processDirectory(readPath, 'bp_animation') }
+                else { this.system.getCache().rp_animations = []; this.system.processDirectory(readPath, 'rp_animation') }
+                break;
+            case 'animation_controllers':
+                if (readPath.startsWith(this.bpPath)) { this.system.getCache().bp_animationcontrollers = []; this.system.processDirectory(readPath, 'bp_animationcontroller') }
+                else { this.system.getCache().rp_animationcontrollers = []; this.system.processDirectory(readPath, 'rp_animationcontroller') }
+                break;
+            case 'block_culling': this.system.getCache().block_culling_rules = []; this.system.processDirectory(readPath, 'block_culling_rule')
+                break;
+            case 'particles': this.system.getCache().particles = []; this.system.processDirectory(readPath, 'particle')
+                break;
+            case 'render_controllers': this.system.getCache().rendercontrollers = []; this.system.processDirectory(readPath, 'rendercontroller')
+                break;
+            case 'models': this.system.getCache().models = []; this.system.processDirectory(readPath, 'model')
+                break;
+            case 'sounds': this.system.getCache().sounds = []; this.system.processGlob(this.rpPath, 'sounds/**/*.{ogg,wav,mp3,fsb}', 'sound')
+                break;
+            case 'textures': this.system.getCache().textures.paths = []; this.system.processGlob(this.rpPath, 'textures/**/*.{png,jpg,jpeg,tga}', 'texture');
+                break;
+            default:
+                console.warn(`No cache to update for ${folderName}`)
         }
 
         switch (fileName) {
             case 'item_texture.json': this.system.getCache().textures.items = []; this.system.processFile(path.join(this.rpPath, 'textures/item_texture.json'), 'item_texture')
                 break;
             case 'terrain_texture.json': this.system.getCache().textures.terrain = []; this.system.processFile(path.join(this.rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
+                break;
+            case 'sound_definitions.json': this.system.getCache().sound_definitions = []; this.system.processFile(path.join(this.rpPath, 'sounds/sound_definitions.json'), 'sound_definition')
                 break;
             case 'manifest.json': if (workspace != this.bpPath) return;
                 const manifest = parse((await fs.promises.readFile(path.join(this.bpPath, 'manifest.json'))).toString())

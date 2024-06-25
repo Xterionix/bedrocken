@@ -36,19 +36,23 @@ async function activate(context) {
 
 	console.log("Bedrocken is Active!")
 
-	let bpPath = vscode.workspace.workspaceFolders[0].uri.fsPath
-	let rpPath = vscode.workspace.workspaceFolders[1]?.uri.fsPath
+	let bpPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath
+	let rpPath = vscode.workspace.workspaceFolders?.[1]?.uri.fsPath
 
-	const config = path.join(bpPath, (await glob.glob("**/config.json", { cwd: bpPath }))[0] || '')
+	try {
 
-	if (config !== bpPath) {
-		const configContent = (await fs.promises.readFile(config)).toString()
-		if (configContent.includes('regolith')) {
-			const configJson = parse(configContent)
-			bpPath = path.join(config.split(path.sep).slice(0, -1).join(path.sep), configJson["packs"]["behaviorPack"])
-			rpPath = path.join(config.split(path.sep).slice(0, -1).join(path.sep), configJson["packs"]["resourcePack"])
+		const config = path.join(bpPath, (await glob.glob("**/config.json", { cwd: bpPath })).pop() || bpPath)
+
+		if (config && config !== bpPath) {
+			const configContent = (await fs.promises.readFile(config)).toString()
+			if (configContent.includes('regolith')) {
+				const configJson = parse(configContent)
+				bpPath = path.join(config.split(path.sep).slice(0, -1).join(path.sep), configJson["packs"]["behaviorPack"])
+				rpPath = path.join(config.split(path.sep).slice(0, -1).join(path.sep), configJson["packs"]["resourcePack"])
+			}
 		}
-	}
+
+	} catch (error) { }
 
 	try {
 
@@ -56,6 +60,8 @@ async function activate(context) {
 		if (!manifest["modules"]?.map(obj => obj.type).includes('script')) vscode.commands.executeCommand('setContext', 'bedrocken.can_add_scripts', true)
 		if (!manifest["dependencies"]?.map(obj => obj.version instanceof Array).includes(true)) vscode.commands.executeCommand('setContext', 'bedrocken.can_link_manifests', true)
 
+		await system.processDirectory(path.join(bpPath, 'animations'), 'bp_animation')
+		await system.processDirectory(path.join(bpPath, 'animation_controllers'), 'bp_animationcontroller')
 		await system.processDirectory(path.join(bpPath, 'scripts'), 'script')
 		await system.processDirectory(path.join(bpPath, 'entities'), 'entity');
 		await system.processDirectory(path.join(bpPath, 'items'), 'item');
@@ -64,6 +70,15 @@ async function activate(context) {
 		await system.processDirectory(path.join(bpPath, 'structures'), 'structure');
 		await system.processGlob(bpPath, 'loot_tables/**/*.json', 'loot_table')
 		await system.processGlob(bpPath, 'trade_tables/**/*.json', 'trade_table')
+		if (rpPath) await system.processGlob(rpPath, 'sounds/**/*.{ogg,wav,mp3,fsb}', 'sound')
+		if (rpPath) await system.processGlob(rpPath, 'textures/**/*.{png,jpg,jpeg,tga}', 'texture')
+		if (rpPath) await system.processDirectory(path.join(rpPath, 'block_culling'), 'block_culling_rule')
+		if (rpPath) await system.processDirectory(path.join(rpPath, 'animations'), 'rp_animation')
+		if (rpPath) await system.processDirectory(path.join(rpPath, 'animation_controllers'), 'rp_animationcontroller')
+		if (rpPath) await system.processDirectory(path.join(rpPath, 'models'), 'model')
+		if (rpPath) await system.processDirectory(path.join(rpPath, 'particles'), 'particle')
+		if (rpPath) await system.processDirectory(path.join(rpPath, 'render_controllers'), 'rendercontroller')
+		if (rpPath) await system.processFile(path.join(rpPath, 'sounds/sound_definitions.json'), 'sound_definition')
 		if (rpPath) await system.processFile(path.join(rpPath, 'textures/item_texture.json'), 'item_texture')
 		if (rpPath) await system.processFile(path.join(rpPath, 'textures/terrain_texture.json'), 'terrain_texture')
 
