@@ -24,7 +24,6 @@ const vscode = require('vscode');
 const fs = require('fs');
 const { parse } = require('jsonc-parser');
 
-// TODO: More dynamic autocomplete
 // TODO: Improve cache system 
 
 const system = new CacheSystem()
