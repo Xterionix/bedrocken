@@ -27,6 +27,7 @@ function createJsonProvider(system) {
                 .replace(/_groups\[\|\][a-zA-Z0-9$!_]+/g, 's')
                 .replace(/(?<=minecraft:entity).*?(?=filters)/g, '[|]')
                 .replace(/\[\|\](all_of|any_of|none_of)/g, '')
+                .replace(/(?<=description\[\|\]animations).*/g, '')
                 .split('[|]')
 
             let value = [];
@@ -40,6 +41,7 @@ function createJsonProvider(system) {
             if (!inQuotes) return;
 
             const jsonInDoc = parse(document.getText())
+            const actualValueInDoc = valueFromJsonPath(getLocation(document.getText(), document.offsetAt(position)).path, jsonInDoc)
 
             if (jsonPath.includes('minecraft:entity') && jsonPath.includes('filters')) {
                 const testPath = getLocation(document.getText(), document.offsetAt(position)).path.slice(0, -1)
@@ -52,7 +54,11 @@ function createJsonProvider(system) {
             const dynamicAutocomplete = {
                 "minecraft:entity": {
                     description: {
-                        identifier: fileBasedIdentifier
+                        identifier: fileBasedIdentifier,
+                        animations: system.getCache().bp_animations.filter(x => !document.getText().includes(x) || actualValueInDoc.includes(x)).concat(system.getCache().bp_animationcontrollers.filter(x => !document.getText().includes(x) || actualValueInDoc.includes(x))),
+                        scripts: {
+                            animate: system.getCache().entity.animations.filter(x => Object.keys(jsonInDoc["minecraft:entity"]["description"]["animations"]).includes(x))
+                        }
                     },
                     components: {
                         'minecraft:loot': {

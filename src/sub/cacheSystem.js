@@ -24,7 +24,8 @@ class CacheSystem {
             boolean_properties: [],
             integer_properties: [],
             float_properties: [],
-            enum_properties: []
+            enum_properties: [],
+            animations: []
         },
         item: {
             ids: [],
@@ -178,7 +179,8 @@ class CacheSystem {
             boolean_properties: [],
             integer_properties: [],
             float_properties: [],
-            enum_properties: []
+            enum_properties: [],
+            animations: []
         }
     }
 
@@ -248,6 +250,7 @@ class CacheSystem {
                     break;
             }
         }
+        this.#cache.entity.animations = Array.from(new Set(Object.keys(description["animations"]).concat(this.#cache.entity.animations)))
     }
     #proceessItemFile(json) {
         const identifier = json["minecraft:item"]["description"]["identifier"]
