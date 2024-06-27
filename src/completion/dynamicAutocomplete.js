@@ -20,6 +20,10 @@ function createJsonProvider(system) {
             const prefix = vscode.workspace.getConfiguration('bedrocken').get('project_prefix', 'bedrocken');
             const fileBasedIdentifier = prefix + ':' + path.basename(document.fileName).replace('.json', '');
 
+            const allItems = system.getCache().item.ids.concat(system.getCache().block.ids).concat(system.getVanillaData().item.ids)
+            const allBlocks = system.getCache().block.ids.concat(system.getVanillaData().block.ids)
+            const allEntities = system.getCache().entity.ids.concat(system.getVanillaData().entity.ids)
+
             let jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number')
                 .join('[|]')
                 .replace('minecraft:icon[|]textures[|]default', 'minecraft:icon')
@@ -38,7 +42,8 @@ function createJsonProvider(system) {
                 .replace(/(?<=entity_sounds\[\|\]entities\[\|\]events).*/g, '')
                 .replace(/(?<=sound_definitions\[\|\]).*?(?=sounds)/g, '')
                 .replace(/(?<=texture_data\[\|\]).*?(?=textures)/g, '')
-                .replace(/(?<=recipe_shaped\[\|\]key).*/g, '')
+                .replace(/(?<=recipe_shaped\[\|]key).*?(?=\[\|]item|$)/g, '')
+                .replace(/(?<=recipe_shaped\[\|\])key$.*/g, 'key[|]property')
                 .replace('entity_sounds[|]entities[|]events', 'entity_sounds[|]entities[|]events[|]sound')
                 .replace(/minecraft:geometry$/gm, 'minecraft:geometry[|]identifier')
                 .split('[|]')
@@ -276,32 +281,65 @@ function createJsonProvider(system) {
                     description: {
                         identifier: fileBasedIdentifier
                     },
-                    key: jsonInDoc["minecraft:recipe_shaped"]["pattern"] ? (jsonInDoc["minecraft:recipe_shaped"]["pattern"].length >= 1 ? Array.from(new Set(jsonInDoc["minecraft:recipe_shaped"]["pattern"].join('').split(''))) : []) : []
+                    key: {
+                        property: jsonInDoc["minecraft:recipe_shaped"] ? (jsonInDoc["minecraft:recipe_shaped"]?.["pattern"] ? (jsonInDoc["minecraft:recipe_shaped"]["pattern"].length >= 1 ? Array.from(new Set(jsonInDoc["minecraft:recipe_shaped"]["pattern"].join('').split(''))) : []) : []) : [],
+                        item: allItems
+                    },
+                    unlock: {
+                        item: allItems
+                    },
+                    result: {
+                        item: allItems
+                    }
                 },
                 "minecraft:recipe_brewing_container": {
                     description: {
                         identifier: fileBasedIdentifier
-                    }
+                    },
+                    input: allItems,
+                    output: allItems,
+                    reagent: allItems
                 },
                 "minecraft:recipe_brewing_mix": {
                     description: {
                         identifier: fileBasedIdentifier
-                    }
+                    },
+                    input: allItems,
+                    output: allItems,
+                    reagent: allItems
                 },
                 "minecraft:recipe_furnace": {
                     description: {
                         identifier: fileBasedIdentifier
-                    }
+                    },
+                    unlock: {
+                        item: allItems
+                    },
+                    input: allItems,
+                    output: allItems
                 },
                 "minecraft:recipe_shapeless": {
                     description: {
                         identifier: fileBasedIdentifier
+                    },
+                    unlock: {
+                        item: allItems
+                    },
+                    ingredients: {
+                        item: allItems
+                    },
+                    result: {
+                        item: allItems
                     }
                 },
                 "minecraft:recipe_smithing_transform": {
                     description: {
                         identifier: fileBasedIdentifier
-                    }
+                    },
+                    template: allItems,
+                    base: allItems,
+                    result: allItems,
+                    addition: 'minecraft:netherite_ingot'
                 },
                 entity_sounds: {
                     entities: {
@@ -325,6 +363,8 @@ function createJsonProvider(system) {
                     }
                 }
             }
+
+            console.log(jsonPath.join('[|]'))
 
             switch (document.fileName.split('\\').pop()) {
                 case 'blocks.json':
