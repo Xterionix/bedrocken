@@ -27,12 +27,15 @@ Supports the following:
 - File name based identifiers
 - Structure names with a structure feature
 - Item components `minecraft:icon` and `minecraft:custom_components`
-- Block components `minecraft:material_instance`, `minecraft:custom_components` and `minecraft:loot`
+- Block components `minecraft:material_instance`, `minecraft:custom_components`, `minecraft:loot` and `minecraft:geometry`
 - Entity components `minecraft:loot` and `minecraft:trade_table`
 - Entity property filters
+- Entity BPA and BPAC
+- Client entity and attachable file
 - Feature names within feature rules and features that place other features
 - Spawn rule identifiers suggesting the names of entities in the project
-- `blocks.json` file
+- `blocks.json`, `sounds.json`, `sound_definitions.json`, `item_texture.json`, `terrain_texture.json` and `flipbook_texture.json` files
+- Shaped recipe keys
 - .lang files
 
 ### Presets
