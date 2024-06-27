@@ -35,7 +35,8 @@ Supports the following:
 - Feature names within feature rules and features that place other features
 - Spawn rule identifiers suggesting the names of entities in the project
 - `blocks.json`, `sounds.json`, `sound_definitions.json`, `item_texture.json`, `terrain_texture.json` and `flipbook_texture.json` files
-- Shaped recipe keys
+- Shaped recipe keys and recipe item identifiers
+- Animation controllers suggest states under transitions
 - .lang files
 
 ### Presets
