@@ -1,5 +1,6 @@
 const { CacheSystem } = require('../sub/cacheSystem');
 
+const path = require('path');
 const vscode = require('vscode');
 const { parse, getLocation, visit } = require('jsonc-parser');
 
@@ -17,7 +18,7 @@ function createJsonProvider(system) {
 
             const suggestions = [];
             const prefix = vscode.workspace.getConfiguration('bedrocken').get('project_prefix', 'bedrocken');
-            const fileBasedIdentifier = prefix + ':' + document.fileName.split('\\').pop().replace('.json', '').split('.').slice(0, -1).join('.');
+            const fileBasedIdentifier = prefix + ':' + path.basename(document.fileName).replace('.json', '');
 
             let jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number')
                 .join('[|]')
@@ -37,6 +38,7 @@ function createJsonProvider(system) {
                 .replace(/(?<=entity_sounds\[\|\]entities\[\|\]events).*/g, '')
                 .replace(/(?<=sound_definitions\[\|\]).*?(?=sounds)/g, '')
                 .replace(/(?<=texture_data\[\|\]).*?(?=textures)/g, '')
+                .replace(/(?<=recipe_shaped\[\|\]key).*/g, '')
                 .replace('entity_sounds[|]entities[|]events', 'entity_sounds[|]entities[|]events[|]sound')
                 .replace(/minecraft:geometry$/gm, 'minecraft:geometry[|]identifier')
                 .split('[|]')
@@ -269,6 +271,37 @@ function createJsonProvider(system) {
                         identifier: fileBasedIdentifier
                     },
                     features: system.getCache().features
+                },
+                "minecraft:recipe_shaped": {
+                    description: {
+                        identifier: fileBasedIdentifier
+                    },
+                    key: jsonInDoc["minecraft:recipe_shaped"]["pattern"] ? (jsonInDoc["minecraft:recipe_shaped"]["pattern"].length >= 1 ? Array.from(new Set(jsonInDoc["minecraft:recipe_shaped"]["pattern"].join('').split(''))) : []) : []
+                },
+                "minecraft:recipe_brewing_container": {
+                    description: {
+                        identifier: fileBasedIdentifier
+                    }
+                },
+                "minecraft:recipe_brewing_mix": {
+                    description: {
+                        identifier: fileBasedIdentifier
+                    }
+                },
+                "minecraft:recipe_furnace": {
+                    description: {
+                        identifier: fileBasedIdentifier
+                    }
+                },
+                "minecraft:recipe_shapeless": {
+                    description: {
+                        identifier: fileBasedIdentifier
+                    }
+                },
+                "minecraft:recipe_smithing_transform": {
+                    description: {
+                        identifier: fileBasedIdentifier
+                    }
                 },
                 entity_sounds: {
                     entities: {
