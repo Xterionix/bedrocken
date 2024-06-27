@@ -25,6 +25,7 @@ function createJsonProvider(system) {
             const allItems = system.getCache().item.ids.concat(system.getCache().block.ids).concat(system.getVanillaData().item.ids)
             const allBlocks = system.getCache().block.ids.concat(system.getVanillaData().block.ids)
             const allEntities = system.getCache().entity.ids.concat(system.getVanillaData().entity.ids)
+            const allSounds = system.getCache().sound_definitions
 
             let jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number')
                 .join('[|]')
@@ -48,6 +49,7 @@ function createJsonProvider(system) {
                 .replace(/(?<=recipe_shaped\[\|\])key$.*/g, 'key[|]property')
                 .replace('entity_sounds[|]entities[|]events', 'entity_sounds[|]entities[|]events[|]sound')
                 .replace(/minecraft:geometry$/gm, 'minecraft:geometry[|]identifier')
+                .replace(/(?<=minecraft:ageable\[\|])feed_items$/gm, 'feed_items[|]item')
                 .replace(/(?<=animation_controllers\[\|]).*?(?=states)/g, '')
                 .replace(/(?<=states\[\|]).*?(?=transitions)/g, '')
                 .replace(/(?<=states\[\|\]transitions).*/g, '')
@@ -86,11 +88,260 @@ function createJsonProvider(system) {
                         }
                     },
                     components: {
+                        "minecraft.behavior.admire_item": {
+                            admire_item_sound: allSounds
+                        },
+                        "minecraft.behavior.avoid_block": {
+                            target_blocks: allBlocks,
+                            avoid_block_sound: allSounds
+                        },
+                        "minecraft.behavior.avoid_mob_type": {
+                            avoid_mob_sound: allSounds
+                        },
+                        "minecraft.behavior.beg": {
+                            items: allItems
+                        },
+                        "minecraft.behavior.celebrate": {
+                            celebration_sound: allSounds
+                        },
+                        "minecraft:behavior.charge_held_item": {
+                            items: allItems
+                        },
+                        "minecraft:behavior.defend_trusted_target": {
+                            aggro_sound: allSounds,
+                        },
+                        "minecraft:behavior.drop_item_for": {
+                            loot_table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
+                        },
+                        "minecraft:behavior.eat_block": {
+                            eat_and_replace_block_pairs: {
+                                eat_block: allBlocks,
+                                replace_block: allBlocks
+                            }
+                        },
+                        "minecraft.behavior.eat_mob": {
+                            eat_mob_sound: allSounds,
+                            loot_table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
+                        },
+                        "minecraft.behavior.jump_to_block": {
+                            forbidden_blocks: allBlocks,
+                            preferred_blocks: allBlocks
+                        },
+                        "minecraft.behavior.lay_egg": {
+                            egg_type: allBlocks,
+                            lay_egg_sound: allSounds,
+                            target_blocks: allBlocks
+                        },
+                        "minecraft.behavior.move_to_block": {
+                            target_blocks: allBlocks
+                        },
+                        "minecraft.behavior.pickup_items": {
+                            excluded_items: allItems
+                        },
+                        "minecraft.behavior.raid_garden": {
+                            blocks: allBlocks
+                        },
+                        "minecraft.behavior.random_search_and_dig": {
+                            item_table: allItems,
+                            target_blocks: allBlocks
+                        },
+                        "minecraft.behavior.snacking": {
+                            items: allItems
+                        },
+                        "minecraft.behavior.sneeze": {
+                            loot_table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities')),
+                            prepare_sound: allSounds,
+                            sound: allSounds
+                        },
+                        "minecraft.behavior.sonic_boom": {
+                            attack_sound: allSounds,
+                            charge_sound: allSounds
+                        },
+                        "minecraft.behavior.stalk_and_pounce_on_target": {
+                            stuck_blocks: allBlocks
+                        },
+                        "minecraft:behavior.summon_entity": {
+                            summon_choices: {
+                                start_sound_event: allSounds,
+                                sequence: {
+                                    entity_type: allEntities
+                                }
+                            }
+                        },
+                        "minecraft.behavior.tempt": {
+                            items: allItems,
+                            tempt_sound: allSounds
+                        },
+                        "minecraft.addrider": {
+                            entity_type: allEntities
+                        },
+                        "minecraft.ageable": {
+                            drop_items: allItems,
+                            feed_items: {
+                                item: allItems
+                            },
+                            transform_to_item: allItems
+                        },
+                        "minecraft.angry": {
+                            angry_sound: allSounds
+                        },
+                        "minecraft.barter": {
+                            barter_table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
+                        },
+                        "minecraft:block_sensor": {
+                            on_break: {
+                                block_list: allBlocks
+                            }
+                        },
+                        "minecraft.boostable": {
+                            boost_items: {
+                                item: allItems,
+                                replace_item: allItems
+                            }
+                        },
+                        "minecraft.break_blocks": {
+                            breakable_blocks: allBlocks
+                        },
+                        "minecraft.breathable": {
+                            breathe_blocks: allBlocks,
+                            non_breathe_blocks: allBlocks
+                        },
+                        "minecraft.breedable": {
+                            breed_items: allItems,
+                            transform_to_item: allItems,
+                            breeds_with: {
+                                baby_type: allEntities,
+                                mate_type: allEntities
+                            }
+                        },
+                        "minecraft.bribeable": {
+                            bribe_items: allItems
+                        },
+                        "minecraft.buoyant": {
+                            liquid_blocks: allBlocks
+                        },
+                        "minecraft.celebrate_hunt": {
+                            celebrate_sound: allSounds
+                        },
+                        "minecraft.damage_sensor": {
+                            triggers: {
+                                on_damage_sound_event: allSounds
+                            }
+                        },
+                        "minecraft:economy_trade_table": {
+                            table: system.getCache().trade_tables
+                        },
+                        "minecraft.equip_item": {
+                            excluded_items: allItems
+                        },
+                        "minecraft.equipment": {
+                            table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
+                        },
+                        "minecraft.equippable": {
+                            slots: {
+                                accepted_items: allItems
+                            }
+                        },
+                        "minecraft.giveable": {
+                            triggers: {
+                                items: allItems
+                            }
+                        },
+                        "minecraft.healable": {
+                            items: {
+                                item: allItems
+                            }
+                        },
+                        "minecraft.home": {
+                            home_block_list: allBlocks
+                        },
+                        "minecraft.inside_block_notifier": {
+                            block_list: {
+                                block: allBlocks
+                            }
+                        },
+                        "minecraft.interact": {
+                            interactions: {
+                                add_items: {
+                                    table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
+                                },
+                                particle_on_start: {
+                                    particle_type: system.getCache().particles
+                                },
+                                play_sounds: allSounds,
+                                spawn_entities: allEntities,
+                                spawn_items: {
+                                    table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
+                                },
+                                transform_to_item: allItems
+                            }
+                        },
+                        "minecraft.item_controllable": {
+                            control_items: allItems
+                        },
                         'minecraft:loot': {
                             table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
                         },
+                        "minecraft.preferred_path": {
+                            preferred_path_blocks: {
+                                blocks: allBlocks
+                            }
+                        },
+                        "minecraft.projectile": {
+                            ignored_entities: allEntities,
+                            hit_ground_sound: allSounds,
+                            hit_sound: allSounds,
+                            on_hit: {
+                                particle_on_hit: {
+                                    particle_type: system.getCache().particles
+                                }
+                            },
+                            particle: system.getCache().particles,
+                            shoot_sound: allSounds
+                        },
+                        "minecraft.reflect_projectiles": {
+                            reflected_projectiles: allEntities
+                        },
+                        "minecraft.shareables": {
+                            items: {
+                                item: allItems
+                            }
+                        },
+                        "minecraft:shooter": {
+                            def: allEntities
+                        },
+                        "minecraft.spawn_entity": {
+                            spawn_entity: allEntities,
+                            spawn_item: allItems,
+                            spawn_sound: allSounds
+                        },
+                        "minecraft.tameable": {
+                            tame_items: allItems
+                        },
+                        "minecraft.tamemount": {
+                            feed_items: {
+                                item: allItems
+                            },
+                            auto_reject_items: {
+                                item: allItems
+                            }
+                        },
                         'minecraft:trade_table': {
                             table: system.getCache().trade_tables
+                        },
+                        "minecraft.trail": {
+                            block_type: allBlocks
+                        },
+                        "minecraft.transformation": {
+                            begin_transform_sound: allSounds,
+                            delay: {
+                                block_types: allBlocks
+                            },
+                            into: allEntities,
+                            transformation_sound: allSounds
+                        },
+                        "minecraft.trusting": {
+                            trust_items: allItems
                         }
                     },
                     filters: {
@@ -111,7 +362,7 @@ function createJsonProvider(system) {
                         identifier: system.getCache().entity.ids,
                         animations: system.getCache().rp_animations.concat(system.getCache().rp_animationcontrollers),
                         geometry: system.getCache().models,
-                        sound_effects: system.getCache().sound_definitions,
+                        sound_effects: allSounds,
                         particle_effects: system.getCache().particles,
                         textures: system.getCache().textures.paths,
                         render_controllers: system.getCache().rendercontrollers,
@@ -128,7 +379,7 @@ function createJsonProvider(system) {
                         identifier: system.getCache().item.ids,
                         animations: system.getCache().rp_animations.concat(system.getCache().rp_animationcontrollers),
                         geometry: system.getCache().models,
-                        sound_effects: system.getCache().sound_definitions,
+                        sound_effects: allSounds,
                         particle_effects: system.getCache().particles,
                         textures: system.getCache().textures.paths,
                         render_controllers: system.getCache().rendercontrollers,
@@ -417,7 +668,7 @@ function createJsonProvider(system) {
                 entity_sounds: {
                     entities: {
                         events: {
-                            sound: system.getCache().sound_definitions
+                            sound: allSounds
                         }
                     }
                 },
@@ -441,6 +692,8 @@ function createJsonProvider(system) {
                     }
                 }
             }
+
+            console.log(jsonPath)
 
             switch (document.fileName.split('\\').pop()) {
                 case 'blocks.json':
