@@ -46,6 +46,9 @@ function createJsonProvider(system) {
                 .replace(/(?<=recipe_shaped\[\|\])key$.*/g, 'key[|]property')
                 .replace('entity_sounds[|]entities[|]events', 'entity_sounds[|]entities[|]events[|]sound')
                 .replace(/minecraft:geometry$/gm, 'minecraft:geometry[|]identifier')
+                .replace(/(?<=animation_controllers\[\|]).*?(?=states)/g, '')
+                .replace(/(?<=states\[\|]).*?(?=transitions)/g, '')
+                .replace(/(?<=states\[\|\]transitions).*/g, '')
                 .split('[|]')
 
             let value = [];
@@ -59,10 +62,11 @@ function createJsonProvider(system) {
             if (!inQuotes) return;
 
             const jsonInDoc = parse(document.getText())
-            const actualValueInDoc = valueFromJsonPath(getLocation(document.getText(), document.offsetAt(position)).path, jsonInDoc)
+            const actualPath = getLocation(document.getText(), document.offsetAt(position)).path
+            const actualValueInDoc = valueFromJsonPath(actualPath, jsonInDoc)
 
             if (jsonPath.includes('minecraft:entity') && jsonPath.includes('filters')) {
-                const testPath = getLocation(document.getText(), document.offsetAt(position)).path.slice(0, -1)
+                const testPath = actualPath.slice(0, -1)
                 testPath.push("test")
                 const test = valueFromJsonPath(testPath, jsonInDoc)
                 if (!test) return;
@@ -361,10 +365,13 @@ function createJsonProvider(system) {
                             texture: system.getCache().textures.paths
                         }
                     }
+                },
+                animation_controllers: {
+                    states: {
+                        transitions: jsonInDoc['animation_controllers'] ? Object.keys(valueFromJsonPath(actualPath.slice(0, -4), jsonInDoc)) : []
+                    }
                 }
             }
-
-            console.log(jsonPath.join('[|]'))
 
             switch (document.fileName.split('\\').pop()) {
                 case 'blocks.json':
