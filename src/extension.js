@@ -74,7 +74,7 @@ async function activate(context) {
 			await system.processDirectory(path.join(bpPath, 'features'), 'feature');
 			await system.processDirectory(path.join(bpPath, 'structures'), 'structure');
 			await system.processGlob(bpPath, 'loot_tables/**/*.json', 'loot_table')
-			await system.processGlob(bpPath, 'trade_tables/**/*.json', 'trade_table')
+			await system.processGlob(bpPath, 'trading/**/*.json', 'trade_table')
 			if (!rpPath) return;
 			await system.processGlob(rpPath, 'sounds/**/*.{ogg,wav,mp3,fsb}', 'sound')
 			await system.processGlob(rpPath, 'textures/**/*.{png,jpg,jpeg,tga}', 'texture')
