@@ -4,6 +4,8 @@ const path = require('path');
 const vscode = require('vscode');
 const { parse, getLocation, visit } = require('jsonc-parser');
 
+//TODO: Tree feature
+
 /**
  * @param {CacheSystem} system
  */
@@ -49,6 +51,7 @@ function createJsonProvider(system) {
                 .replace(/(?<=animation_controllers\[\|]).*?(?=states)/g, '')
                 .replace(/(?<=states\[\|]).*?(?=transitions)/g, '')
                 .replace(/(?<=states\[\|\]transitions).*/g, '')
+                .replace(/(?<=single_block_feature\[\|\]may_attach_to).*/g, '')
                 .split('[|]')
 
             let value = [];
@@ -145,7 +148,37 @@ function createJsonProvider(system) {
                     },
                     components: {
                         "minecraft:custom_components": system.getCache().item.custom_components,
-                        "minecraft:icon": system.getCache().textures.items
+                        "minecraft:icon": system.getCache().textures.items,
+                        "minecraft:block_placer": {
+                            block: allBlocks,
+                            use_on: allBlocks
+                        },
+                        "minecraft:digger": {
+                            destroy_speeds: {
+                                block: allBlocks
+                            }
+                        },
+                        "minecraft:entity_placer": {
+                            entity: allEntities,
+                            use_on: allBlocks,
+                            dispense_on: allBlocks
+                        },
+                        "minecraft:food": {
+                            using_converts_to: allItems
+                        },
+                        "minecraft:projectile": {
+                            projectile_entity: allEntities
+                        },
+                        "minecraft:repairable": {
+                            repair_items: {
+                                items: allItems
+                            }
+                        },
+                        "minecraft:shooter": {
+                            ammunition: {
+                                item: allItems
+                            }
+                        }
                     }
                 },
                 "minecraft:block": {
@@ -163,7 +196,12 @@ function createJsonProvider(system) {
                             identifier: system.getCache().models,
                             culling: system.getCache().block_culling_rules
                         },
-                        "minecraft:loot": system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/block'))
+                        "minecraft:loot": system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/block')),
+                        "minecraft:placement_filter": {
+                            conditions: {
+                                block_filter: allBlocks
+                            }
+                        }
                     }
                 },
                 "minecraft:feature_rules": {
@@ -181,42 +219,60 @@ function createJsonProvider(system) {
                 "minecraft:cave_carver_feature": {
                     description: {
                         identifier: fileBasedIdentifier
-                    }
+                    },
+                    fill_with: allBlocks
                 },
                 "minecraft:fossil_feature": {
                     description: {
                         identifier: fileBasedIdentifier
-                    }
+                    },
+                    ore_block: allBlocks
                 },
                 "minecraft:geode_feature": {
                     description: {
                         identifier: fileBasedIdentifier
-                    }
+                    },
+                    filler: allBlocks,
+                    inner_layer: allBlocks,
+                    alternate_inner_layer: allBlocks,
+                    middle_layer: allBlocks,
+                    outer_layer: allBlocks,
+                    inner_placements: allBlocks
                 },
                 "minecraft:growing_plant_feature": {
                     description: {
                         identifier: fileBasedIdentifier
-                    }
+                    },
+                    body_blocks: allBlocks,
+                    head_blocks: allBlocks
                 },
                 "minecraft:multiface_feature": {
                     description: {
                         identifier: fileBasedIdentifier
-                    }
+                    },
+                    can_place_on: allBlocks,
+                    places_block: allBlocks
                 },
                 "minecraft:nether_cave_carver_feature": {
                     description: {
                         identifier: fileBasedIdentifier
-                    }
+                    },
+                    fill_with: allBlocks
                 },
                 "minecraft:ore_feature": {
                     description: {
                         identifier: fileBasedIdentifier
+                    },
+                    replace_rules: {
+                        places_block: allBlocks,
+                        may_replace: allBlocks
                     }
                 },
                 "minecraft:partially_exposed_blob_feature": {
                     description: {
                         identifier: fileBasedIdentifier
-                    }
+                    },
+                    places_block: allBlocks
                 },
                 "minecraft:scatter_feature": {
                     description: {
@@ -239,7 +295,10 @@ function createJsonProvider(system) {
                 "minecraft:single_block_feature": {
                     description: {
                         identifier: fileBasedIdentifier
-                    }
+                    },
+                    places_block: allBlocks,
+                    may_replace: allBlocks,
+                    may_attach_to: allBlocks
                 },
                 "minecraft:snap_to_surface_feature": {
                     description: {
@@ -251,7 +310,13 @@ function createJsonProvider(system) {
                     description: {
                         identifier: fileBasedIdentifier
                     },
-                    structure_name: system.getCache().structures
+                    structure_name: system.getCache().structures,
+                    constraints: {
+                        block_intersection: {
+                            block_allowlist: allBlocks,
+                            block_whitelist: allBlocks
+                        }
+                    }
                 },
                 "minecraft:surface_relative_threshold_feature": {
                     description: {
@@ -267,13 +332,17 @@ function createJsonProvider(system) {
                 "minecraft:underwater_cave_carver_feature": {
                     description: {
                         identifier: fileBasedIdentifier
-                    }
+                    },
+                    fill_with: allBlocks,
+                    replace_air_with: allBlocks
                 },
                 "minecraft:vegetation_patch_feature": {
                     description: {
                         identifier: fileBasedIdentifier
                     },
-                    vegetation_feature: system.getCache().features
+                    vegetation_feature: system.getCache().features,
+                    replaceable_blocks: allBlocks,
+                    ground_block: allBlocks,
                 },
                 "minecraft:weighted_random_feature": {
                     description: {

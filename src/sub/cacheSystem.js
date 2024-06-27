@@ -59,7 +59,7 @@ class CacheSystem {
     }
 
     /**
- * @typedef { 'bp_animation' |
+    * @typedef { 'bp_animation' |
     * 'bp_animationcontroller' |
     * 'block_culling_rule'|
     * 'rp_animation'|
