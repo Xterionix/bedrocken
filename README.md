@@ -38,7 +38,7 @@ Supports the following:
 - Shaped recipe keys and recipe item identifiers
 - Animation controllers suggest states under transitions
 - .lang files
-- Entity, item and blocks id in blocks, item and feature files
+- Entity, item and blocks id in blocks, item, entity and feature files
 
 ### Presets
 
