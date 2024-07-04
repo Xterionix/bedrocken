@@ -88,20 +88,20 @@ function createJsonProvider(system) {
                         }
                     },
                     components: {
-                        "minecraft.behavior.admire_item": {
+                        "minecraft:behavior.admire_item": {
                             admire_item_sound: allSounds
                         },
-                        "minecraft.behavior.avoid_block": {
+                        "minecraft:behavior.avoid_block": {
                             target_blocks: allBlocks,
                             avoid_block_sound: allSounds
                         },
-                        "minecraft.behavior.avoid_mob_type": {
+                        "minecraft:behavior.avoid_mob_type": {
                             avoid_mob_sound: allSounds
                         },
-                        "minecraft.behavior.beg": {
+                        "minecraft:behavior.beg": {
                             items: allItems
                         },
-                        "minecraft.behavior.celebrate": {
+                        "minecraft:behavior.celebrate": {
                             celebration_sound: allSounds
                         },
                         "minecraft:behavior.charge_held_item": {
@@ -119,45 +119,45 @@ function createJsonProvider(system) {
                                 replace_block: allBlocks
                             }
                         },
-                        "minecraft.behavior.eat_mob": {
+                        "minecraft:behavior.eat_mob": {
                             eat_mob_sound: allSounds,
                             loot_table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
                         },
-                        "minecraft.behavior.jump_to_block": {
+                        "minecraft:behavior.jump_to_block": {
                             forbidden_blocks: allBlocks,
                             preferred_blocks: allBlocks
                         },
-                        "minecraft.behavior.lay_egg": {
+                        "minecraft:behavior.lay_egg": {
                             egg_type: allBlocks,
                             lay_egg_sound: allSounds,
                             target_blocks: allBlocks
                         },
-                        "minecraft.behavior.move_to_block": {
+                        "minecraft:behavior.move_to_block": {
                             target_blocks: allBlocks
                         },
-                        "minecraft.behavior.pickup_items": {
+                        "minecraft:behavior.pickup_items": {
                             excluded_items: allItems
                         },
-                        "minecraft.behavior.raid_garden": {
+                        "minecraft:behavior.raid_garden": {
                             blocks: allBlocks
                         },
-                        "minecraft.behavior.random_search_and_dig": {
+                        "minecraft:behavior.random_search_and_dig": {
                             item_table: allItems,
                             target_blocks: allBlocks
                         },
-                        "minecraft.behavior.snacking": {
+                        "minecraft:behavior.snacking": {
                             items: allItems
                         },
-                        "minecraft.behavior.sneeze": {
+                        "minecraft:behavior.sneeze": {
                             loot_table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities')),
                             prepare_sound: allSounds,
                             sound: allSounds
                         },
-                        "minecraft.behavior.sonic_boom": {
+                        "minecraft:behavior.sonic_boom": {
                             attack_sound: allSounds,
                             charge_sound: allSounds
                         },
-                        "minecraft.behavior.stalk_and_pounce_on_target": {
+                        "minecraft:behavior.stalk_and_pounce_on_target": {
                             stuck_blocks: allBlocks
                         },
                         "minecraft:behavior.summon_entity": {
@@ -168,24 +168,24 @@ function createJsonProvider(system) {
                                 }
                             }
                         },
-                        "minecraft.behavior.tempt": {
+                        "minecraft:behavior.tempt": {
                             items: allItems,
                             tempt_sound: allSounds
                         },
-                        "minecraft.addrider": {
+                        "minecraft:addrider": {
                             entity_type: allEntities
                         },
-                        "minecraft.ageable": {
+                        "minecraft:ageable": {
                             drop_items: allItems,
                             feed_items: {
                                 item: allItems
                             },
                             transform_to_item: allItems
                         },
-                        "minecraft.angry": {
+                        "minecraft:angry": {
                             angry_sound: allSounds
                         },
-                        "minecraft.barter": {
+                        "minecraft:barter": {
                             barter_table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
                         },
                         "minecraft:block_sensor": {
@@ -193,20 +193,20 @@ function createJsonProvider(system) {
                                 block_list: allBlocks
                             }
                         },
-                        "minecraft.boostable": {
+                        "minecraft:boostable": {
                             boost_items: {
                                 item: allItems,
                                 replace_item: allItems
                             }
                         },
-                        "minecraft.break_blocks": {
+                        "minecraft:break_blocks": {
                             breakable_blocks: allBlocks
                         },
-                        "minecraft.breathable": {
+                        "minecraft:breathable": {
                             breathe_blocks: allBlocks,
                             non_breathe_blocks: allBlocks
                         },
-                        "minecraft.breedable": {
+                        "minecraft:breedable": {
                             breed_items: allItems,
                             transform_to_item: allItems,
                             breeds_with: {
@@ -214,16 +214,16 @@ function createJsonProvider(system) {
                                 mate_type: allEntities
                             }
                         },
-                        "minecraft.bribeable": {
+                        "minecraft:bribeable": {
                             bribe_items: allItems
                         },
-                        "minecraft.buoyant": {
+                        "minecraft:buoyant": {
                             liquid_blocks: allBlocks
                         },
-                        "minecraft.celebrate_hunt": {
+                        "minecraft:celebrate_hunt": {
                             celebrate_sound: allSounds
                         },
-                        "minecraft.damage_sensor": {
+                        "minecraft:damage_sensor": {
                             triggers: {
                                 on_damage_sound_event: allSounds
                             }
@@ -231,36 +231,36 @@ function createJsonProvider(system) {
                         "minecraft:economy_trade_table": {
                             table: system.getCache().trade_tables
                         },
-                        "minecraft.equip_item": {
+                        "minecraft:equip_item": {
                             excluded_items: allItems
                         },
-                        "minecraft.equipment": {
+                        "minecraft:equipment": {
                             table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
                         },
-                        "minecraft.equippable": {
+                        "minecraft:equippable": {
                             slots: {
                                 accepted_items: allItems
                             }
                         },
-                        "minecraft.giveable": {
+                        "minecraft:giveable": {
                             triggers: {
                                 items: allItems
                             }
                         },
-                        "minecraft.healable": {
+                        "minecraft:healable": {
                             items: {
                                 item: allItems
                             }
                         },
-                        "minecraft.home": {
+                        "minecraft:home": {
                             home_block_list: allBlocks
                         },
-                        "minecraft.inside_block_notifier": {
+                        "minecraft:inside_block_notifier": {
                             block_list: {
                                 block: allBlocks
                             }
                         },
-                        "minecraft.interact": {
+                        "minecraft:interact": {
                             interactions: {
                                 add_items: {
                                     table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
@@ -276,18 +276,18 @@ function createJsonProvider(system) {
                                 transform_to_item: allItems
                             }
                         },
-                        "minecraft.item_controllable": {
+                        "minecraft:item_controllable": {
                             control_items: allItems
                         },
                         'minecraft:loot': {
                             table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
                         },
-                        "minecraft.preferred_path": {
+                        "minecraft:preferred_path": {
                             preferred_path_blocks: {
                                 blocks: allBlocks
                             }
                         },
-                        "minecraft.projectile": {
+                        "minecraft:projectile": {
                             ignored_entities: allEntities,
                             hit_ground_sound: allSounds,
                             hit_sound: allSounds,
@@ -299,10 +299,10 @@ function createJsonProvider(system) {
                             particle: system.getCache().particles,
                             shoot_sound: allSounds
                         },
-                        "minecraft.reflect_projectiles": {
+                        "minecraft:reflect_projectiles": {
                             reflected_projectiles: allEntities
                         },
-                        "minecraft.shareables": {
+                        "minecraft:shareables": {
                             items: {
                                 item: allItems
                             }
@@ -310,15 +310,15 @@ function createJsonProvider(system) {
                         "minecraft:shooter": {
                             def: allEntities
                         },
-                        "minecraft.spawn_entity": {
+                        "minecraft:spawn_entity": {
                             spawn_entity: allEntities,
                             spawn_item: allItems,
                             spawn_sound: allSounds
                         },
-                        "minecraft.tameable": {
+                        "minecraft:tameable": {
                             tame_items: allItems
                         },
-                        "minecraft.tamemount": {
+                        "minecraft:tamemount": {
                             feed_items: {
                                 item: allItems
                             },
@@ -329,10 +329,10 @@ function createJsonProvider(system) {
                         'minecraft:trade_table': {
                             table: system.getCache().trade_tables
                         },
-                        "minecraft.trail": {
+                        "minecraft:trail": {
                             block_type: allBlocks
                         },
-                        "minecraft.transformation": {
+                        "minecraft:transformation": {
                             begin_transform_sound: allSounds,
                             delay: {
                                 block_types: allBlocks
@@ -340,7 +340,7 @@ function createJsonProvider(system) {
                             into: allEntities,
                             transformation_sound: allSounds
                         },
-                        "minecraft.trusting": {
+                        "minecraft:trusting": {
                             trust_items: allItems
                         }
                     },
@@ -692,8 +692,6 @@ function createJsonProvider(system) {
                     }
                 }
             }
-
-            console.log(jsonPath)
 
             switch (document.fileName.split('\\').pop()) {
                 case 'blocks.json':
