@@ -18,7 +18,7 @@ class Filewatcher {
         this.bpPath = bpPath;
         this.rpPath = rpPath;
 
-        this.watcher = vscode.workspace.createFileSystemWatcher('**/*.{json,mcstructure}', false, false, false);
+        this.watcher = vscode.workspace.createFileSystemWatcher('**/*.{json,mcstructure,png,jpg,jpeg,tga}', false, false, false);
         this.watcher.onDidChange(this.#updateCache.bind(this));
         this.watcher.onDidCreate(this.#updateCache.bind(this));
         this.watcher.onDidDelete(this.#updateCache.bind(this));
