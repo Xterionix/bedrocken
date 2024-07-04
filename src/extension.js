@@ -82,6 +82,7 @@ async function activate(context) {
 			await system.processDirectory(path.join(rpPath, 'animations'), 'rp_animation')
 			await system.processDirectory(path.join(rpPath, 'animation_controllers'), 'rp_animationcontroller')
 			await system.processDirectory(path.join(rpPath, 'models'), 'model')
+			await system.processDirectory(path.join(rpPath, 'entity'), 'rp_entity')
 			await system.processDirectory(path.join(rpPath, 'particles'), 'particle')
 			await system.processDirectory(path.join(rpPath, 'render_controllers'), 'rendercontroller')
 			await system.processFile(path.join(rpPath, 'sounds/sound_definitions.json'), 'sound_definition')

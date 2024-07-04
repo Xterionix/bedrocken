@@ -37,7 +37,8 @@ class CacheSystem {
             integer_properties: [],
             float_properties: [],
             enum_properties: [],
-            animations: []
+            animations: [],
+            client_animations: []
         },
         item: {
             ids: [],
@@ -79,7 +80,8 @@ class CacheSystem {
     * 'trade_table' |
     * 'texture' |
     * 'item_texture' |
-    * 'terrain_texture'
+    * 'terrain_texture' |
+    * 'rp_entity'
     * } FileType
     */
 
@@ -171,6 +173,8 @@ class CacheSystem {
                     break;
                 case 'model': this.#processModel(text)
                     break;
+                case 'rp_entity': this.#processClientEntityFile(json)
+                    break;
                 case 'item_texture': this.#processItemTextures(json)
                     break;
                 case 'terrain_texture': this.#processTerrainTextures(json)
@@ -196,7 +200,8 @@ class CacheSystem {
             integer_properties: [],
             float_properties: [],
             enum_properties: [],
-            animations: []
+            animations: [],
+            client_animations: []
         }
     }
 
@@ -266,6 +271,10 @@ class CacheSystem {
                     break;
             }
         }
+        if (description["animations"]) this.#cache.entity.animations = Array.from(new Set(Object.keys(description["animations"]).concat(this.#cache.entity.animations)))
+    }
+    #processClientEntityFile(json) {
+        const description = json["minecraft:client_entity"]?.["description"]
         if (description["animations"]) this.#cache.entity.animations = Array.from(new Set(Object.keys(description["animations"]).concat(this.#cache.entity.animations)))
     }
     #proceessItemFile(json) {
