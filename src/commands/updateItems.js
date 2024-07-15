@@ -17,8 +17,9 @@ async function updateItems() {
         title: "Updating Items",
         cancellable: false
     }, (progress, token) => {
-        return new Promise((resolve, reject) => {
-            const filePaths = getAllFilePaths(itemsPath);
+        return new Promise(async (resolve, reject) => {
+
+            const filePaths = await getAllFilePaths(itemsPath);
             const totalFiles = filePaths.length;
 
             filePaths.forEach(async (filePath, index) => {
@@ -39,6 +40,8 @@ async function updateItems() {
                 }
 
                 fileContent["format_version"] = "1.20.80";
+
+                if (fileContent["minecraft:item"]["description"]["category"]) { if (fileContent["minecraft:item"]["description"]["menu_category"]) fileContent["minecraft:item"]["description"]["menu_category"].category = fileContent["minecraft:item"]["description"]["category"]; else fileContent["minecraft:item"]["description"]["menu_category"] = { category: fileContent["minecraft:item"]["description"]["category"] }; delete fileContent["minecraft:item"]["description"]["category"]; }
 
                 const icon = innerMostValue(fileContent["minecraft:item"]["components"]["minecraft:icon"]);
                 fileContent["minecraft:item"]["components"]["minecraft:icon"] = icon;
