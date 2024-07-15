@@ -34,6 +34,7 @@ function createJsonProvider(system) {
                 .replace(/minecraft:material_instances\[[^\]]*\]([^[]*)texture/, 'minecraft:material_instances[|]*[|]texture')
                 .replace(/_groups\[\|\][a-zA-Z0-9$!_]+/g, 's')
                 .replace(/(?<=minecraft:entity).*?(?=filters)/g, '[|]')
+                .replace(/(?<=minecraft:entity).*?(?=trigger)/g, '[|]')
                 .replace(/\[\|\](all_of|any_of|none_of)/g, '')
                 .replace(/(?<=description\[\|\]animations).*/g, '')
                 .replace(/(?<=description\[\|\]geometry).*/g, '')
@@ -78,13 +79,15 @@ function createJsonProvider(system) {
                 jsonPath.push(test)
             }
 
+            console.log(jsonPath)
+
             const dynamicAutocomplete = {
                 "minecraft:entity": {
                     description: {
                         identifier: fileBasedIdentifier,
                         animations: system.getCache().bp_animations.concat(system.getCache().bp_animationcontrollers),
                         scripts: {
-                            animate: system.getCache().entity.animations.filter(x => (jsonInDoc["minecraft:entity"]?.["description"]?.["animations"] ? Object.keys(jsonInDoc["minecraft:entity"]["description"]["animations"]) : []).includes(x))
+                            animate: jsonInDoc["minecraft:entity"]?.["description"]?.["animations"] ? Object.keys(jsonInDoc["minecraft:entity"]["description"]["animations"]) : []
                         }
                     },
                     components: {
@@ -355,7 +358,8 @@ function createJsonProvider(system) {
                             float_property: system.getCache().entity.float_properties,
                             enum_property: system.getCache().entity.enum_properties.map(x => x.id)
                         }
-                    }
+                    },
+                    trigger: jsonInDoc["minecraft:entity"]?.["events"] ? Object.keys(jsonInDoc["minecraft:entity"]["events"]) : []
                 },
                 "minecraft:client_entity": {
                     description: {
@@ -700,7 +704,7 @@ function createJsonProvider(system) {
                 default:
                     value = valueFromJsonPath(jsonPath, dynamicAutocomplete)
                     const valueInDoc = valueFromJsonPath(jsonPath, jsonInDoc)
-                    if (valueInDoc instanceof Array && typeof value != 'string') value = value.filter(x => !valueInDoc.includes(x))
+                    if (Array.isArray(valueInDoc) && typeof value != 'string') value = value.filter(x => !valueInDoc.includes(x))
                     break;
             };
 
