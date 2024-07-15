@@ -213,7 +213,7 @@ class CacheSystem {
         this.#cache.rendercontrollers.push(...Object.keys(json["render_controllers"]).sort())
     }
     #processModel(text) {
-        this.#cache.models.push(...text.match(/"geometry\.([^"]*)"/g).map(x => x.slice(1, -1)))
+        this.#cache.models.push(...text.match(/"geometry\.([^"]*)"/g).map(x => x.slice(1, -1)).map(x => x.includes(':geometry') ? x.split(':geometry')[0] : x))
     }
     #processSoundDefinitions(json) {
         this.#cache.sound_definitions = Object.keys(json["sound_definitions"]).sort()
