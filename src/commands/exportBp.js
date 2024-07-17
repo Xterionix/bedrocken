@@ -12,7 +12,7 @@ async function exportBp() {
     if (!location) vscode.workspace.getConfiguration('bedrocken').update('export.location', downloadsFolder)
     location = downloadsFolder
 
-    const extension = vscode.workspace.getConfiguration('bedrocken').get('export.file_type')
+    const extension = vscode.workspace.getConfiguration('bedrocken').get('export.fileType')
     const name = vscode.workspace.name.split(' (Workspace)')[0].split(' ').map(x => x[0].toUpperCase() + x.slice(1)).join(" ") + ' [BP].' + extension.split('/')[0]
 
     await vscode.window.withProgress({

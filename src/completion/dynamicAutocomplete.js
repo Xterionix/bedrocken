@@ -19,7 +19,7 @@ function createJsonProvider(system) {
         provideCompletionItems(document, position) {
 
             const suggestions = [];
-            const prefix = vscode.workspace.getConfiguration('bedrocken').get('project_prefix', 'bedrocken');
+            const prefix = vscode.workspace.getConfiguration('bedrocken').get('projectPrefix', 'bedrocken');
             const fileBasedIdentifier = prefix + ':' + path.basename(document.fileName).replace('.json', '');
 
             const allItems = system.getCache().item.ids.concat(system.getCache().block.ids).concat(system.getVanillaData().item.ids)

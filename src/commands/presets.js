@@ -46,7 +46,7 @@ async function presets(context, bpPath, rpPath) {
         const variables = form.map(question => question.id)
         variables.push('{{PROJ_PREFIX}}')
         variables.push('{{IDENTIFIER_CAPITALIZE}}')
-        answers.push(vscode.workspace.getConfiguration('bedrocken').get('project_prefix') || 'bedrocken')
+        answers.push(vscode.workspace.getConfiguration('bedrocken').get('projectPrefix') || 'bedrocken')
         answers.push(capitalIdentifier)
 
         for (const createOptions of createFiles) {

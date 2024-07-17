@@ -46,7 +46,7 @@
         "title": "Bedrocken: Open Exports Folder"
       },
       {
-        "command": "bedrocken.project_prefix",
+        "command": "bedrocken.projectPrefix",
         "title": "Bedrocken: Set Project Prefix"
       },
       {
@@ -84,7 +84,7 @@
               "type": "string"
             }
           },
-          "bedrocken.export.file_type": {
+          "bedrocken.export.fileType": {
             "title": "Export File Type",
             "type": "string",
             "description": "Exports project files with this file extension",
@@ -99,18 +99,19 @@
             "type": "string",
             "description": "Exports project files to this location"
           },
-          "bedrocken.project_prefix": {
+          "bedrocken.projectPrefix": {
             "title": "Project Prefix",
             "type": "string",
-            "description": "Your project's namespace like `minecraft`"
+            "description": "Your project's namespace like `minecraft`",
+            "default": "bedrocken"
           },
-          "bedrocken.json_autocomplete": {
+          "bedrocken.jsonAutocomplete": {
             "title": "Dynamic JSON Autocompletion",
             "type": "boolean",
             "description": "Enable/disable dynamic autocomplete with JSON files.",
             "default": true
           },
-          "bedrocken.lang_autocomplete": {
+          "bedrocken.langAutocomplete": {
             "title": "Dynamic Lang Autocompletion",
             "type": "boolean",
             "description": "Enable/disable dynamic autocomplete within lang files",

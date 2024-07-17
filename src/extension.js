@@ -113,13 +113,13 @@ async function activate(context) {
 	const projectSwitcherCommand = vscode.commands.registerCommand('bedrocken.switch_projects', () => projectSwitcher(context))
 	const presetsCommand = vscode.commands.registerCommand('bedrocken.presets', () => presets(context, bpPath, rpPath))
 	const snippetsCommand = vscode.commands.registerCommand('bedrocken.snippets', () => snippets(context, bpPath, rpPath))
-	const setProjectPrefixCommand = vscode.commands.registerCommand('bedrocken.project_prefix', () => chooseProjectPrefix())
+	const setProjectPrefixCommand = vscode.commands.registerCommand('bedrocken.projectPrefix', () => chooseProjectPrefix())
 
 	const dynamicAutocomplete = createJsonProvider(system)
 	const langAutocomplete = createLangProvider(system)
 
-	if (vscode.workspace.getConfiguration('bedrocken').get('json_autocomplete')) context.subscriptions.push(dynamicAutocomplete)
-	if (vscode.workspace.getConfiguration('bedrocken').get('lang_autocomplete')) context.subscriptions.push(langAutocomplete)
+	if (vscode.workspace.getConfiguration('bedrocken').get('jsonAutocomplete')) context.subscriptions.push(dynamicAutocomplete)
+	if (vscode.workspace.getConfiguration('bedrocken').get('langAutocomplete')) context.subscriptions.push(langAutocomplete)
 
 	context.subscriptions.push(
 		projectSwitcherCommand, snippetsCommand, presetsCommand, exportBpCommand, exportRpCommand, exportProjectCommand, openExportsFolderCommand, linkManifestsCommand, addScriptsManifestCommand, setProjectPrefixCommand, updateItemsCommands, generateTextureListCommands, createNewProjectCommand
