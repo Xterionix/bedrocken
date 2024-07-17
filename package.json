@@ -14,7 +14,7 @@
     "onStartupFinished",
     "onLanguage:json"
   ],
-  "main": "dist/extension.js",
+  "main": "src/extension.js",
   "contributes": {
     "commands": [
       {

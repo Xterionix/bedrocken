@@ -56,7 +56,8 @@ class CacheSystem {
         structures: [],
         features: [],
         loot_tables: [],
-        trade_tables: []
+        trade_tables: [],
+        functions: []
     }
 
     /**
@@ -81,7 +82,8 @@ class CacheSystem {
     * 'texture' |
     * 'item_texture' |
     * 'terrain_texture' |
-    * 'rp_entity'
+    * 'rp_entity'|
+    * 'function'
     * } FileType
     */
 
@@ -121,6 +123,8 @@ class CacheSystem {
             case 'trade_table': this.#cache.trade_tables = files.map(x => x.replace(/\\/g, '/'))
                 break;
             case 'sound': this.#cache.sounds = files.map(x => x.replace(/\\/g, '/').replace(new RegExp(path.extname(x), 'g'), ''))
+                break;
+            case 'function': this.#cache.functions = files.map(x => x.replace(/\\/g, '/').replace(new RegExp(path.extname(x), 'g'), '').replace('functions/', ''))
                 break;
             case 'texture': this.#cache.textures.paths = files.map(x => x.replace(/\\/g, '/').replace(new RegExp(path.extname(x), 'g'), ''))
                 break;

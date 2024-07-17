@@ -34,7 +34,7 @@ Supports the following:
 - Client entity and attachable file
 - Feature names within feature rules and features that place other features
 - Spawn rule identifiers suggesting the names of entities in the project
-- `blocks.json`, `sounds.json`, `sound_definitions.json`, `item_texture.json`, `terrain_texture.json` and `flipbook_texture.json` files
+- `blocks.json`, `sounds.json`, `sound_definitions.json`, `item_texture.json`, `terrain_texture.json`, `flipbook_texture.json` and `tick.json` files
 - Shaped recipe keys and recipe item identifiers
 - Animation controllers suggest states under transitions
 - .lang files

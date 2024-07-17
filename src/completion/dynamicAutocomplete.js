@@ -79,8 +79,6 @@ function createJsonProvider(system) {
                 jsonPath.push(test)
             }
 
-            console.log(jsonPath)
-
             const dynamicAutocomplete = {
                 "minecraft:entity": {
                     description: {
@@ -694,7 +692,8 @@ function createJsonProvider(system) {
                     states: {
                         transitions: jsonInDoc['animation_controllers'] ? Object.keys(valueFromJsonPath(actualPath.slice(0, -4), jsonInDoc)) : []
                     }
-                }
+                },
+                values: system.getCache().functions
             }
 
             switch (document.fileName.split('\\').pop()) {
