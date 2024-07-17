@@ -610,7 +610,7 @@ function createJsonProvider(system) {
                         identifier: fileBasedIdentifier
                     },
                     key: {
-                        property: jsonInDoc["minecraft:recipe_shaped"] ? (jsonInDoc["minecraft:recipe_shaped"]?.["pattern"] ? (jsonInDoc["minecraft:recipe_shaped"]["pattern"].length >= 1 ? Array.from(new Set(jsonInDoc["minecraft:recipe_shaped"]["pattern"].join('').split('').filter(x => x !== ''))) : []) : []) : [],
+                        property: jsonInDoc["minecraft:recipe_shaped"] ? (jsonInDoc["minecraft:recipe_shaped"]?.["pattern"] ? (jsonInDoc["minecraft:recipe_shaped"]["pattern"].length >= 1 ? Array.from(new Set(jsonInDoc["minecraft:recipe_shaped"]["pattern"].join('').split('').filter(x => x != ' '))) : []) : []) : [],
                         item: allItems
                     },
                     unlock: {
