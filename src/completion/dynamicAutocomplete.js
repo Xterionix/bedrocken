@@ -34,6 +34,7 @@ function createJsonProvider(system) {
                 .replace(/minecraft:material_instances\[[^\]]*\]([^[]*)texture/, 'minecraft:material_instances[|]*[|]texture')
                 .replace(/_groups\[\|\][a-zA-Z0-9$!_]+/g, 's')
                 .replace(/(?<=minecraft:entity).*?(?=filters)/g, '[|]')
+                .replace(/(?<=events).*?(?=component_groups)/g, '[|]')
                 .replace(/(?<=minecraft:entity).*?(?=trigger)/g, '[|]')
                 .replace(/\[\|\](all_of|any_of|none_of)/g, '')
                 .replace(/(?<=description\[\|\]animations).*/g, '')
@@ -70,6 +71,8 @@ function createJsonProvider(system) {
             const jsonInDoc = parse(document.getText())
             const actualPath = getLocation(document.getText(), document.offsetAt(position)).path
             const actualValueInDoc = valueFromJsonPath(actualPath, jsonInDoc)
+
+            console.log(jsonPath)
 
             if (jsonPath.includes('minecraft:entity') && jsonPath.includes('filters')) {
                 const testPath = actualPath.slice(0, -1)
@@ -356,6 +359,9 @@ function createJsonProvider(system) {
                             float_property: system.getCache().entity.float_properties,
                             enum_property: system.getCache().entity.enum_properties.map(x => x.id)
                         }
+                    },
+                    events: {
+                        component_groups: jsonInDoc["minecraft:entity"]?.["component_groups"] ? Object.keys(jsonInDoc["minecraft:entity"]["component_groups"]) : []
                     },
                     trigger: jsonInDoc["minecraft:entity"]?.["events"] ? Object.keys(jsonInDoc["minecraft:entity"]["events"]) : []
                 },
