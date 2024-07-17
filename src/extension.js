@@ -117,8 +117,11 @@ async function activate(context) {
 	const dynamicAutocomplete = createJsonProvider(system)
 	const langAutocomplete = createLangProvider(system)
 
+	if (vscode.workspace.getConfiguration('bedrocken').get('json_autocomplete')) context.subscriptions.push(dynamicAutocomplete)
+	if (vscode.workspace.getConfiguration('bedrocken').get('lang_autocomplete')) context.subscriptions.push(langAutocomplete)
+
 	context.subscriptions.push(
-		langAutocomplete, dynamicAutocomplete, projectSwitcherCommand, snippetsCommand, presetsCommand, exportBpCommand, exportRpCommand, exportProjectCommand, openExportsFolderCommand, linkManifestsCommand, addScriptsManifestCommand, setProjectPrefixCommand, updateItemsCommands, generateTextureListCommands, createNewProjectCommand
+		projectSwitcherCommand, snippetsCommand, presetsCommand, exportBpCommand, exportRpCommand, exportProjectCommand, openExportsFolderCommand, linkManifestsCommand, addScriptsManifestCommand, setProjectPrefixCommand, updateItemsCommands, generateTextureListCommands, createNewProjectCommand
 	);
 
 }

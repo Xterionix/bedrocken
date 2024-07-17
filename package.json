@@ -14,7 +14,7 @@
     "onStartupFinished",
     "onLanguage:json"
   ],
-  "main": "dist/extension.js",
+  "main": "src/extension.js",
   "contributes": {
     "commands": [
       {
@@ -88,7 +88,7 @@
             "title": "Export File Type",
             "type": "string",
             "description": "Exports project files with this file extension",
-            "default": "zip",
+            "default": "mcpack/mcaddon",
             "enum": [
               "zip",
               "mcpack/mcaddon"
@@ -103,6 +103,18 @@
             "title": "Project Prefix",
             "type": "string",
             "description": "Your project's namespace like `minecraft`"
+          },
+          "bedrocken.json_autocomplete": {
+            "title": "Dynamic JSON Autocompletion",
+            "type": "boolean",
+            "description": "Enable/disable dynamic autocomplete with JSON files.",
+            "default": true
+          },
+          "bedrocken.lang_autocomplete": {
+            "title": "Dynamic Lang Autocompletion",
+            "type": "boolean",
+            "description": "Enable/disable dynamic autocomplete within lang files",
+            "default": true
           }
         }
       }
