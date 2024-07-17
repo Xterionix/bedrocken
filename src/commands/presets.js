@@ -13,7 +13,7 @@ const { parse, stringify } = require('comment-json');
  */
 async function presets(context, bpPath, rpPath) {
 
-    const presetFiles = getAllFilePaths(path.join(context.extensionPath, 'data/presets')).filter(x => x.includes('manifest.json'))
+    const presetFiles = (await getAllFilePaths(path.join(context.extensionPath, 'data/presets'))).filter(x => x.includes('manifest.json'))
     let presets = await Promise.all(presetFiles.map(async preset => JSON.parse((await fs.promises.readFile(preset)).toString())))
 
     if (presets.length == 0) { vscode.window.showErrorMessage('No presets found'); return };

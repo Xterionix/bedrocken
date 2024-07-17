@@ -14,7 +14,7 @@ const { parse, stringify } = require('comment-json');
  */
 async function snippets(context, bpPath, rpPath) {
 
-    const snippetFiles = getAllFilePaths(path.join(context.extensionPath, 'data/snippets'))
+    const snippetFiles = await getAllFilePaths(path.join(context.extensionPath, 'data/snippets'))
     let snippets = await Promise.all(snippetFiles.map(async snippet => JSON.parse((await fs.promises.readFile(snippet)).toString())))
 
     if (!vscode.window.activeTextEditor) { vscode.window.showErrorMessage('Snippets can only be run when you have a file open'); return };
