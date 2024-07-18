@@ -58,3 +58,4 @@ Supports the following:
 `Control + P > Generate:`, supported files include the following:
 
 - `texture_list.json`
+- `sound_definitions.json`
