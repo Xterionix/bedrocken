@@ -27,7 +27,11 @@ function createJsonProvider(system) {
             const allEntities = system.getCache().entity.ids.concat(system.getVanillaData().entity.ids)
             const allSounds = system.getCache().sound_definitions
 
-            let jsonPath = getLocation(document.getText(), document.offsetAt(position)).path.filter(x => typeof x != 'number')
+            const location = getLocation(document.getText(), document.offsetAt(position))
+            const actualPath = location.path;
+            const isInProperty = location.isAtPropertyKey
+
+            let jsonPath = actualPath.filter(x => typeof x != 'number')
                 .join('[|]')
                 .replace('minecraft:icon[|]textures[|]default', 'minecraft:icon')
                 .replace('permutations[|]', '')
@@ -69,7 +73,6 @@ function createJsonProvider(system) {
             if (!inQuotes) return;
 
             const jsonInDoc = parse(document.getText())
-            const actualPath = getLocation(document.getText(), document.offsetAt(position)).path
             const actualValueInDoc = valueFromJsonPath(actualPath, jsonInDoc)
 
             console.log(jsonPath)
@@ -350,7 +353,7 @@ function createJsonProvider(system) {
                     },
                     filters: {
                         value: {
-                            enum_property: system.getCache().entity.enum_properties.filter(x => x.id == valueFromJsonPath(getLocation(document.getText(), document.offsetAt(position)).path.slice(0, -1).concat(["domain"]), jsonInDoc))[0]?.value,
+                            enum_property: system.getCache().entity.enum_properties.filter(x => x.id == valueFromJsonPath(actualPath.slice(0, -1).concat(["domain"]), jsonInDoc))[0]?.value,
                             bool_property: [true, false]
                         },
                         domain: {
@@ -702,9 +705,47 @@ function createJsonProvider(system) {
                 values: system.getCache().functions
             }
 
+            const isPropertyCompletion = {
+                "minecraft:entity": {
+                    description: {
+                        scripts: {
+                            animate: true
+                        }
+                    }
+                },
+                "minecraft:client_entity": {
+                    description: {
+                        render_controllers: true,
+                        scripts: {
+                            animate: true
+                        }
+                    }
+                },
+                "minecraft:attachable": {
+                    description: {
+                        render_controllers: true,
+                        scripts: {
+                            animate: true
+                        }
+                    }
+                },
+                "minecraft:recipe_shaped": {
+                    key: {
+                        property: true
+                    }
+                },
+                animation_controllers: {
+                    states: {
+                        transitions: true
+                    }
+                }
+            }
+
+            if (valueFromJsonPath(jsonPath, isPropertyCompletion) && !isInProperty) return;
+
             switch (document.fileName.split('\\').pop()) {
                 case 'blocks.json':
-                    value = system.getCache().block.ids.filter(id => !jsonInDoc[id])
+                    if (jsonPath[0] === '') value = system.getCache().block.ids.filter(id => !jsonInDoc[id])
                     break;
                 default:
                     value = valueFromJsonPath(jsonPath, dynamicAutocomplete)
@@ -714,6 +755,8 @@ function createJsonProvider(system) {
             };
 
             if (typeof value == 'string') value = [value];
+
+            value = Array.from(new Set(value)) //TODO: Figure out why duplicate items are stored in the cache
 
             const line = document.getText(new vscode.Range(new vscode.Position(position.line, 0), position)).trim()
 
