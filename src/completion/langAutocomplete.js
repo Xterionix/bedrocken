@@ -12,14 +12,23 @@ function createLangProvider(system) {
             { scheme: 'file', language: 'plaintext' }
         ], {
         provideCompletionItems(document, position) {
+
             const suggestions = []
             const line = document.getText(new vscode.Range(new vscode.Position(position.line, 0), position)).replace('.name', '')
-            if (line.includes('=')) return [Object.assign(new vscode.CompletionItem(
-                line.split('=')[0].split(':').pop().split('_').map(str => str[0].toUpperCase() + str.slice(1)).join(' '),
-                vscode.CompletionItemKind.EnumMember
-            ), { sortText: '0' })];
-            if (!document.fileName.endsWith('.lang')) return
-            const text = document.getText().split('\n')
+
+            if (!document.fileName.endsWith('.lang')) return;
+
+            if (line.includes('=')) {
+                let completion;
+                if (line.startsWith('action.hint.exit.')) completion = 'Press :_input_key.sneak: to Dismount'
+                else completion = line.split('=')[0].split(':').pop().split('_').map(str => str[0].toUpperCase() + str.slice(1)).join(' ')
+                completion = new vscode.CompletionItem(completion, vscode.CompletionItemKind.EnumMember)
+                completion.sortText = '0'
+                return [completion]
+            }
+
+            const text = document.getText().split('\n');
+
             system.getCache().entity.ids.forEach(id => {
                 if (!text.some(x => x.startsWith(`entity.${id}.name`))) suggestions.push(new vscode.CompletionItem(`entity.${id}.name`, vscode.CompletionItemKind.Class))
             })
@@ -35,6 +44,7 @@ function createLangProvider(system) {
             system.getCache().block.ids.forEach(id => {
                 if (!text.some(x => x.startsWith(`tile.${id}`))) suggestions.push(new vscode.CompletionItem(`tile.${id}.name`, vscode.CompletionItemKind.Class))
             })
+
             return suggestions
         }
     })
