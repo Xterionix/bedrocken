@@ -9,8 +9,9 @@ const appData = process.env.APPDATA
 
 /**
  * @param {vscode.ExtensionContext} context 
+ * @param {string} workspacesPath
  */
-async function projectSwitcher(context) {
+async function projectSwitcher(context, workspacesPath) {
 
     try {
 
@@ -72,7 +73,7 @@ async function projectSwitcher(context) {
 
         vscode.window.showQuickPick(options.sort()).then(async selectedOption => {
             if (selectedOption) {
-                const workspaceFile = path.join(context.extensionPath, 'data/workspaces', selectedOption.replace(' [BP]', '').replace(' [RP]', '').toLowerCase() + '.code-workspace')
+                const workspaceFile = path.join(workspacesPath, selectedOption.replace(' [BP]', '').replace(' [RP]', '').toLowerCase() + '.code-workspace')
                 if (await exists(workspaceFile)) vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(workspaceFile), false)
                 else {
                     const data = {

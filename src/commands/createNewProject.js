@@ -5,7 +5,11 @@ const { v4 } = require('uuid');
 
 const mojangFolder = process.env.APPDATA.replace('Roaming', '') + '//Local/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang'
 
-async function createNewProject(context) {
+/**
+ * @param {vscode.ExtensionContext} context 
+ * @param {string} workspacesPath
+ */
+async function createNewProject(context, workspacesPath) {
 
     const bpName = await vscode.window.showInputBox({ prompt: 'Enter Behavior Pack name', placeHolder: 'Addon #424 [BP]' })
     const bpDescription = (await vscode.window.showInputBox({ prompt: 'Enter Behavior Pack description', placeHolder: 'Another new addon!' })) || ''
@@ -96,7 +100,7 @@ async function createNewProject(context) {
 
     }
 
-    const workspaceFile = path.join(context.extensionPath, 'data/workspaces', bpName.replace(' [BP]', '').replace(' [RP]', '').toLowerCase() + '.code-workspace')
+    const workspaceFile = path.join(workspacesPath, bpName.replace(' [BP]', '').replace(' [RP]', '').toLowerCase() + '.code-workspace')
 
     await fs.promises.writeFile(workspaceFile, JSON.stringify(data, null, 4))
     await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(workspaceFile), false)

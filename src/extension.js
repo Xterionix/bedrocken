@@ -16,6 +16,8 @@ const { createNewProject } = require('./commands/createNewProject');
 const { createJsonProvider } = require('./completion/dynamicAutocomplete')
 const { createLangProvider } = require('./completion/langAutocomplete')
 
+const { exists } = require('./sub/util');
+
 const { CacheSystem } = require('./sub/cacheSystem');
 const { Filewatcher } = require('./sub/fileWatcher');
 
@@ -38,6 +40,8 @@ async function activate(context) {
 
 	let bpPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath
 	let rpPath = vscode.workspace.workspaceFolders?.[1]?.uri.fsPath
+
+	const workspacesPath = path.join(context.globalStorageUri.fsPath, 'workspaces');
 
 	try {
 
@@ -99,6 +103,8 @@ async function activate(context) {
 
 	} catch (error) { }
 
+	if (!(await exists(workspacesPath))) await fs.promises.mkdir(workspacesPath, { recursive: true })
+
 	const addScriptsManifestCommand = vscode.commands.registerCommand('bedrocken.add_scripts_manifests', () => addScriptsToManifest())
 	const linkManifestsCommand = vscode.commands.registerCommand('bedrocken.link_manifests', () => linkManifests())
 
@@ -106,13 +112,13 @@ async function activate(context) {
 	const exportRpCommand = vscode.commands.registerCommand('bedrocken.export_rp', () => exportRp())
 	const exportProjectCommand = vscode.commands.registerCommand('bedrocken.export_project', () => exportProject())
 	const openExportsFolderCommand = vscode.commands.registerCommand('bedrocken.open_exports_folder', () => openExportsFolder())
-	const createNewProjectCommand = vscode.commands.registerCommand('bedrocken.new_project', () => createNewProject(context))
+	const createNewProjectCommand = vscode.commands.registerCommand('bedrocken.new_project', () => createNewProject(context, workspacesPath))
 
 	const updateItemsCommand = vscode.commands.registerCommand('bedrocken.update_items', () => updateItems());
 	const generateTextureListCommand = vscode.commands.registerCommand('bedrocken.generate_texture_list', () => generateTextureList(rpPath));
 	const generateSoundDefinitionsCommand = vscode.commands.registerCommand('bedrocken.generate_sound_definitions', () => generateSoundDefinitions(rpPath));
 
-	const projectSwitcherCommand = vscode.commands.registerCommand('bedrocken.switch_projects', () => projectSwitcher(context))
+	const projectSwitcherCommand = vscode.commands.registerCommand('bedrocken.switch_projects', () => projectSwitcher(context, workspacesPath))
 	const presetsCommand = vscode.commands.registerCommand('bedrocken.presets', () => presets(context, bpPath, rpPath))
 	const snippetsCommand = vscode.commands.registerCommand('bedrocken.snippets', () => snippets(context, bpPath, rpPath))
 	const setProjectPrefixCommand = vscode.commands.registerCommand('bedrocken.projectPrefix', () => chooseProjectPrefix())
