@@ -705,7 +705,7 @@ function createJsonProvider(system) {
                 values: system.getCache().functions
             }
 
-            const isPropertyCompletion = {
+            const propertyCompletion = {
                 "minecraft:entity": {
                     description: {
                         scripts: {
@@ -741,7 +741,10 @@ function createJsonProvider(system) {
                 }
             }
 
-            if (valueFromJsonPath(jsonPath, isPropertyCompletion) && !isInProperty) return;
+            const isPropertyCompletion = valueFromJsonPath(jsonPath, propertyCompletion)
+
+            if (isPropertyCompletion && !isInProperty) return;
+            if (!isPropertyCompletion && isInProperty) return;
 
             switch (document.fileName.split('\\').pop()) {
                 case 'blocks.json':
