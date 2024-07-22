@@ -20,8 +20,12 @@ function createLangProvider(system) {
 
             if (line.includes('=')) {
                 let completion;
+
                 if (line.startsWith('action.hint.exit.')) completion = 'Press :_input_key.sneak: to Dismount'
                 else completion = line.split('=')[0].split(':').pop().split('_').map(str => str[0].toUpperCase() + str.slice(1)).join(' ')
+
+                if (line.startsWith('item.spawn_egg')) completion = 'Spawn ' + completion
+
                 completion = new vscode.CompletionItem(completion, vscode.CompletionItemKind.EnumMember)
                 completion.sortText = '0'
                 return [completion]
