@@ -741,9 +741,35 @@ function createJsonProvider(system) {
                 }
             }
 
+            const bothCompletion = {
+                "minecraft:entity": {
+                    description: {
+                        scripts: {
+                            animate: true
+                        }
+                    }
+                },
+                "minecraft:client_entity": {
+                    description: {
+                        render_controllers: true,
+                        scripts: {
+                            animate: true
+                        }
+                    }
+                },
+                "minecraft:attachable": {
+                    description: {
+                        render_controllers: true,
+                        scripts: {
+                            animate: true
+                        }
+                    }
+                }
+            }
+
             const isPropertyCompletion = valueFromJsonPath(jsonPath, propertyCompletion)
 
-            if (isPropertyCompletion && !isInProperty) return;
+            if (isPropertyCompletion && !isInProperty && !(typeof actualPath.slice().reverse()[0] == 'number' && valueFromJsonPath(jsonPath, bothCompletion))) return;
             if (!isPropertyCompletion && isInProperty) return;
 
             switch (document.fileName.split('\\').pop()) {
