@@ -76,8 +76,6 @@ function createJsonProvider(system) {
             const jsonInDoc = parse(document.getText())
             const actualValueInDoc = valueFromJsonPath(actualPath, jsonInDoc)
 
-            console.log(jsonPath)
-
             if (jsonPath.includes('minecraft:entity') && jsonPath.includes('filters')) {
                 const testPath = actualPath.slice(0, -1)
                 testPath.push("test")
@@ -85,6 +83,8 @@ function createJsonProvider(system) {
                 if (!test) return;
                 jsonPath.push(test)
             }
+
+            console.log(jsonPath)
 
             const dynamicAutocomplete = {
                 "minecraft:entity": {
@@ -355,7 +355,8 @@ function createJsonProvider(system) {
                     filters: {
                         value: {
                             enum_property: system.getCache().entity.enum_properties.filter(x => x.id == valueFromJsonPath(actualPath.slice(0, -1).concat(["domain"]), jsonInDoc))[0]?.value,
-                            bool_property: [true, false]
+                            bool_property: [true, false],
+                            is_family: system.getCache().entity.families
                         },
                         domain: {
                             bool_property: system.getCache().entity.boolean_properties,
