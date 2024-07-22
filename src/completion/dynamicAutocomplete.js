@@ -39,6 +39,7 @@ function createJsonProvider(system) {
                 .replace(/_groups\[\|\][a-zA-Z0-9$!_]+/g, 's')
                 .replace(/(?<=minecraft:entity).*?(?=filters)/g, '[|]')
                 .replace(/(?<=events).*?(?=component_groups)/g, '[|]')
+                .replace(/(?<=events).*?(?=set_property)/g, '[|]')
                 .replace(/(?<=minecraft:entity).*?(?=trigger)/g, '[|]')
                 .replace(/\[\|\](all_of|any_of|none_of)/g, '')
                 .replace(/(?<=description\[\|\]animations).*/g, '')
