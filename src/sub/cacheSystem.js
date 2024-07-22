@@ -38,7 +38,8 @@ class CacheSystem {
             float_properties: [],
             enum_properties: [],
             animations: [],
-            client_animations: []
+            client_animations: [],
+            families: []
         },
         item: {
             ids: [],
@@ -205,7 +206,8 @@ class CacheSystem {
             float_properties: [],
             enum_properties: [],
             animations: [],
-            client_animations: []
+            client_animations: [],
+            families: []
         }
     }
 
@@ -260,6 +262,14 @@ class CacheSystem {
         this.#cache.entity.ids.push(identifier)
         if (text.includes('minecraft:rideable')) this.#cache.entity.rideable_ids.push(identifier)
         if (description["is_spawnable"]) this.#cache.entity.spawnable_ids.push(identifier)
+        for (const component in json['minecraft:entity']['components']) {
+            this.#processEntityComponent(component, json['minecraft:entity']['components'][component])
+        }
+        for (const component_group in json['minecraft:entity']['component_groups']) {
+            for (const component in json['minecraft:entity']['component_groups'][component_group]) {
+                this.#processEntityComponent(component, json['minecraft:entity']['component_groups'][component_group][component])
+            }
+        }
         if (!description["properties"]) return;
         const properties = description["properties"]
         for (const property in properties) {
@@ -276,6 +286,13 @@ class CacheSystem {
             }
         }
         if (description["animations"]) this.#cache.entity.animations = Array.from(new Set(Object.keys(description["animations"]).concat(this.#cache.entity.animations)))
+    }
+    #processEntityComponent(id, json) {
+        switch (id) {
+            case 'minecraft:type_family':
+                this.#cache.entity.families = Array.from(new Set(this.#cache.entity.families.concat(json.family)))
+                break;
+        }
     }
     #processClientEntityFile(json) {
         const description = json["minecraft:client_entity"]?.["description"]
