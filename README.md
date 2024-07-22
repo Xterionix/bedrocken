@@ -40,6 +40,7 @@ Supports the following:
 - .lang files
 - Entity, item and blocks id in blocks, item, entity and feature files
 - Adding and removing component groups
+- Loot table items
 
 ### Presets
 

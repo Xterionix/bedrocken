@@ -703,7 +703,12 @@ function createJsonProvider(system) {
                         transitions: jsonInDoc['animation_controllers'] ? Object.keys(valueFromJsonPath(actualPath.slice(0, -4), jsonInDoc)) : []
                     }
                 },
-                values: system.getCache().functions
+                values: system.getCache().functions,
+                pools: {
+                    entries: {
+                        name: valueFromJsonPath(actualPath.slice(0, -1).concat('type'), jsonInDoc) ? valueFromJsonPath(actualPath.slice(0, -1).concat('type'), jsonInDoc) == 'loot_table' ? system.getCache().loot_tables : allItems : []
+                    }
+                }
             }
 
             const propertyCompletion = {
