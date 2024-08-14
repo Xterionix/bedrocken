@@ -1,0 +1,54 @@
+{
+    "format_version": "1.20.80",
+    "minecraft:item": {
+        "description": {
+            "identifier": "{{PROJ_PREFIX}}:{{IDENTIFIER}}_sword",
+            "menu_category": {
+                "category": "equipment",
+                "group": "itemGroup.name.sword"
+            }
+        },
+        "components": {
+            "minecraft:max_stack_size": 1,
+            "minecraft:hand_equipped": true,
+            "minecraft:durability": {
+                "max_durability": {{DURABILITY}}
+            },
+            "minecraft:damage": {
+                "value": {{DAMAGE}}
+            },
+            "minecraft:enchantable": {
+                "value": {{ENCHANTABILITY}},
+                "slot": "sword"
+            },
+            "minecraft:can_destroy_in_creative": false,
+            "minecraft:icon": "{{IDENTIFIER}}_sword",
+            "minecraft:digger": {
+                "destroy_speeds": [
+                    { "block": "minecraft:bamboo", "speed": 60 },
+                    { "block": "minecraft:web", "speed": 15 },
+                    { "block": { "tags": "true" }, "speed": 1.5 }
+                ],
+                "use_efficiency": true
+            },
+            "minecraft:repairable": {
+                "repair_items": [
+                    {
+                        "items": [
+                            "{{REPAIR_ITEM}}"
+                        ],
+                        "repair_amount": "query.max_durability * 0.25"
+                    }
+                ]
+            },
+            "minecraft:tags": {
+                "tags": [
+                    "minecraft:is_tool",
+                    "minecraft:digger",
+                    "minecraft:is_sword",
+                    "{{TIER}}"
+                ]
+            }
+        }
+    }
+}

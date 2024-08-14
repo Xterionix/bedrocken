@@ -1,0 +1,94 @@
+{
+    "name": "Sword",
+    "description": "Creates a sword item file.",
+    "packTypes": [ "bp", "rp" ],
+    "form": [
+        {
+            "id": "{{IDENTIFIER}}",
+            "label": "Enter file identifier",
+            "description": "project_prefix:identifier_sword",
+            "type": "text"
+        },
+        {
+            "id": "{{DURABILITY}}",
+            "label": "Enter max durability",
+            "description": "Golden: 33, Wood: 60, Stone: 132, Iron: 251, Diamond: 1562, Netherite: 2032",
+            "type": "number"
+        },
+        {
+            "id": "{{DAMAGE}}",
+            "label": "Enter damage",
+            "description": "Wood: 4, Golden: 4, Stone: 5, Iron: 6, Diamond: 7, Netherite: 8",
+            "type": "number"
+        },
+        {
+            "id": "{{ENCHANTABILITY}}",
+            "label": "Enter enchantability",
+            "description": "Stone: 5, Diamond: 10, Iron: 14, Wood: 15, Netherite: 15, Golden: 22",
+            "type": "number"
+        },
+        {
+            "id": "{{REPAIR_ITEM}}",
+            "label": "Enter identifier",
+            "description": "Identifier of the item used to repair the sword other than itself",
+            "type": "text"
+        },
+        {
+            "id": "{{TIER}}",
+            "label": "Enter tier",
+            "description": "Tool tier identified by its tag",
+            "type": "radio",
+            "options": [ "minecraft:diamond_tier", "minecraft:stone_tier" ]
+        }
+    ],
+    "createFiles": [
+        {
+            "packType": "bp",
+            "path": "items/armor/{{IDENTIFIER}}",
+            "files": [
+                {
+                    "name": "{{IDENTIFIER}}_helmet.json",
+                    "path": "./item_helmet.json"
+                },
+                {
+                    "name": "{{IDENTIFIER}}_boots.json",
+                    "path": "./item_boots.json"
+                },
+                {
+                    "name": "{{IDENTIFIER}}_leggings.json",
+                    "path": "./item_leggings.json"
+                },
+                {
+                    "name": "{{IDENTIFIER}}_chestplate.json",
+                    "path": "./item_chestplate.json"
+                }
+            ]
+        }
+    ],
+    "expandFiles": [
+        {
+            "type": "json",
+            "packType": "rp",
+            "path": "textures/item_texture.json",
+            "file": "./item_texture.json"
+        },
+        {
+            "type": "text",
+            "packType": "rp",
+            "path": "texts/en_US.lang",
+            "file": "./en_US.lang"
+        }
+    ],
+    "copyFiles": [
+        {
+            "packType": "rp",
+            "path": "textures/items/armor/{{IDENTIFIER}}",
+            "files": [
+                {
+                    "name": "{{IDENTIFIER}}_helmet.png",
+                    "path": "./icon_helmet.png"
+                }
+            ]
+        }
+    ]
+}
