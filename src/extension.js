@@ -11,6 +11,7 @@ const { chooseProjectPrefix } = require('./commands/chooseProjectPrefix');
 const { updateItems } = require('./commands/updateItems');
 const { generateTextureList } = require('./commands/generateTextureList');
 const { generateSoundDefinitions } = require('./commands/generateSoundDefinitions');
+const { generateItemTexture } = require('./commands/generateItemTexture');
 const { createNewProject } = require('./commands/createNewProject');
 
 const { createJsonProvider } = require('./completion/dynamicAutocomplete')
@@ -116,6 +117,7 @@ async function activate(context) {
 
 	const updateItemsCommand = vscode.commands.registerCommand('bedrocken.update_items', () => updateItems());
 	const generateTextureListCommand = vscode.commands.registerCommand('bedrocken.generate_texture_list', () => generateTextureList(rpPath));
+	const generateItemTextureCommand = vscode.commands.registerCommand('bedrocken.generate_item_texture', () => generateItemTexture(rpPath));
 	const generateSoundDefinitionsCommand = vscode.commands.registerCommand('bedrocken.generate_sound_definitions', () => generateSoundDefinitions(rpPath));
 
 	const projectSwitcherCommand = vscode.commands.registerCommand('bedrocken.switch_projects', () => projectSwitcher(context, workspacesPath))
@@ -130,7 +132,7 @@ async function activate(context) {
 	if (vscode.workspace.getConfiguration('bedrocken').get('langAutocomplete')) context.subscriptions.push(langAutocomplete)
 
 	context.subscriptions.push(
-		projectSwitcherCommand, snippetsCommand, presetsCommand, exportBpCommand, exportRpCommand, exportProjectCommand, openExportsFolderCommand, linkManifestsCommand, addScriptsManifestCommand, setProjectPrefixCommand, updateItemsCommand, generateTextureListCommand, generateSoundDefinitionsCommand, createNewProjectCommand
+		projectSwitcherCommand, snippetsCommand, presetsCommand, exportBpCommand, exportRpCommand, exportProjectCommand, openExportsFolderCommand, linkManifestsCommand, addScriptsManifestCommand, setProjectPrefixCommand, updateItemsCommand, generateTextureListCommand, generateSoundDefinitionsCommand, createNewProjectCommand, generateItemTextureCommand
 	);
 
 }

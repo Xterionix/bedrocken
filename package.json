@@ -72,6 +72,10 @@
         "title": "Bedrocken: Generate sound_definitions.json"
       },
       {
+        "command": "bedrocken.generate_item_texture",
+        "title": "Bedrocken: Generate item_texture.json"
+      },
+      {
         "command": "bedrocken.update_items",
         "title": "Bedrocken: Update Items"
       }
