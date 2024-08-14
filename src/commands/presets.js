@@ -37,10 +37,17 @@ async function presets(context, bpPath, rpPath) {
         if (packTypes.includes('rp') && !rpPath) { vscode.window.showErrorMessage('This preset requires a resource pack. No resource pack was found'); return }
 
         for (const question of form) {
-            await vscode.window.showInputBox({ prompt: question.label, placeHolder: question.description }).then(answer => {
-                answers.push(answer || question.id.replace(/{{/g, '').replace(/}}/g, ''))
-                if (question.id == '{{IDENTIFIER}}') capitalIdentifier = answer[0].toUpperCase() + answer.slice(1).replace(/_/g, ' ')
-            })
+
+            let answer;
+
+            if (question.type == 'text' || question.type == 'number') answer = (await vscode.window.showInputBox({ prompt: question.label, placeHolder: question.description }))
+            else if (question.type == 'radio') answer = question.options[(await vscode.window.showQuickPick(question.options, { title: question.label, placeHolder: question.description }))]
+
+            if (question.id == '{{IDENTIFIER}}') capitalIdentifier = answer[0].toUpperCase() + answer.slice(1).replace(/_/g, ' ')
+            if (question.type == 'number') answer = parseInt(answer)
+
+            answers.push(answer || question.id.replace(/{{/g, '').replace(/}}/g, ''))
+
         }
 
         const variables = form.map(question => question.id)
@@ -48,6 +55,8 @@ async function presets(context, bpPath, rpPath) {
         variables.push('{{IDENTIFIER_CAPITALIZE}}')
         answers.push(vscode.workspace.getConfiguration('bedrocken').get('projectPrefix') || 'bedrocken')
         answers.push(capitalIdentifier)
+
+        return;
 
         for (const createOptions of createFiles) {
             const createPath = path.join(createOptions.packType == 'bp' ? bpPath : rpPath, applyVariables(createOptions.path, variables, answers))
