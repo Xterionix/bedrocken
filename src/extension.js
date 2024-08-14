@@ -115,7 +115,7 @@ async function activate(context) {
 	const openExportsFolderCommand = vscode.commands.registerCommand('bedrocken.open_exports_folder', () => openExportsFolder())
 	const createNewProjectCommand = vscode.commands.registerCommand('bedrocken.new_project', () => createNewProject(context, workspacesPath))
 
-	const updateItemsCommand = vscode.commands.registerCommand('bedrocken.update_items', () => updateItems());
+	const updateItemsCommand = vscode.commands.registerCommand('bedrocken.update_items', () => updateItems(bpPath));
 	const generateTextureListCommand = vscode.commands.registerCommand('bedrocken.generate_texture_list', () => generateTextureList(rpPath));
 	const generateItemTextureCommand = vscode.commands.registerCommand('bedrocken.generate_item_texture', () => generateItemTexture(rpPath));
 	const generateSoundDefinitionsCommand = vscode.commands.registerCommand('bedrocken.generate_sound_definitions', () => generateSoundDefinitions(rpPath));
