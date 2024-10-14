@@ -39,7 +39,7 @@ async function activate(context) {
 
 	console.log("Bedrocken is Active!")
 
-	let bpPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath
+	let bpPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath //TODO: Rely on manifest.json's within the folder
 	let rpPath = vscode.workspace.workspaceFolders?.[1]?.uri.fsPath
 
 	const workspacesPath = path.join(context.globalStorageUri.fsPath, 'workspaces');
