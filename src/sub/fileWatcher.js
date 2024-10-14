@@ -52,7 +52,9 @@ class Filewatcher {
                 break;
             case 'structures': this.system.getCache().structures = []; this.system.processDirectory(readPath, 'structure')
                 break;
-            case 'scripts': this.system.getCache().block.custom_components = []; this.system.getCache().item.custom_components = []; this.system.processDirectory(readPath, 'script');
+            case 'scripts':
+                this.system.getCache().block.custom_components = []; this.system.getCache().item.custom_components = []; this.system.getCache().texts = [];
+                this.system.processDirectory(readPath, 'script');
                 break;
             case 'animations':
                 if (readPath.startsWith(this.bpPath)) { this.system.getCache().bp_animations = []; this.system.processDirectory(readPath, 'bp_animation') }

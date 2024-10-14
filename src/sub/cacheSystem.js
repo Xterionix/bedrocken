@@ -58,7 +58,8 @@ class CacheSystem {
         features: [],
         loot_tables: [],
         trade_tables: [],
-        functions: []
+        functions: [],
+        texts: []
     }
 
     /**
@@ -313,6 +314,9 @@ class CacheSystem {
         (text.match(/(?:itemComponentRegistry|event\.itemTypeRegistry|itemTypeRegistry)\.registerCustomComponent\(['"]([^'"]*)['"]/g) || []).forEach(match => {
             this.#cache.item.custom_components.push(match.match(/['"]([^'"]*)['"]/)[1]);
         });
+        (text.match(/(?<=\{\s*translate\s*:\s*\')([\w:.]+)(?='\s*\})/g) || []).forEach(match => {
+            this.#cache.texts.push(match)
+        })
     }
 
 
