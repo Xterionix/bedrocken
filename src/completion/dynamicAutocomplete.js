@@ -55,6 +55,8 @@ function createJsonProvider(system) {
                 .replace(/(?<=recipe_shaped\[\|]key).*?(?=\[\|]item|$)/g, '')
                 .replace(/(?<=recipe_shaped\[\|\])key$.*/g, 'key[|]property')
                 .replace('entity_sounds[|]entities[|]events', 'entity_sounds[|]entities[|]events[|]sound')
+                .replace('entity_sounds[|]entities', 'entity_sounds[|]mobs')
+                .replace(/(?<=entity_sounds\[\|\]mobs).*/g, '')
                 .replace(/minecraft:geometry$/gm, 'minecraft:geometry[|]identifier')
                 .replace(/(?<=minecraft:ageable\[\|])feed_items$/gm, 'feed_items[|]item')
                 .replace(/(?<=animation_controllers\[\|]).*?(?=states)/g, '')
@@ -683,7 +685,8 @@ function createJsonProvider(system) {
                         events: {
                             sound: allSounds
                         }
-                    }
+                    },
+                    mobs: allEntities
                 },
                 sound_definitions: {
                     sounds: system.getCache().sounds
@@ -745,6 +748,9 @@ function createJsonProvider(system) {
                     states: {
                         transitions: true
                     }
+                },
+                entity_sounds: {
+                    mobs: true
                 }
             }
 
