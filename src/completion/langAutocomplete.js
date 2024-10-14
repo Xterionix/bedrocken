@@ -22,7 +22,7 @@ function createLangProvider(system) {
                 let completion;
 
                 if (line.startsWith('action.hint.exit.')) completion = 'Press :_input_key.sneak: to Dismount'
-                else completion = line.split('=')[0].split(':').pop().split('_').map(str => str[0].toUpperCase() + str.slice(1)).join(' ')
+                else completion = line.split('=')[0].split(':').pop().split('.').pop().split('_').map(str => str[0].toUpperCase() + str.slice(1)).join(' ')
 
                 if (line.startsWith('item.spawn_egg')) completion = completion + ' Spawn Egg'
 
