@@ -17,7 +17,7 @@ async function generateSoundDefinitions(rpPath) {
     }
 
     files.forEach(file => {
-        const group = path.dirname(file).replace('/', '.')
+        const group = path.dirname(file).replace(/\//g, '.')
         const type = path.basename(file).split('_')[0]
         const category = group + '.' + type
         if (output['sound_definitions'][category]) output['sound_definitions'][category]['sounds'].push('sounds/' + file)
