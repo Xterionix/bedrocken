@@ -10,7 +10,7 @@ const completelyRemovedComponents = ['minecraft:dye_powder', 'minecraft:armor', 
 
 async function updateItems(bpPath) {
 
-    const itemsPath = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'items');
+    const itemsPath = path.join(bpPath, 'items');
 
     if (!(await exists(itemsPath))) return;
 

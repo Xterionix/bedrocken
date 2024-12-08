@@ -20,11 +20,10 @@ async function snippets(context, bpPath, rpPath) {
     if (!vscode.window.activeTextEditor) { vscode.window.showErrorMessage('Snippets can only be run when you have a file open'); return };
 
     const document = vscode.window.activeTextEditor.document
-    const workspace = vscode.workspace.workspaceFolders.find(folder => document.uri.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? bpPath : rpPath
+    const workspace = document.uri.fsPath.startsWith(bpPath) ? bpPath : rpPath
     const folderName = path.relative(workspace, document.uri.fsPath).split(path.sep)[0]
     const fileContent = parse(document.getText())
-    const workspaceIndex = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.findIndex(folder => vscode.window.activeTextEditor.document.uri.fsPath.startsWith(folder.uri.fsPath)) : -1;
-    const packType = workspaceIndex == 0 ? "bp" : "rp"
+    const packType = workspace == bpPath ? "bp" : "rp"
     const fileName = document.fileName.split('\\').pop()
 
     snippets = snippets.filter(snippet => snippet.folder == folderName).filter(snippet => snippet.packType == packType).filter(snippet => fileName.endsWith(snippet.fileType))

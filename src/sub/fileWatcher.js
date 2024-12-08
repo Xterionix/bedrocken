@@ -32,7 +32,7 @@ class Filewatcher {
 
         if (e.fsPath.includes(' copy.json')) return;
 
-        const workspace = vscode.workspace.workspaceFolders.find(folder => e.fsPath.startsWith(folder.uri.fsPath)).index == 0 ? this.bpPath : this.rpPath
+        const workspace = e.fsPath.startsWith(this.bpPath) ? this.bpPath : this.rpPath
         const folderName = path.relative(workspace, e.fsPath).split('\\')[0]
         const readPath = path.join(workspace, folderName)
         const fileName = path.basename(e.fsPath)
