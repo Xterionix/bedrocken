@@ -59,7 +59,8 @@ class CacheSystem {
         loot_tables: [],
         trade_tables: [],
         functions: [],
-        texts: []
+        texts: [],
+        fogs: []
     }
 
     /**
@@ -86,7 +87,8 @@ class CacheSystem {
     * 'terrain_texture' |
     * 'rp_entity'|
     * 'function'|
-    * 'client_biome'
+    * 'client_biome'|
+    * 'fog'
     * } FileType
     */
 
@@ -182,11 +184,15 @@ class CacheSystem {
                     break;
                 case 'rp_entity': this.#processClientEntityFile(json)
                     break;
+                case 'fog': this.#processFogFile(json);
+                    break;
                 case 'item_texture': this.#processItemTextures(json)
                     break;
                 case 'terrain_texture': this.#processTerrainTextures(json)
                     break;
                 case 'sound_definition': this.#processSoundDefinitions(json)
+                    break;
+                case 'client_biome':
                     break;
                 default: console.warn(`Unknown file type: ${type}`)
                     break;
@@ -249,6 +255,10 @@ class CacheSystem {
     }
     #processStructureFile(name) {
         this.#cache.structures.push('mystructure:' + name.split('.')[0])
+    }
+    #processFogFile(json) {
+        const identifier = json["minecraft:fog_settings"]?.["description"]?.["identifier"]
+        if (identifier) this.#cache.fogs.push(identifier)
     }
     #processItemTextures(json) {
         this.#cache.textures.items = Object.keys(json["texture_data"]).sort()

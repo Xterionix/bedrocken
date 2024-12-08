@@ -689,7 +689,15 @@ function createJsonProvider(system) {
                             addition: allSounds,
                             loop: allSounds,
                             mood: allSounds
+                        },
+                        "minecraft:fog_appearance": {
+                            fog_identifier: system.getCache().fogs
                         }
+                    }
+                },
+                "minecraft:fog_settings": {
+                    description: {
+                        identifier: fileBasedIdentifier
                     }
                 },
                 entity_sounds: {

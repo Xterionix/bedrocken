@@ -66,6 +66,8 @@ class Filewatcher {
                 break;
             case 'block_culling': this.system.getCache().block_culling_rules = []; this.system.processDirectory(readPath, 'block_culling_rule')
                 break;
+            case 'fogs': this.system.getCache().fogs = []; this.system.processDirectory(readPath, 'fog')
+                break;
             case 'particles': this.system.getCache().particles = []; this.system.processDirectory(readPath, 'particle')
                 break;
             case 'render_controllers': this.system.getCache().rendercontrollers = []; this.system.processDirectory(readPath, 'rendercontroller')
