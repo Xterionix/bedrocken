@@ -4,12 +4,13 @@ const path = require('path');
 const { parse } = require('jsonc-parser');
 
 
-async function linkManifests() {
+async function linkManifests(bpPath, rpPath) {
 
-    if (vscode.workspace.workspaceFolders.length == 1) { vscode.window.showErrorMessage('No resource pack found'); return; }
+    if (!bpPath) { vscode.window.showErrorMessage('No behavior pack found'); return; }
+    if (!rpPath) { vscode.window.showErrorMessage('No resource pack found'); return; }
 
-    const bpManifestPath = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'manifest.json')
-    const rpManifestPath = path.join(vscode.workspace.workspaceFolders[1].uri.fsPath, 'manifest.json')
+    const bpManifestPath = path.join(bpPath, 'manifest.json')
+    const rpManifestPath = path.join(rpPath, 'manifest.json')
 
     const bpManifest = parse((await fs.promises.readFile(bpManifestPath)).toString())
     const rpManifest = parse((await fs.promises.readFile(rpManifestPath)).toString())

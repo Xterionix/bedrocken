@@ -6,7 +6,7 @@ const os = require('os');
 
 const downloadsFolder = path.join(os.homedir(), 'Downloads')
 
-async function exportBp() {
+async function exportBp(bpPath) {
 
     let location = vscode.workspace.getConfiguration('bedrocken').get('export.location')
     if (!location) vscode.workspace.getConfiguration('bedrocken').update('export.location', downloadsFolder)
@@ -27,7 +27,7 @@ async function exportBp() {
 
         zip.pipe(output)
         zip.glob('**/*', {
-            cwd: vscode.workspace.workspaceFolders[0].uri.fsPath,
+            cwd: bpPath,
             ignore: ['.git/**']
         });
         return zip.finalize()

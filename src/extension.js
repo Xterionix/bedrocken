@@ -59,6 +59,9 @@ async function activate(context) {
 
 	} catch (error) { }
 
+	console.log('BP: ', bpPath);
+	console.log('RP: ', rpPath);
+
 	try {
 
 		const manifest = parse((await fs.promises.readFile(path.join(bpPath, 'manifest.json'))).toString())
@@ -106,12 +109,12 @@ async function activate(context) {
 
 	if (!(await exists(workspacesPath))) await fs.promises.mkdir(workspacesPath, { recursive: true })
 
-	const addScriptsManifestCommand = vscode.commands.registerCommand('bedrocken.add_scripts_manifests', () => addScriptsToManifest())
-	const linkManifestsCommand = vscode.commands.registerCommand('bedrocken.link_manifests', () => linkManifests())
+	const addScriptsManifestCommand = vscode.commands.registerCommand('bedrocken.add_scripts_manifests', () => addScriptsToManifest(bpPath))
+	const linkManifestsCommand = vscode.commands.registerCommand('bedrocken.link_manifests', () => linkManifests(bpPath, rpPath))
 
-	const exportBpCommand = vscode.commands.registerCommand('bedrocken.export_bp', () => exportBp())
-	const exportRpCommand = vscode.commands.registerCommand('bedrocken.export_rp', () => exportRp())
-	const exportProjectCommand = vscode.commands.registerCommand('bedrocken.export_project', () => exportProject())
+	const exportBpCommand = vscode.commands.registerCommand('bedrocken.export_bp', () => exportBp(bpPath))
+	const exportRpCommand = vscode.commands.registerCommand('bedrocken.export_rp', () => exportRp(rpPath))
+	const exportProjectCommand = vscode.commands.registerCommand('bedrocken.export_project', () => exportProject(bpPath, rpPath))
 	const openExportsFolderCommand = vscode.commands.registerCommand('bedrocken.open_exports_folder', () => openExportsFolder())
 	const createNewProjectCommand = vscode.commands.registerCommand('bedrocken.new_project', () => createNewProject(context, workspacesPath))
 

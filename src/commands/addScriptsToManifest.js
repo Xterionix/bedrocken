@@ -10,9 +10,9 @@ const scriptVersion = {
     "@minecraft/common": ["1.2.0", "1.1.0", "1.0.0"]
 }
 
-async function addScriptsToManifest() {
+async function addScriptsToManifest(bpPath) {
 
-    const manifestPath = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'manifest.json')
+    const manifestPath = path.join(bpPath, 'manifest.json')
 
     const manifest = parse((await fs.promises.readFile(manifestPath)).toString())
 

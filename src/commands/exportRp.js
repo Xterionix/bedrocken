@@ -5,12 +5,9 @@ const fs = require('fs');
 const path = require('path');
 const archiver = require('archiver');
 
-async function exportRp() {
+async function exportRp(rpPath) {
 
-    if (vscode.workspace.workspaceFolders.length == 1) {
-        vscode.window.showErrorMessage('No resource pack found')
-        return;
-    }
+    if (rpPath) { vscode.window.showErrorMessage('No resource pack found'); return; }
 
     let location = vscode.workspace.getConfiguration('bedrocken').get('export.location')
     if (!location) vscode.workspace.getConfiguration('bedrocken').update('export.location', downloadsFolder)
@@ -31,7 +28,7 @@ async function exportRp() {
 
         zip.pipe(output)
         zip.glob('**/*', {
-            cwd: vscode.workspace.workspaceFolders[1].uri.fsPath,
+            cwd: rpPath,
             ignore: ['.git/**']
         });
         return zip.finalize()
