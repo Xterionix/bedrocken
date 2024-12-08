@@ -26,7 +26,7 @@ function openExportsFolder() {
 
     const command = explorerCommand[userOS]
 
-    exec(`${command} ${path.join(location)}`, (err, stdout, stderr) => {
+    exec(`${command} ${location}`, (err, stdout, stderr) => {
         if (err || stderr) {
             console.warn('Err: ' + err, 'Std err: ' + stderr)
             return;
