@@ -1,4 +1,5 @@
 const { CacheSystem } = require('../sub/cacheSystem');
+const { valueFromJsonPath } = require('../sub/util')
 
 const path = require('path');
 const vscode = require('vscode');
@@ -856,10 +857,6 @@ function createJsonProvider(system) {
         }
     })
 
-}
-
-function valueFromJsonPath(path, object) {
-    return path.reduce((acc, key) => acc && acc[key], object)
 }
 
 function isInQuotes(_, offset, length, document, position) {

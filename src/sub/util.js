@@ -24,4 +24,9 @@ function mergeDeep(target, source) {
     return target;
 }
 
-module.exports = { exists, mergeDeep }
+function valueFromJsonPath(path, object) {
+    if (!(path instanceof Array)) throw new TypeError("Expected an array. Did not receive an array")
+    return path.reduce((acc, key) => acc && acc[key], object)
+}
+
+module.exports = { exists, mergeDeep, valueFromJsonPath }
