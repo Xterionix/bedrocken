@@ -3,3 +3,4 @@ node_modules
 # *.vsix
 data/workspaces/**
 dist/**
+scripts/**.txt
