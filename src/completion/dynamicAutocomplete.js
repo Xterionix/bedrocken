@@ -710,7 +710,12 @@ function createJsonProvider(system) {
                 values: system.getCache().functions,
                 pools: {
                     entries: {
-                        name: valueFromJsonPath(actualPath.slice(0, -1).concat('type'), jsonInDoc) ? valueFromJsonPath(actualPath.slice(0, -1).concat('type'), jsonInDoc) == 'loot_table' ? system.getCache().loot_tables : allItems : []
+                        name: valueFromJsonPath(actualPath.slice(0, -1).concat('type'), jsonInDoc) ? valueFromJsonPath(actualPath.slice(0, -1).concat('type'), jsonInDoc) == 'loot_table' ? system.getCache().loot_tables : allItems : [],
+                        functions: {
+                            conditions: {
+                                entity_type: allEntities
+                            }
+                        }
                     }
                 }
             }
