@@ -5,9 +5,9 @@ const { parse } = require('jsonc-parser');
 const { v4 } = require('uuid');
 
 const scriptVersion = {
-    "@minecraft/server": ["1.0.0", "1.1.0", "1.2.0", "1.3.0", "1.4.0", "1.5.0", "1.6.0", "1.7.0", "1.8.0", "1.9.0", "1.10.0", "1.10.0", "1.11.0", "1.12.0-beta"],
-    "@minecraft/server-ui": ["1.0.0", "1.1.0", "1.2.0-beta"],
-    "@minecraft/common": ["1.2.0", "1.1.0", "1.0.0"]
+    "@minecraft/server": ["1.0.0", "1.1.0", "1.2.0", "1.3.0", "1.4.0", "1.5.0", "1.6.0", "1.7.0", "1.8.0", "1.9.0", "1.10.0", "1.10.0", "1.11.0", "1.12.0", "1.13.0", "1.14.0", "1.15.0", "1.16.0", "1.17.0-beta"],
+    "@minecraft/server-ui": ["1.0.0", "1.1.0", "1.2.0", "1.3.0", "1.4.0-beta"],
+    "@minecraft/common": ["1.0.0", "1.1.0", "1.2.0"]
 }
 
 async function addScriptsToManifest(bpPath) {
