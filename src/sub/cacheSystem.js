@@ -85,7 +85,8 @@ class CacheSystem {
     * 'item_texture' |
     * 'terrain_texture' |
     * 'rp_entity'|
-    * 'function'
+    * 'function'|
+    * 'client_biome'
     * } FileType
     */
 

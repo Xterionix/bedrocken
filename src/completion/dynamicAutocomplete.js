@@ -680,6 +680,18 @@ function createJsonProvider(system) {
                     result: allItems,
                     addition: 'minecraft:netherite_ingot'
                 },
+                "minecraft:client_biome": {
+                    description: {
+                        identifier: fileBasedIdentifier
+                    },
+                    components: {
+                        "minecraft:ambient_sounds": {
+                            addition: allSounds,
+                            loop: allSounds,
+                            mood: allSounds
+                        }
+                    }
+                },
                 entity_sounds: {
                     entities: {
                         events: {
