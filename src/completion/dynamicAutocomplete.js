@@ -36,7 +36,7 @@ function createJsonProvider(system) {
                 .join('[|]')
                 .replace('minecraft:icon[|]textures[|]default', 'minecraft:icon')
                 .replace('permutations[|]', '')
-                .replace(/minecraft:material_instances\[[^\]]*\]([^[]*)texture/, 'minecraft:material_instances[|]*[|]texture')
+                .replace(/(?<=minecraft:material_instances\[\|\]).*?(?=\[\|\]texture)/g, '*')
                 .replace(/_groups\[\|\][a-zA-Z0-9$!_]+/g, 's')
                 .replace(/(?<=minecraft:entity).*?(?=filters)/g, '[|]')
                 .replace(/(?<=events).*?(?=component_groups)/g, '[|]')
@@ -87,7 +87,8 @@ function createJsonProvider(system) {
                 jsonPath.push(test)
             }
 
-            console.log(jsonPath)
+            console.log('Path', jsonPath)
+            console.log('Actual Path', actualPath)
 
             const dynamicAutocomplete = {
                 "minecraft:entity": {
@@ -820,14 +821,14 @@ function createJsonProvider(system) {
 
             } else {
 
-                if (isPropertyCompletion && !isInProperty && !(typeof actualPath.slice().reverse()[0] == 'number' && valueFromJsonPath(jsonPath, bothCompletion))) return;
-                if (!isPropertyCompletion && isInProperty) return;
-
                 switch (document.fileName.split('\\').pop()) {
                     case 'blocks.json':
-                        if (jsonPath[0] === '') value = system.getCache().block.ids.filter(id => !jsonInDoc[id])
+                        // TODO: Suggest block_id>texture
+                        if (jsonPath.length == 1) value = system.getCache().block.ids.filter(id => !jsonInDoc[id])
                         break;
                     default:
+                        if (isPropertyCompletion && !isInProperty && !(typeof actualPath.slice().reverse()[0] == 'number' && valueFromJsonPath(jsonPath, bothCompletion))) return;
+                        if (!isPropertyCompletion && isInProperty) return;
                         value = valueFromJsonPath(jsonPath, dynamicAutocomplete)
                         const valueInDoc = valueFromJsonPath(jsonPath, jsonInDoc)
                         if (Array.isArray(valueInDoc) && typeof value != 'string') value = value.filter(x => !valueInDoc.includes(x))
