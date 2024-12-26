@@ -91,7 +91,7 @@ async function projectSwitcher(context, workspacesPath) {
             }
         });
     } catch (error) {
-        console.warn(error)
+        console.warn('Errored when switching projects:', error)
     }
 
 }
