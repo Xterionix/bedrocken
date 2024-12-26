@@ -408,6 +408,9 @@ function createJsonProvider(system) {
                 "minecraft:spawn_rules": {
                     description: {
                         identifier: system.getCache().entity.ids
+                    },
+                    conditions: {
+                        "minecraft:spawns_on_block_filter": allBlocks
                     }
                 },
                 "minecraft:item": {
