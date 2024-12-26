@@ -7,6 +7,8 @@ const fs = require('fs');
 const path = require('path');
 const { parse, stringify } = require('comment-json');
 
+//TODO: Support conditions
+
 /**
  * @param {vscode.ExtensionContext} context
  * @param {string} bpPath
