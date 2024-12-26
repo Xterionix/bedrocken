@@ -76,6 +76,10 @@
         "title": "Bedrocken: Generate item_texture.json"
       },
       {
+        "command": "bedrocken.generate_terrain_texture",
+        "title": "Bedrocken: Generate terrain_texture.json"
+      },
+      {
         "command": "bedrocken.update_items",
         "title": "Bedrocken: Update Items"
       }

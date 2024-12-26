@@ -1,3 +1,5 @@
+import { generateTerrainTexture } from './commands/generateTerrainTexture';
+
 const { projectSwitcher } = require('./commands/projectSwitcher');
 const { presets } = require('./commands/presets');
 const { snippets } = require('./commands/snippets');
@@ -123,6 +125,7 @@ async function activate(context) {
 	const updateItemsCommand = vscode.commands.registerCommand('bedrocken.update_items', () => updateItems(bpPath));
 	const generateTextureListCommand = vscode.commands.registerCommand('bedrocken.generate_texture_list', () => generateTextureList(rpPath));
 	const generateItemTextureCommand = vscode.commands.registerCommand('bedrocken.generate_item_texture', () => generateItemTexture(rpPath));
+	const generateTerrainTextureCommand = vscode.commands.registerCommand('bedrocken.generate_terrain_texture', () => generateTerrainTexture(rpPath));
 	const generateSoundDefinitionsCommand = vscode.commands.registerCommand('bedrocken.generate_sound_definitions', () => generateSoundDefinitions(rpPath));
 
 	const projectSwitcherCommand = vscode.commands.registerCommand('bedrocken.switch_projects', () => projectSwitcher(context, workspacesPath))
@@ -137,7 +140,7 @@ async function activate(context) {
 	if (vscode.workspace.getConfiguration('bedrocken').get('langAutocomplete')) context.subscriptions.push(langAutocomplete)
 
 	context.subscriptions.push(
-		projectSwitcherCommand, snippetsCommand, presetsCommand, exportBpCommand, exportRpCommand, exportProjectCommand, openExportsFolderCommand, linkManifestsCommand, addScriptsManifestCommand, setProjectPrefixCommand, updateItemsCommand, generateTextureListCommand, generateSoundDefinitionsCommand, createNewProjectCommand, generateItemTextureCommand
+		projectSwitcherCommand, snippetsCommand, presetsCommand, exportBpCommand, exportRpCommand, exportProjectCommand, openExportsFolderCommand, linkManifestsCommand, addScriptsManifestCommand, setProjectPrefixCommand, updateItemsCommand, generateTextureListCommand, generateSoundDefinitionsCommand, createNewProjectCommand, generateItemTextureCommand, generateTerrainTextureCommand
 	);
 
 }
