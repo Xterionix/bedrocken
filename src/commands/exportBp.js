@@ -5,6 +5,7 @@ const archiver = require('archiver');
 const os = require('os');
 
 const downloadsFolder = path.join(os.homedir(), 'Downloads')
+const ignoreFolders = ['.git/**', '.vscode/**']
 
 async function exportBp(bpPath) {
 
@@ -28,7 +29,7 @@ async function exportBp(bpPath) {
         zip.pipe(output)
         zip.glob('**/*', {
             cwd: bpPath,
-            ignore: ['.git/**']
+            ignore: ignoreFolders
         });
         return zip.finalize()
 
@@ -41,4 +42,4 @@ async function exportBp(bpPath) {
 
 }
 
-module.exports = { exportBp, downloadsFolder }
+module.exports = { exportBp, downloadsFolder, ignoreFolders }

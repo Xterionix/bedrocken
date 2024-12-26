@@ -1,14 +1,11 @@
 const { parse } = require('jsonc-parser');
 
-const { downloadsFolder } = require('./exportBp');
+const { downloadsFolder, ignoreFolders } = require('./exportBp');
 
 const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
 const archiver = require('archiver');
-const os = require('os');
-
-const ignoreFolders = ['.git/**', '.vscode/**']
 
 async function exportProject(bpPath, rpPath) {
 

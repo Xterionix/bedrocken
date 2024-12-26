@@ -1,4 +1,4 @@
-const { downloadsFolder } = require('./exportBp');
+const { downloadsFolder, ignoreFolders } = require('./exportBp');
 
 const vscode = require('vscode');
 const fs = require('fs');
@@ -29,7 +29,7 @@ async function exportRp(rpPath) {
         zip.pipe(output)
         zip.glob('**/*', {
             cwd: rpPath,
-            ignore: ['.git/**']
+            ignore: ignoreFolders
         });
         return zip.finalize()
 
