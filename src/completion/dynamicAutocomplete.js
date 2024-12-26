@@ -826,8 +826,9 @@ function createJsonProvider(system) {
 
                 switch (document.fileName.split('\\').pop()) {
                     case 'blocks.json':
-                        // TODO: Suggest block_id>texture
                         if (jsonPath.length == 1) value = system.getCache().block.ids.filter(id => !jsonInDoc[id])
+                        if (jsonPath.length == 2 && jsonPath[1] == 'textures') value = system.getCache().textures.terrain
+                        if (jsonPath.length == 3 && jsonPath[1] == 'textures' && !isInProperty) value = system.getCache().textures.terrain
                         break;
                     default:
                         if (isPropertyCompletion && !isInProperty && !(typeof actualPath.slice().reverse()[0] == 'number' && valueFromJsonPath(jsonPath, bothCompletion))) return;
