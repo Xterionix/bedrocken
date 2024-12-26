@@ -1,5 +1,3 @@
-import { generateTerrainTexture } from './commands/generateTerrainTexture';
-
 const { projectSwitcher } = require('./commands/projectSwitcher');
 const { presets } = require('./commands/presets');
 const { snippets } = require('./commands/snippets');
@@ -14,6 +12,7 @@ const { updateItems } = require('./commands/updateItems');
 const { generateTextureList } = require('./commands/generateTextureList');
 const { generateSoundDefinitions } = require('./commands/generateSoundDefinitions');
 const { generateItemTexture } = require('./commands/generateItemTexture');
+const { generateTerrainTexture } = require('./commands/generateTerrainTexture');
 const { createNewProject } = require('./commands/createNewProject');
 
 const { createJsonProvider } = require('./completion/dynamicAutocomplete')
