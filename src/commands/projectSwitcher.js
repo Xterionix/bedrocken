@@ -71,6 +71,7 @@ async function projectSwitcher(context, workspacesPath) {
 
         if (options.length == 0) { vscode.window.showErrorMessage('No directories found'); return; }
 
+        //TODO: Migrate to form
         vscode.window.showQuickPick(options.sort()).then(async selectedOption => {
             if (selectedOption) {
                 const workspaceFile = path.join(workspacesPath, selectedOption.replace(' [BP]', '').replace(' [RP]', '').toLowerCase() + '.code-workspace')

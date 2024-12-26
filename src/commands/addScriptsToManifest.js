@@ -1,3 +1,4 @@
+const { Form } = require('../sub/form');
 const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
@@ -9,6 +10,8 @@ const scriptVersion = {
     "@minecraft/server-ui": ["1.0.0", "1.1.0", "1.2.0", "1.3.0", "1.4.0-beta"],
     "@minecraft/common": ["1.0.0", "1.1.0", "1.2.0"]
 }
+
+const moduleForm = new Form([{ type: 'checkbox', description: 'Choose script modules', label: 'Script Modules', options: ["@minecraft/server", "@minecraft/server-ui"] }]);
 
 async function addScriptsToManifest(bpPath) {
 
@@ -23,11 +26,12 @@ async function addScriptsToManifest(bpPath) {
 
     dependencies = dependencies.filter(obj => !obj.hasOwnProperty('module_name'))
 
-    const versions = await vscode.window.showQuickPick(["@minecraft/server", "@minecraft/server-ui"], { canPickMany: true })
+    const versions = (await moduleForm.show())[0]
 
-    if (!versions) return;
+    if (!versions || !Array.isArray(versions)) return;
 
     for (const option of versions) {
+        //TODO: Cache the form?
         const version = await vscode.window.showQuickPick(scriptVersion[option].slice().reverse(), { title: option });
         dependencies.push({ "module_name": option, "version": version });
     }

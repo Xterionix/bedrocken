@@ -5,7 +5,7 @@ const vscode = require('vscode');
  * @property {'text'|'integer'|'float'|'radio'|'checkbox'} type
  * @property {string} label
  * @property {string} description
- * @property {string[]|undefined} options
+ * @property {string[]=} options
  */
 
 class Form {
@@ -34,7 +34,7 @@ class Form {
                     answers[i] = await vscode.window.showQuickPick(question.options, { title: question.label, placeHolder: question.description });
                     if (answers[i] == undefined) return; break;
                 case 'checkbox':
-                    answers[i] = (await vscode.window.showQuickPick(question.options, { title: question.label, placeHolder: question.description, canPickMany: true })).join(',');
+                    answers[i] = (await vscode.window.showQuickPick(question.options, { title: question.label, placeHolder: question.description, canPickMany: true }));
                     if (answers[i] == undefined) return; break;
                 default:
                     throw new Error('Invalid question type ' + question.type + ' received')

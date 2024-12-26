@@ -11,10 +11,11 @@ const mojangFolder = process.env.APPDATA.replace('Roaming', '') + '//Local/Packa
  */
 async function createNewProject(context, workspacesPath) {
 
-    const bpName = await vscode.window.showInputBox({ prompt: 'Enter Behavior Pack name', placeHolder: 'Addon #424 [BP]' })
-    const bpDescription = (await vscode.window.showInputBox({ prompt: 'Enter Behavior Pack description', placeHolder: 'Another new addon!' })) || ''
+    //TODO: Migrate to form?
+    const bpName = await vscode.window.showInputBox({ prompt: '', placeHolder: 'Addon #424 [BP]' })
+    const bpDescription = (await vscode.window.showInputBox({ prompt: 'Enter Behavior Pack ', placeHolder: 'Another new addon!' })) || ''
 
-    const rpName = (await vscode.window.showInputBox({ prompt: 'Enter Resource Pack name', placeHolder: 'Addon #424 [RP]' })) || ''
+    const rpName = (await vscode.window.showInputBox({ prompt: 'Enter  Pack name', placeHolder: 'Addon #424 [RP]' })) || ''
     const rpDescription = (await vscode.window.showInputBox({ prompt: 'Enter Resource Pack description', placeHolder: 'Another new addon!' })) || bpDescription
 
     if (!bpName) return;

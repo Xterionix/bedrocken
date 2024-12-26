@@ -1,11 +1,13 @@
+const { Form } = require('../sub/form');
 const vscode = require('vscode');
 
-function chooseProjectPrefix() {
+const prefixForm = new Form([{ label: 'Project Prefix', description: 'project_prefix: <-', type: 'text' }])
 
-    vscode.window.showInputBox({ title: 'Project Prefix' }).then(value => {
-        vscode.workspace.getConfiguration('bedrocken').update('projectPrefix', value, vscode.ConfigurationTarget.Workspace)
-        vscode.window.setStatusBarMessage('Project prefix set to ' + value, 2000)
-    })
+async function chooseProjectPrefix() {
+
+    const value = (await prefixForm.show())[0]
+    vscode.workspace.getConfiguration('bedrocken').update('projectPrefix', value, vscode.ConfigurationTarget.Workspace)
+    vscode.window.setStatusBarMessage('Project prefix set to ' + value, 2000)
 
 }
 
