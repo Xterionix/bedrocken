@@ -1,3 +1,5 @@
+const { parse } = require('jsonc-parser');
+const { exists } = require('../sub/util');
 const vscode = require('vscode');
 const path = require('path');
 const fs = require('fs');
@@ -7,24 +9,24 @@ async function generateItemTexture(rpPath) {
 
     if (!rpPath) { vscode.window.showErrorMessage('No resource pack found'); return; }
 
-    const files = (await glob.glob('textures/**/*.{png,jpg,jpeg,tga}', { cwd: rpPath })).map(file => file.replace(/\\/g, '/').replace(new RegExp(path.extname(file), 'g'), ''))
+    const files = (await glob.glob('textures/**/items/*.{png,jpg,jpeg,tga}', { cwd: rpPath })).map(file => file.replace(/\\/g, '/').replace(new RegExp(path.extname(file), 'g'), ''))
 
     if (!files.length) return;
 
-    const output = {
-        resource_pack_name: "rp",
-        texture_name: "atlas.items",
-        texture_data: {}
-    }
+    const atlasPath = path.join(rpPath, 'textures/item_texture.json');
+
+    const output = await exists(atlasPath) ? parse((await fs.promises.readFile(atlasPath)).toString()) : { resource_pack_name: "rp", texture_name: "atlas.items" }
+
+    output['texture_data'] = {};
 
     files.forEach(file => {
-        console.warn(path.basename(file) + '_' + path.dirname(file).split('/').slice().reverse()[0])
-        output.texture_data[path.basename(file) + '_' + path.dirname(file).split('/').slice().reverse()[0]] = {
+        const suffix = path.dirname(file).split('/').slice().reverse()[0]
+        output.texture_data[path.basename(file) + (suffix != 'items' ? '_' + suffix : '')] = {
             textures: file
         }
     })
 
-    await fs.promises.writeFile(path.join(rpPath, 'textures/item_texture.json'), JSON.stringify(output, null, 4))
+    await fs.promises.writeFile(atlasPath, JSON.stringify(output, null, 4))
 
     vscode.window.setStatusBarMessage('item_texture.json generated', 2000)
 
