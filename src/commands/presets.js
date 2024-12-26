@@ -1,3 +1,4 @@
+const { Form } = require('../sub/form');
 const { mergeDeep } = require('../sub/util');
 const { getAllFilePaths } = require('../sub/cacheSystem');
 
@@ -30,25 +31,16 @@ async function presets(context, bpPath, rpPath) {
         const createFiles = preset["createFiles"]
         const expandFiles = preset["expandFiles"]
         const copyFiles = preset["copyFiles"]
-        const answers = []
 
-        let capitalIdentifier = 'Bedrocken'
+        let capitalIdentifier = 'Bedrocken';
 
         if (packTypes.includes('rp') && !rpPath) { vscode.window.showErrorMessage('This preset requires a resource pack. No resource pack was found'); return }
 
-        for (const question of form) {
+        const presetForm = new Form(form);
+        const answers = await presetForm.show();
 
-            let answer;
-
-            if (question.type == 'text' || question.type == 'number') answer = (await vscode.window.showInputBox({ prompt: question.label, placeHolder: question.description }))
-            else if (question.type == 'radio') answer = question.options[(await vscode.window.showQuickPick(question.options, { title: question.label, placeHolder: question.description }))]
-
-            if (question.id == '{{IDENTIFIER}}') capitalIdentifier = answer[0].toUpperCase() + answer.slice(1).replace(/_/g, ' ')
-            if (question.type == 'number') answer = parseInt(answer)
-
-            answers.push(answer || question.id.replace(/{{/g, '').replace(/}}/g, ''))
-
-        }
+        capitalIdentifier = answers[form.findIndex(q => q.id == '{{IDENTIFIER}}')].toString()
+        capitalIdentifier = capitalIdentifier[0].toUpperCase() + capitalIdentifier.slice(1).replace(/_/g, ' ')
 
         const variables = form.map(question => question.id)
         variables.push('{{PROJ_PREFIX}}')
