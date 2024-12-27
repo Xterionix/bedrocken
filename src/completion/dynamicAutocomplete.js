@@ -68,10 +68,11 @@ function createJsonProvider(system) {
 
             let value = [];
             let inQuotes = false;
+            let quoteStart;
 
             visit(document.getText(), {
-                onLiteralValue: (value, offset, length) => inQuotes = !inQuotes ? isInQuotes(value, offset, length, document, position) : true,
-                onObjectProperty: (value, offset, length) => inQuotes = !inQuotes ? isInQuotes(value, offset, length, document, position) : true
+                onLiteralValue: (value, offset, length, line, char) => { inQuotes = !inQuotes ? isInQuotes(value, offset, length, document, position) : true; if (inQuotes && !quoteStart) quoteStart = new vscode.Position(line, char) },
+                onObjectProperty: (value, offset, length, line, char) => { inQuotes = !inQuotes ? isInQuotes(value, offset, length, document, position) : true; if (inQuotes && !quoteStart) quoteStart = new vscode.Position(line, char) },
             });
 
             if (!inQuotes) return;
@@ -844,17 +845,9 @@ function createJsonProvider(system) {
 
             value = Array.from(new Set(value)) //TODO: Figure out why duplicate items are stored in the cache
 
-            const line = document.getText(new vscode.Range(new vscode.Position(position.line, 0), position)).trim()
-
             value.forEach(x => {
                 const item = new vscode.CompletionItem(x, vscode.CompletionItemKind.Enum)
-                let overlapLength = 0;
-                for (let i = 1; i <= x.length; i++) {
-                    if (line.endsWith(x.slice(0, i))) {
-                        overlapLength = i;
-                    }
-                }
-                item.range = new vscode.Range(new vscode.Position(position.line, position.character - overlapLength), position);
+                item.range = new vscode.Range(position, quoteStart.translate(0, 1));
                 suggestions.push(item)
             })
 
