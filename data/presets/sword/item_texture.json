@@ -1,0 +1,7 @@
+{
+    "texture_data": {
+        "{{IDENTIFIER}}_sword": {
+            "textures": [ "textures/items/{{IDENTIFIER}}/sword" ]
+        }
+    }
+}

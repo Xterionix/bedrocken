@@ -38,7 +38,7 @@
             "label": "Enter tier",
             "description": "Tool tier identified by its tag",
             "type": "radio",
-            "options": [ "minecraft:diamond_tier", "minecraft:stone_tier" ]
+            "options": [ "minecraft:diamond_tier", "minecraft:golden_tier", "minecraft:iron_tier", "minecraft:netherite_tier", "minecraft:stone_tier", "minecraft:wooden_tier" ]
         }
     ],
     "createFiles": [
@@ -73,8 +73,8 @@
             "path": "textures/items/{{IDENTIFIER}}",
             "files": [
                 {
-                    "name": "{{IDENTIFIER}}_sword.png",
-                    "path": "./icon_sword.png"
+                    "name": "sword.png",
+                    "path": "./icon.png"
                 }
             ]
         }
