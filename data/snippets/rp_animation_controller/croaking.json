@@ -1,0 +1,38 @@
+{
+    "name": "Croaking",
+    "description": "Plays an animation when croaking",
+    "packType": "rp",
+    "fileExtension": "json",
+    "fileType": "rp_animationcontroller",
+    "insertions": [
+        {
+            "path": [ "animation_controllers" ],
+            "data": {
+                "controller.animation.croaking": {
+                    "initial_state": "default",
+                    "states": {
+                        "default": {
+                            "blend_transition": 0.2,
+                            "transitions": [
+                                {
+                                    "croak": "query.is_croaking"
+                                }
+                            ]
+                        },
+                        "croak": {
+                            "blend_transition": 0.2,
+                            "animations": [
+                                "croak"
+                            ],
+                            "transitions": [
+                                {
+                                    "default": "query.any_animation_finished"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

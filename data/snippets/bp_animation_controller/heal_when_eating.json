@@ -1,0 +1,36 @@
+{
+    "name": "Heal when eating",
+    "description": "Allows the entity to heal when eating",
+    "packType": "bp",
+    "fileExtension": "json",
+    "fileType": "bp_animationcontroller",
+    "insertions": [
+        {
+            "path": [ "animation_controllers" ],
+            "data": {
+                "controller.animation.heal_when_eating": {
+                    "initial_state": "default",
+                    "states": {
+                        "default": {
+                            "transitions": [
+                                {
+                                    "eating": "query.is_eating"
+                                }
+                            ]
+                        },
+                        "eating": {
+                            "on_exit": [
+                                "/effect @s instant_health 1 1 true"
+                            ],
+                            "transitions": [
+                                {
+                                    "default": "!query.is_eating"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "name": "Heightmap y Distribution",
+    "description": "Sets y distribution to the heightmap",
+    "packType": "bp",
+    "fileExtension": "json",
+    "fileType": "feature_rule",
+    "insertions": [
+        {
+            "path": [ "minecraft:feature_rules", "distribution" ],
+            "data": {
+                "y": "query.heightmap(variable.worldx, variable.worldz)"
+            }
+        }
+    ]
+}

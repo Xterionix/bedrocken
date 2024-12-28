@@ -1,0 +1,36 @@
+{
+    "name": "Delayed Attack Reset",
+    "description": "Allows the entity to run an event if the delayed attack occurs regardless of if it missed or not",
+    "packType": "bp",
+    "fileExtension": "json",
+    "fileType": "bp_animationcontroller",
+    "insertions": [
+        {
+            "path": [ "animation_controllers" ],
+            "data": {
+                "controller.animation.reset_delayed_attack": {
+                    "initial_state": "default",
+                    "states": {
+                        "default": {
+                            "transitions": [
+                                {
+                                    "attack": "query.is_delayed_attacking"
+                                }
+                            ]
+                        },
+                        "attack": {
+                            "on_exit": [
+                                ""
+                            ],
+                            "transitions": [
+                                {
+                                    "default": "!query.is_delayed_attacking"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

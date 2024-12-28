@@ -1,0 +1,24 @@
+{
+    "name": "Look at Target",
+    "description": "Adds the default animation that rotates an entity's head to face its target",
+    "packType": "rp",
+    "fileExtension": "json",
+    "fileType": "rp_entity",
+    "insertions": [
+        {
+            "path": [ "minecraft:client_entity" ],
+            "data": {
+                "description": {
+                    "animations": {
+                        "look_at_target": "animation.common.look_at_target"
+                    },
+                    "scripts": {
+                        "animate": [
+                            "look_at_target"
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

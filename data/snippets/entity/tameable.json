@@ -1,0 +1,94 @@
+{
+    "name": "Tameable",
+    "description": "Allows the entity to be tamed",
+    "packType": "bp",
+    "fileExtension": "json",
+    "fileType": "entity",
+    "insertions": [
+        {
+            "path": [ "minecraft:entity", "components" ],
+            "data": {
+                "minecraft:tameable": {
+                    "probability": 0.2,
+                    "tame_items": [
+                        "minecraft:apple"
+                    ],
+                    "tame_event": {
+                        "target": "self",
+                        "event": "on_tame"
+                    }
+                }
+            }
+        },
+        {
+            "path": [ "minecraft:entity", "component_groups" ],
+            "data": {
+                "tamed": {
+                    "minecraft:is_tamed": { },
+                    "minecraft:behavior.follow_owner": {
+                        "priority": 6,
+                        "speed_multiplier": 1,
+                        "start_distance": 10,
+                        "stop_distance": 2
+                    },
+                    "minecraft:behavior.owner_hurt_target": {
+                        "priority": 2
+                    },
+                    "minecraft:behavior.owner_hurt_by_target": {
+                        "priority": 1
+                    },
+                    "minecraft:sittable": {
+                        "sit_event": {
+                            "event": "sit"
+                        },
+                        "stand_event": {
+                            "event": "stand"
+                        }
+                    },
+                    "minecraft:behavior.stay_while_sitting": {
+                        "priority": 0
+                    },
+                    "minecraft:healable": {
+                        "items": [
+                            {
+                                "item": "minecraft:apple",
+                                "heal_amount": 1
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "path": [ "minecraft:entity", "events" ],
+            "data": {
+                "on_tame": {
+                    "add": {
+                        "component_groups": [
+                            "tamed"
+                        ]
+                    },
+                    "remove": {
+                        "component_groups": [
+                            "wild"
+                        ]
+                    }
+                },
+                "sit": {
+                    "run_command": {
+                        "command": [
+                            "title @p actionbar Pet is Sitting"
+                        ]
+                    }
+                },
+                "stand": {
+                    "run_command": {
+                        "command": [
+                            "title @p actionbar Pet is Standing"
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

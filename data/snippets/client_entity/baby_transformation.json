@@ -1,0 +1,26 @@
+{
+    "name": "Baby Transform",
+    "description": "Adds the default animation that double's the size of a baby entity",
+    "packType": "rp",
+    "fileExtension": "json",
+    "fileType": "rp_entity",
+    "insertions": [
+        {
+            "path": [ "minecraft:client_entity" ],
+            "data": {
+                "description": {
+                    "animations": {
+                        "baby_transform": "animation.cow.baby_transform"
+                    },
+                    "scripts": {
+                        "animate": [
+                            {
+                                "baby_transform": "query.is_baby"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

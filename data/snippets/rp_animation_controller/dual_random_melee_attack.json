@@ -1,0 +1,46 @@
+{
+    "name": "Dual Random Melee Attack",
+    "description": "Plays one of two random animations when attacking",
+    "packType": "rp",
+    "fileExtension": "json",
+    "fileType": "rp_animationcontroller",
+    "insertions": [
+        {
+            "path": [ "animation_controllers" ],
+            "data": {
+                "controller.animation.attack.dual_random_melee": {
+                    "initial_state": "default",
+                    "states": {
+                        "default": {
+                            "blend_transition": 0.2,
+                            "transitions": [
+                                {
+                                    "attack": "variable.attack_time > 0.1"
+                                }
+                            ]
+                        },
+                        "attack": {
+                            "blend_transition": 0.2,
+                            "on_entry": [
+                                "v.random = Math.random_integer(1, 2);"
+                            ],
+                            "animations": [
+                                {
+                                    "attack_1": "v.random == 1"
+                                },
+                                {
+                                    "attack_2": "v.random == 2"
+                                }
+                            ],
+                            "transitions": [
+                                {
+                                    "default": "query.any_animation_finished"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

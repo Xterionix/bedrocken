@@ -1,0 +1,28 @@
+{
+    "name": "Food",
+    "description": "Adds required components for a food item",
+    "packType": "bp",
+    "fileExtension": "json",
+    "fileType": "item",
+    "insertions": [
+        {
+            "path": [ "minecraft:item", "components" ],
+            "data": {
+                "minecraft:use_modifiers": {
+                    "movement_modifier": 0.35,
+                    "use_duration": 1.6
+                },
+                "minecraft:food": {
+                    "nutrition": 3,
+                    "saturation_modifier": 0.3
+                },
+                "minecraft:use_animation": "eat",
+                "minecraft:tags": {
+                    "tags": [
+                        "minecraft:is_food"
+                    ]
+                }
+            }
+        }
+    ]
+}

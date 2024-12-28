@@ -1,0 +1,25 @@
+{
+    "name": "Flower Patch",
+    "description": "Sets the scatter feature's for flower patches",
+    "packType": "bp",
+    "fileExtension": "json",
+    "fileType": "feature",
+    "insertions": [
+        {
+            "path": [ "minecraft:scatter_feature" ],
+            "data": {
+                "iterations": "v.flower_patch.size = math.random_integer(6, 14); return math.random_integer(math.pow(v.flower_patch.size, 2) / 4, math.pow(v.flower_patch.size, 2) / 3);",
+                "project_input_to_floor": true,
+                "x": {
+                    "distribution": "gaussian",
+                    "extent": [ 0, "v.flower_patch.size" ]
+                },
+                "z": {
+                    "distribution": "gaussian",
+                    "extent": [ 0, "v.flower_patch.size" ]
+                },
+                "y": 0
+            }
+        }
+    ]
+}

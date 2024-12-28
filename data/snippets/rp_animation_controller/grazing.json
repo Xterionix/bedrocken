@@ -1,0 +1,38 @@
+{
+    "name": "Grazing",
+    "description": "Plays an animation when grazing",
+    "packType": "rp",
+    "fileExtension": "json",
+    "fileType": "rp_animationcontroller",
+    "insertions": [
+        {
+            "path": [ "animation_controllers" ],
+            "data": {
+                "controller.animation.graze": {
+                    "initial_state": "default",
+                    "states": {
+                        "default": {
+                            "blend_transition": 0.2,
+                            "transitions": [
+                                {
+                                    "graze": "query.is_grazing"
+                                }
+                            ]
+                        },
+                        "graze": {
+                            "blend_transition": 0.2,
+                            "animations": [
+                                "graze"
+                            ],
+                            "transitions": [
+                                {
+                                    "default": "query.any_animation_finished"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

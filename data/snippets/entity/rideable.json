@@ -1,0 +1,61 @@
+{
+    "name": "Rideable",
+    "description": "Allows the entity to be ridden",
+    "packType": "bp",
+    "fileExtension": "json",
+    "fileType": "entity",
+    "insertions": [
+        {
+            "path": [ "minecraft:entity", "component_groups" ],
+            "data": {
+                "rideable": {
+                    "minecraft:rideable": {
+                        "controlling_seat": 0,
+                        "family_types": [
+                            "player"
+                        ],
+                        "seat_count": 1,
+                        "seats": [
+                            {
+                                "position": [
+                                    0,
+                                    0,
+                                    0
+                                ]
+                            }
+                        ],
+                        "crouching_skip_interact": true,
+                        "interact_text": "action.interact.ride.horse",
+                        "rider_can_interact": false
+                    }
+                },
+                "control": {
+                    "minecraft:behavior.player_ride_tamed": {
+                        "priority": 0
+                    },
+                    "minecraft:input_ground_controlled": { }
+                }
+            }
+        },
+        {
+            "path": [ "minecraft:entity", "events" ],
+            "data": {
+                "become_rideale": {
+                    "add": {
+                        "component_groups": [
+                            "rideable",
+                            "control"
+                        ]
+                    }
+                },
+                "sit": {
+                    "remove": {
+                        "component_groups": [
+                            "riedable"
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

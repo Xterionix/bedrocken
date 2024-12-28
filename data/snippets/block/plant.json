@@ -1,0 +1,61 @@
+{
+    "name": "Plant",
+    "description": "Basic components needed for a plant, like ferns or flowers)",
+    "packType": "bp",
+    "fileExtension": "json",
+    "fileType": "block",
+    "insertions": [
+        {
+            "path": [ "minecraft:block", "components" ],
+            "data": {
+                "minecraft:geometry": "minecraft:geometry.cross",
+                "minecraft:material_instances": {
+                    "*": {
+                        "texture": "",
+                        "render_method": "alpha_test"
+                    }
+                },
+                "minecraft:light_dampening": 0,
+                "minecraft:light_emission": 0,
+                "minecraft:map_color": "#FFFFFF",
+                "minecraft:collision_box": false,
+                "minecraft:selection_box": {
+                    "origin": [
+                        -5,
+                        0,
+                        -5
+                    ],
+                    "size": [
+                        10,
+                        16,
+                        10
+                    ]
+                },
+                "minecraft:placement_filter": {
+                    "conditions": [
+                        {
+                            "block_filter": [
+                                "minecraft:coarse_dirt",
+                                "minecraft:dirt",
+                                "minecraft:dirt_with_roots",
+                                "minecraft:farmland",
+                                "minecraft:grass_block",
+                                "minecraft:moss_block",
+                                "minecraft:mud",
+                                "minecraft:muddy_mangrove_roots",
+                                "minecraft:mycelium",
+                                "minecraft:pale_moss_block",
+                                "minecraft:podzol",
+                                "minecraft:sand",
+                                "minecraft:red_sand"
+                            ],
+                            "allowed_faces": [
+                                "up"
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

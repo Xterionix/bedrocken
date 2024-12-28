@@ -1,0 +1,38 @@
+{
+    "name": "Delayed Attack",
+    "description": "Plays an animation when delayed attacking",
+    "packType": "rp",
+    "fileExtension": "json",
+    "fileType": "rp_animationcontroller",
+    "insertions": [
+        {
+            "path": [ "animation_controllers" ],
+            "data": {
+                "controller.animation.attack.delayed": {
+                    "initial_state": "default",
+                    "states": {
+                        "default": {
+                            "blend_transition": 0.2,
+                            "transitions": [
+                                {
+                                    "attack": "query.is_delayed_attacking"
+                                }
+                            ]
+                        },
+                        "attack": {
+                            "blend_transition": 0.2,
+                            "animations": [
+                                "attack"
+                            ],
+                            "transitions": [
+                                {
+                                    "default": "query.any_animation_finished"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

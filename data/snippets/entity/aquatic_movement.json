@@ -1,0 +1,32 @@
+{
+    "name": "Aquatic Movement",
+    "description": "Allows the entity to swim",
+    "packType": "bp",
+    "fileExtension": "json",
+    "fileType": "entity",
+    "insertions": [
+        {
+            "path": [ "minecraft:entity", "components" ],
+            "data": {
+                "minecraft:movement.amphibious": { },
+                "minecraft:behavior.swim_idle": {
+                    "priority": 5,
+                    "idle_time": 5.0,
+                    "success_rate": 0.05
+                },
+                "minecraft:behavior.swim_wander": {
+                    "priority": 5,
+                    "interval": 0.1,
+                    "look_ahead": 2,
+                    "wander_time": 5
+                },
+                "minecraft:underwater_movement": {
+                    "value": 0.2
+                },
+                "minecraft:movement": {
+                    "value": 0.2
+                }
+            }
+        }
+    ]
+}

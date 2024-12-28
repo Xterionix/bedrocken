@@ -1,0 +1,38 @@
+{
+    "name": "Roaring",
+    "description": "Plays an animation when roaring",
+    "packType": "rp",
+    "fileExtension": "json",
+    "fileType": "rp_animationcontroller",
+    "insertions": [
+        {
+            "path": [ "animation_controllers" ],
+            "data": {
+                "controller.animation.roar": {
+                    "initial_state": "default",
+                    "states": {
+                        "default": {
+                            "blend_transition": 0.2,
+                            "transitions": [
+                                {
+                                    "roar": "query.is_roaring"
+                                }
+                            ]
+                        },
+                        "roar": {
+                            "blend_transition": 0.2,
+                            "animations": [
+                                "roar"
+                            ],
+                            "transitions": [
+                                {
+                                    "default": "query.any_animation_finished"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
