@@ -63,35 +63,6 @@ class CacheSystem {
         fogs: []
     }
 
-    /**
-    * @typedef { 'bp_animation' |
-    * 'bp_animationcontroller' |
-    * 'block_culling_rule'|
-    * 'rp_animation'|
-    * 'rp_animationcontroller'|
-    * 'sound_definition'|
-    * 'sound'|
-    * 'entity' |
-    * 'item' |
-    * 'model' |
-    * 'particle' |
-    * 'rendercontroller' |
-    * 'block' |
-    * 'script' |
-    * 'structure' |
-    * 'feature' |
-    * 'loot_table' |
-    * 'trade_table' |
-    * 'texture' |
-    * 'item_texture' |
-    * 'terrain_texture' |
-    * 'rp_entity'|
-    * 'function'|
-    * 'client_biome'|
-    * 'fog'
-    * } FileType
-    */
-
     getCache() {
         return this.#cache
     }
@@ -102,7 +73,7 @@ class CacheSystem {
 
     /**
      * @param {string} folderPath 
-     * @param {FileType} type
+     * @param {import('./fileType').FileType} type
      */
     async processDirectory(folderPath, type) {
         if (!(await exists(folderPath))) return;
@@ -115,7 +86,7 @@ class CacheSystem {
     }
 
     /**
-     * @param {FileType} type
+     * @param {import('./fileType').FileType} type
      * @param {string} pattern
      */
     async processGlob(folderPath, pattern, type) {
@@ -141,7 +112,7 @@ class CacheSystem {
 
     /**
      * @param {string} file 
-     * @param {FileType} type
+     * @param {import('./fileType').FileType} type
      */
     async processFile(file, type) {
 
