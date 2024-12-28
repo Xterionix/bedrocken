@@ -24,11 +24,12 @@ async function snippets(context, bpPath, rpPath) {
     const document = vscode.window.activeTextEditor.document
     const workspace = document.uri.fsPath.startsWith(bpPath) ? bpPath : rpPath
     const fileContent = parse(document.getText())
-    const packType = workspace == bpPath ? "bp" : "rp"
+    const packType = workspace == bpPath ? "bp" : "rp";
+    const fileType = identifyFileType(document.uri.fsPath)
 
-    snippets = snippets.filter(snippet => snippet.fileType == identifyFileType(document.uri.fsPath)).filter(snippet => snippet.packType == packType).filter(snippet => document.fileName.endsWith(snippet.fileExtension))
+    snippets = snippets.filter(snippet => snippet.fileType == fileType).filter(snippet => snippet.packType == packType).filter(snippet => document.fileName.endsWith(snippet.fileExtension))
 
-    if (snippets.length == 0) { vscode.window.showErrorMessage('No snippets found for this file type'); return };
+    if (snippets.length == 0) { vscode.window.showErrorMessage('No snippets found for ' + fileType); return };
 
     vscode.window.showQuickPick(snippets.map(x => ({ label: x.name, description: x.description }))).then(selectedOption => {
         if (!selectedOption) return;
