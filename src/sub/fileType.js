@@ -57,6 +57,7 @@ function identifyFileType(filePath) {
     switch (folderName) {
         case 'items': return 'item'
         case 'entities': return 'entity'
+        case 'entity': return 'rp_entity'
         case 'blocks': return 'block'
         case 'features': return 'feature'
         case 'feature_rules': return 'feature_rule'
@@ -66,7 +67,7 @@ function identifyFileType(filePath) {
         case 'scripts': return 'script'
         case 'dimensions': return 'dimension'
         case 'animations': if (workspace == bpPath) return 'bp_animation'; else return 'rp_animation'
-        case 'animation_controllers': if (workspace == bpPath) return 'rp_animationcontroller'; else return 'bp_animationcontroller'
+        case 'animation_controllers': if (workspace == bpPath) return 'bp_animationcontroller'; else return 'rp_animationcontroller'
         case 'biomes': if (workspace == bpPath) return 'biome'; else return 'client_biome'
         case 'block_culling': return 'block_culling_rule'
         case 'fogs': return 'fog'
