@@ -2,8 +2,8 @@
     "name": "Log Rotation",
     "description": "3 axis-aligned directions.",
     "packType": "bp",
-    "fileType": "json",
-    "folder": "blocks",
+    "fileExtension": "json",
+    "fileType": "block",
     "insertions": [
         {
             "path": [ "minecraft:block", "description", "traits" ],

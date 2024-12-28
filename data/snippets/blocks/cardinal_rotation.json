@@ -2,8 +2,8 @@
     "name": "Cardinal Rotation",
     "description": "4 directions - 'north', 'south', 'east' and 'west'.",
     "packType": "bp",
-    "fileType": "json",
-    "folder": "blocks",
+    "fileExtension": "json",
+    "fileType": "block",
     "insertions": [
         {
             "path": [ "minecraft:block", "description", "traits" ],

@@ -2,8 +2,8 @@
     "name": "Default Entity Components",
     "description": "Adds health, collision, physics, pushable, loot, breathable and hurt on condition components to the entity.",
     "packType": "bp",
-    "fileType": "json",
-    "folder": "entities",
+    "fileExtension": "json",
+    "fileType": "entity",
     "insertions": [
         {
             "path": [ "minecraft:entity", "components" ],

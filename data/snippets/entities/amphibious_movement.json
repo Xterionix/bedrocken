@@ -2,8 +2,8 @@
     "name": "Amphibious Movement",
     "description": "Allows the entity to walk and swim",
     "packType": "bp",
-    "fileType": "json",
-    "folder": "entities",
+    "fileExtension": "json",
+    "fileType": "entity",
     "insertions": [
         {
             "path": [ "minecraft:entity", "events" ],

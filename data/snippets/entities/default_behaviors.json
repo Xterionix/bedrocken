@@ -2,8 +2,8 @@
     "name": "Default Entity Behaviors",
     "description": "Allows the entity to randomly walk and look around",
     "packType": "bp",
-    "fileType": "json",
-    "folder": "entities",
+    "fileExtension": "json",
+    "fileType": "entity",
     "insertions": [
         {
             "path": [ "minecraft:entity", "components" ],

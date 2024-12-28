@@ -2,8 +2,8 @@
     "name": "Facing Direction Rotation",
     "description": "6 directions - 'down', 'up', 'north', 'south', 'east' and 'west'.",
     "packType": "bp",
-    "fileType": "json",
-    "folder": "blocks",
+    "fileExtension": "json",
+    "fileType": "block",
     "insertions": [
         {
             "path": [ "minecraft:block", "description", "traits" ],

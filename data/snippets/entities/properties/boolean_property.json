@@ -2,8 +2,8 @@
     "name": "Boolean Property",
     "description": "Adds a simple boolean property",
     "packType": "bp",
-    "fileType": "json",
-    "folder": "entities",
+    "fileExtension": "json",
+    "fileType": "entity",
     "insertions": [
         {
             "path": [ "minecraft:entity", "description", "properties" ],

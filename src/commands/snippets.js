@@ -1,3 +1,5 @@
+const { identifyFileType } = require('../sub/fileType');
+
 const { mergeDeep } = require('../sub/util');
 const { getAllFilePaths } = require('../sub/cacheSystem');
 
@@ -21,12 +23,10 @@ async function snippets(context, bpPath, rpPath) {
 
     const document = vscode.window.activeTextEditor.document
     const workspace = document.uri.fsPath.startsWith(bpPath) ? bpPath : rpPath
-    const folderName = path.relative(workspace, document.uri.fsPath).split(path.sep)[0]
     const fileContent = parse(document.getText())
     const packType = workspace == bpPath ? "bp" : "rp"
-    const fileName = document.fileName.split('\\').pop()
 
-    snippets = snippets.filter(snippet => snippet.folder == folderName).filter(snippet => snippet.packType == packType).filter(snippet => fileName.endsWith(snippet.fileType))
+    snippets = snippets.filter(snippet => snippet.fileType == identifyFileType(document.uri.fsPath)).filter(snippet => snippet.packType == packType).filter(snippet => document.fileName.endsWith(snippet.fileExtension))
 
     if (snippets.length == 0) { vscode.window.showErrorMessage('No snippets found for this file type'); return };
 
