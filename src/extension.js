@@ -19,9 +19,9 @@ const { createJsonProvider } = require('./completion/dynamicAutocomplete')
 const { createLangProvider } = require('./completion/langAutocomplete')
 
 const { exists } = require('./sub/util');
-
 const { CacheSystem } = require('./sub/cacheSystem');
 const { Filewatcher } = require('./sub/fileWatcher');
+const { setBpPath, setRpPath } = require('./sub/globalVars')
 
 const glob = require('glob');
 const path = require('path');
@@ -62,6 +62,8 @@ async function activate(context) {
 
 	console.log('BP: ', bpPath);
 	console.log('RP: ', rpPath);
+
+	setBpPath(bpPath); setRpPath(rpPath);
 
 	try {
 
