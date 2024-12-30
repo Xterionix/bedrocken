@@ -28,7 +28,8 @@
 * 'client_biome'|
 * 'fog'|
 * 'bp_manifest'|
-* 'rp_manifest'
+* 'rp_manifest'|
+* 'sounds'
 * } FileType
 */
 
@@ -51,6 +52,7 @@ function identifyFileType(filePath) {
         case 'item_texture.json': return 'item_texture'
         case 'terrain_texture.json': return 'terrain_texture'
         case 'sound_definitions.json': return 'sound_definition'
+        case 'sounds.json': return 'sounds'
         case 'manifest.json': if (workspace == bpPath) return 'bp_manifest'; else return 'rp_manifest'
     }
 
