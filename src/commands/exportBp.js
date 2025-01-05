@@ -1,3 +1,4 @@
+const { parse } = require('jsonc-parser');
 const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
@@ -14,7 +15,12 @@ async function exportBp(bpPath) {
     location = downloadsFolder
 
     const extension = vscode.workspace.getConfiguration('bedrocken').get('export.fileType')
-    const name = vscode.workspace.name.split(' (Workspace)')[0].split(' ').map(x => x[0].toUpperCase() + x.slice(1)).join(" ") + ' [BP].' + extension.split('/')[0]
+
+    let projectName = parse((await fs.promises.readFile(path.join(bpPath, 'manifest.json'))).toString())['header']['name'];
+    if (projectName == 'pack.name' || !projectName) projectName = (await fs.promises.readFile(path.join(bpPath, 'texts/en_US.lang'))).toString().split('\n').filter(line => line.startsWith('pack.name'))[0].replace('pack.name=', '');
+
+    projectName = projectName.replace(/(\b[bB][pP]\b|\b[rR][pP]\b)|([^a-zA-Z0-9\-\_\. ])/g, '').replace(/[\x00-\x1F\x7F]/g, '').trim();
+    projectName += '.' + extension.split('/').pop();
 
     await vscode.window.withProgress({
         location: vscode.ProgressLocation.Window,
@@ -22,7 +28,7 @@ async function exportBp(bpPath) {
         cancellable: false
     }, async () => {
 
-        const output = fs.createWriteStream(path.join(location, name))
+        const output = fs.createWriteStream(path.join(location, projectName))
 
         const zip = archiver('zip', { zlib: { level: 9 } })
 
