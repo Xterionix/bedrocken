@@ -10,6 +10,8 @@ const completelyRemovedComponents = ['minecraft:dye_powder', 'minecraft:armor', 
 
 async function updateItems(bpPath) {
 
+    vscode.window.showInformationMessage('This feature is not availible yet.'); return;
+
     const itemsPath = path.join(bpPath, 'items');
 
     if (!(await exists(itemsPath))) return;
