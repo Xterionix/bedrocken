@@ -1,6 +1,6 @@
 node_modules
 .vscode-test/
-# *.vsix
+*.vsix
 data/workspaces/**
 dist/**
 scripts/**.txt
