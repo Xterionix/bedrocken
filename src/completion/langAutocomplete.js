@@ -42,10 +42,11 @@ function createLangProvider(system) {
             system.getCache().entity.rideable_ids.forEach(id => {
                 if (!text.some(x => x.startsWith(`action.hint.exit.${id}`))) suggestions.push(new vscode.CompletionItem(`action.hint.exit.${id}`, vscode.CompletionItemKind.Class))
             })
-            system.getCache().item.ids.forEach(id => {
+            const itemIds = system.getCache().item.ids;
+            itemIds.forEach(id => {
                 if (!text.some(x => x.startsWith(`item.${id}`))) suggestions.push(new vscode.CompletionItem(`item.${id}`, vscode.CompletionItemKind.Class))
             })
-            system.getCache().block.ids.forEach(id => {
+            system.getCache().block.ids.filter(id => !itemIds.includes(id)).forEach(id => {
                 if (!text.some(x => x.startsWith(`tile.${id}`))) suggestions.push(new vscode.CompletionItem(`tile.${id}.name`, vscode.CompletionItemKind.Class))
             })
             system.getCache().texts.forEach(id => {
