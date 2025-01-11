@@ -1,3 +1,5 @@
+const { exists } = require('../sub/util');
+
 const vscode = require('vscode');
 const path = require('path');
 const fs = require('fs');
@@ -10,6 +12,9 @@ async function generateSoundDefinitions(rpPath) {
     const files = (await glob.glob('sounds/**/*.{ogg,wav,mp3,fsb}', { cwd: rpPath })).map(file => file.replace(/\\/g, '/').replace('sounds/', '').replace(new RegExp(path.extname(file), 'g'), ''))
 
     if (!files.length) return;
+
+    const filePath = path.join(rpPath, 'textures/item_texture.json');
+    const fileExists = await exists(filePath);
 
     const output = {
         format_version: "1.20.80",
@@ -28,7 +33,14 @@ async function generateSoundDefinitions(rpPath) {
         }
     })
 
-    await fs.promises.writeFile(path.join(rpPath, 'sounds/sound_definitions.json'), JSON.stringify(output, null, 4))
+    if (fileExists) {
+        const edit = new vscode.WorkspaceEdit()
+        const uri = vscode.Uri.file(filePath);
+        const strOutput = JSON.stringify(output, null, 4)
+
+        edit.replace(uri, new vscode.Range(new vscode.Position(0, 0), new vscode.Position(strOutput.length, 0)), strOutput)
+        vscode.workspace.applyEdit(edit)
+    } else await fs.promises.writeFile(filePath, JSON.stringify(output, null, 4))
 
     vscode.window.setStatusBarMessage('sound_definitions.json generated', 2000)
 
