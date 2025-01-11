@@ -26,9 +26,8 @@ Supports the following:
 
 - File name based identifiers
 - Structure names with a structure feature
-- Item components `minecraft:icon` and `minecraft:custom_components`
-- Block components `minecraft:material_instance`, `minecraft:custom_components`, `minecraft:loot` and `minecraft:geometry`
-- Entity components `minecraft:loot` and `minecraft:trade_table`
+- Item components & Block components
+- Entity components
 - Entity property filters
 - Entity BPA and BPAC
 - Client entity and attachable file
@@ -61,3 +60,5 @@ Supports the following:
 
 - `texture_list.json`
 - `sound_definitions.json`
+- `item_texture.json`
+- `terrain_texture.json`
