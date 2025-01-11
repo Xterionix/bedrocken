@@ -6,7 +6,7 @@ An extension that provides some helpful features for bedrock addon development.
 
 ### Project Exports
 
-A command that allows you to export you BP/RPs directly.
+A command that allows you to export you BP/RP/Addons directly.
 
 ### Project Switcher
 
@@ -21,6 +21,8 @@ Clicking on a `manifest.json` shows a new option to link the BP and RPs together
 Clicking on a `manifest.json` allows you to easily add scripts.
 
 ### Dynamic Autocomplete
+
+`Control + P > Set Project Prefix` to change the namespace
 
 Supports the following:
 
