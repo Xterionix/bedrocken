@@ -23,7 +23,7 @@ function createJsonProvider(system) {
             const prefix = vscode.workspace.getConfiguration('bedrocken').get('projectPrefix', 'bedrocken');
             const fileBasedIdentifier = prefix + ':' + path.basename(document.fileName).replace('.json', '');
 
-            const allItems = system.getCache().item.ids.concat(system.getCache().block.ids).concat(system.getVanillaData().item.ids)
+            const allItems = system.getCache().item.ids.concat(system.getCache().block.ids).concat(system.getCache().entity.spawnable_ids.map(entityId => entityId + '_spawn_egg')).concat(system.getVanillaData().item.ids)
             const allBlocks = system.getCache().block.ids.concat(system.getVanillaData().block.ids)
             const allEntities = system.getCache().entity.ids.concat(system.getVanillaData().entity.ids)
             const allSounds = system.getCache().sound_definitions
