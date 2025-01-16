@@ -27,3 +27,23 @@ urls.forEach(url => {
         console.error('Error fetching the JSON file:', err);
     });
 });
+
+const langFile = 'https://raw.githubusercontent.com/Mojang/bedrock-samples/refs/heads/main/resource_pack/texts/en_US.lang'
+
+https.get(langFile, (response) => {
+    let data = '';
+
+    response.on('data', (chunk) => {
+        data += chunk;
+    });
+
+    response.on('end', () => {
+        try {
+            fs.writeFileSync(`./mojang-langs.txt`, data.split('\n').filter(x => x.includes('=')).map(x => '"' + x.split('=')[0] + '"').join(','))
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+        }
+    });
+}).on('error', (err) => {
+    console.error('Error fetching the JSON file:', err);
+});
