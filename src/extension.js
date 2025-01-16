@@ -14,6 +14,7 @@ const { generateSoundDefinitions } = require('./commands/generateSoundDefinition
 const { generateItemTexture } = require('./commands/generateItemTexture');
 const { generateTerrainTexture } = require('./commands/generateTerrainTexture');
 const { createNewProject } = require('./commands/createNewProject');
+const { addBlockIcon } = require('./commands/addBlockIcon');
 
 const { createJsonProvider } = require('./completion/dynamicAutocomplete')
 const { createLangProvider } = require('./completion/langAutocomplete')
@@ -128,6 +129,7 @@ async function activate(context) {
 	const generateItemTextureCommand = vscode.commands.registerCommand('bedrocken.generate_item_texture', () => generateItemTexture(rpPath));
 	const generateTerrainTextureCommand = vscode.commands.registerCommand('bedrocken.generate_terrain_texture', () => generateTerrainTexture(rpPath));
 	const generateSoundDefinitionsCommand = vscode.commands.registerCommand('bedrocken.generate_sound_definitions', () => generateSoundDefinitions(rpPath));
+	const addBlockIconCommand = vscode.commands.registerCommand('bedrocken.add_block_icon', (res) => addBlockIcon(res?.path, bpPath, rpPath, system));
 
 	const projectSwitcherCommand = vscode.commands.registerCommand('bedrocken.switch_projects', () => projectSwitcher(context, workspacesPath))
 	const presetsCommand = vscode.commands.registerCommand('bedrocken.presets', () => presets(context, bpPath, rpPath))
@@ -141,7 +143,7 @@ async function activate(context) {
 	if (vscode.workspace.getConfiguration('bedrocken').get('langAutocomplete')) context.subscriptions.push(langAutocomplete)
 
 	context.subscriptions.push(
-		projectSwitcherCommand, snippetsCommand, presetsCommand, exportBpCommand, exportRpCommand, exportProjectCommand, openExportsFolderCommand, linkManifestsCommand, addScriptsManifestCommand, setProjectPrefixCommand, updateItemsCommand, generateTextureListCommand, generateSoundDefinitionsCommand, createNewProjectCommand, generateItemTextureCommand, generateTerrainTextureCommand
+		projectSwitcherCommand, snippetsCommand, presetsCommand, exportBpCommand, exportRpCommand, exportProjectCommand, openExportsFolderCommand, linkManifestsCommand, addScriptsManifestCommand, setProjectPrefixCommand, updateItemsCommand, generateTextureListCommand, generateSoundDefinitionsCommand, createNewProjectCommand, generateItemTextureCommand, generateTerrainTextureCommand, addBlockIconCommand
 	);
 
 }

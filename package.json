@@ -82,6 +82,10 @@
       {
         "command": "bedrocken.update_items",
         "title": "Bedrocken: Update Items"
+      },
+      {
+        "command": "bedrocken.add_block_icon",
+        "title": "Bedrocken: Add Block Icon"
       }
     ],
     "configuration": [
@@ -142,6 +146,11 @@
         {
           "command": "bedrocken.add_scripts_manifests",
           "when": "resourceFilename == 'manifest.json'",
+          "group": "bedrocken"
+        },
+        {
+          "command": "bedrocken.add_block_icon",
+          "when": "resource =~ /.*[\\/](blocks)[\\/].*/ && resourceExtname == '.json'",
           "group": "bedrocken"
         }
       ]
