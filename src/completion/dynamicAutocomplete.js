@@ -87,6 +87,7 @@ function createJsonProvider(system) {
             }
 
             if (jsonPath[0] == 'entity_sounds' && jsonPath.length == 3) jsonPath = ['entity_sounds', 'mobs']
+            if (jsonPath[0] == 'minecraft:client_entity' && jsonPath[2] == 'render_controllers' && jsonPath.length == 4) jsonPath.pop()
 
             console.log('Path', jsonPath)
             console.log('Actual Path', actualPath)
