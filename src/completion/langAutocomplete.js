@@ -50,7 +50,7 @@ function createLangProvider(system) {
                 if (!text.some(x => x.startsWith(`tile.${id}`))) suggestions.push(new vscode.CompletionItem(`tile.${id}.name`, vscode.CompletionItemKind.Class))
             })
             system.getCache().texts.forEach(id => {
-                if (!text.some(x => x.startsWith(id))) suggestions.push(new vscode.CompletionItem(id, vscode.CompletionItemKind.Enum))
+                if (!text.some(x => x.startsWith(id)) && !system.getVanillaData().texts.includes(id)) suggestions.push(new vscode.CompletionItem(id, vscode.CompletionItemKind.Enum))
             })
 
             return suggestions
