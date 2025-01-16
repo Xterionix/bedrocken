@@ -468,7 +468,7 @@ function createJsonProvider(system) {
                             identifier: system.getCache().models,
                             culling: system.getCache().block_culling_rules
                         },
-                        "minecraft:loot": system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/block')),
+                        "minecraft:loot": system.getCache().loot_tables,
                         "minecraft:placement_filter": {
                             conditions: {
                                 block_filter: allBlocks
