@@ -19,7 +19,7 @@ async function exportBp(bpPath) {
     let projectName = parse((await fs.promises.readFile(path.join(bpPath, 'manifest.json'))).toString())['header']['name'];
     if (projectName == 'pack.name' || !projectName) projectName = (await fs.promises.readFile(path.join(bpPath, 'texts/en_US.lang'))).toString().split('\n').filter(line => line.startsWith('pack.name'))[0].replace('pack.name=', '');
 
-    projectName = projectName.replace(/([brBR]+[pP])|([^a-zA-Z0-9\-\_\. ])/g, '').replace(/[\x00-\x1F\x7F]/g, '').trim();
+    projectName = projectName.split('#')[0].replace(/([brBR]+[pP])|([^a-zA-Z0-9\-\_\. ])/g, '').replace(/[\x00-\x1F\x7F]/g, '').trim();
     projectName += '.' + extension.split('/').pop();
 
     await vscode.window.withProgress({
