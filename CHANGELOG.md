@@ -14,3 +14,7 @@ All notable changes to the "bedrocken" extension will be documented in this file
 - Fixed render controller suggestions in the format "{"controller.render.name": "query.is_baby"}"
 - Fixed comments being included in project export name
 - Added addBlockIcon context option to blocks
+
+## [1.2.0]
+
+- Added support for `minecraft:item_visual`
