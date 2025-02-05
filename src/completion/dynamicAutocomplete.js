@@ -35,6 +35,8 @@ function createJsonProvider(system) {
             let jsonPath = actualPath.filter(x => typeof x != 'number')
                 .join('[|]')
                 .replace('minecraft:icon[|]textures[|]default', 'minecraft:icon')
+                .replace('minecraft:item_visual[|]geometry', 'minecraft:geometry')
+                .replace('minecraft:item_visual[|]material_instances', 'minecraft:material_instances')
                 .replace('permutations[|]', '')
                 .replace(/(?<=minecraft:material_instances\[\|\]).*?(?=\[\|\]texture)/g, '*')
                 .replace(/_groups\[\|\][a-zA-Z0-9$!_]+/g, 's')
