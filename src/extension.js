@@ -102,6 +102,7 @@ async function activate(context) {
 			await system.processDirectory(path.join(rpPath, 'render_controllers'), 'rendercontroller')
 			await system.processDirectory(path.join(rpPath, 'biomes'), 'client_biome')
 			await system.processDirectory(path.join(rpPath, 'fogs'), 'fog')
+			await system.processFile(path.join(rpPath, 'sounds.json'), 'sounds')
 			await system.processFile(path.join(rpPath, 'sounds/sound_definitions.json'), 'sound_definition')
 			await system.processFile(path.join(rpPath, 'textures/item_texture.json'), 'item_texture')
 			await system.processFile(path.join(rpPath, 'textures/terrain_texture.json'), 'terrain_texture')

@@ -28,6 +28,7 @@ function createJsonProvider(system) {
             const allEntities = system.getCache().entity.ids.concat(system.getVanillaData().entity.ids)
             const allSounds = system.getCache().sound_definitions
             const allGroups = system.getCache().groups.concat(system.getVanillaData().groups.slice().map(id => 'minecraft:' + id))
+            const allBlockSounds = system.getCache().block_sounds.concat(system.getVanillaData().block_sounds)
 
             const location = getLocation(document.getText(), document.offsetAt(position))
             const actualPath = location.path;
@@ -849,6 +850,7 @@ function createJsonProvider(system) {
                 switch (document.fileName.split('\\').pop()) {
                     case 'blocks.json':
                         if (jsonPath.length == 1) value = system.getCache().block.ids.filter(id => !jsonInDoc[id])
+                        if (jsonPath.length == 2 && jsonPath[1] == 'sound' && !isInProperty) value = allBlockSounds
                         if (jsonPath.length == 2 && jsonPath[1] == 'textures') value = system.getCache().textures.terrain
                         if (jsonPath.length == 3 && jsonPath[1] == 'textures' && !isInProperty) value = system.getCache().textures.terrain
                         break;
