@@ -27,6 +27,7 @@ function createJsonProvider(system) {
             const allBlocks = system.getCache().block.ids.concat(system.getVanillaData().block.ids)
             const allEntities = system.getCache().entity.ids.concat(system.getVanillaData().entity.ids)
             const allSounds = system.getCache().sound_definitions
+            const allGroups = system.getCache().groups.concat(system.getVanillaData().groups.slice().map(id => 'minecraft:' + id))
 
             const location = getLocation(document.getText(), document.offsetAt(position))
             const actualPath = location.path;
@@ -419,7 +420,10 @@ function createJsonProvider(system) {
                 },
                 "minecraft:item": {
                     description: {
-                        identifier: fileBasedIdentifier
+                        identifier: fileBasedIdentifier,
+                        menu_category: {
+                            group: allGroups
+                        }
                     },
                     components: {
                         "minecraft:custom_components": system.getCache().item.custom_components,
@@ -458,7 +462,10 @@ function createJsonProvider(system) {
                 },
                 "minecraft:block": {
                     description: {
-                        identifier: fileBasedIdentifier
+                        identifier: fileBasedIdentifier,
+                        menu_category: {
+                            group: allGroups
+                        }
                     },
                     components: {
                         "minecraft:custom_components": system.getCache().block.custom_components,
@@ -707,6 +714,17 @@ function createJsonProvider(system) {
                 "minecraft:fog_settings": {
                     description: {
                         identifier: fileBasedIdentifier
+                    }
+                },
+                "minecraft:crafting_items_catalog": {
+                    categories: {
+                        groups: {
+                            group_identifier: {
+                                icon: allItems,
+                                name: allGroups.filter(id => id.startsWith('minecraft:'))
+                            },
+                            items: allItems.filter(id => !id.startsWith('minecraft:'))
+                        }
                     }
                 },
                 entity_sounds: {

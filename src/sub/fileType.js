@@ -30,7 +30,8 @@
 * 'bp_manifest'|
 * 'rp_manifest'|
 * 'sounds'|
-* 'blocks'
+* 'blocks'|
+* 'item_catalog'
 * } FileType
 */
 
@@ -80,6 +81,7 @@ function identifyFileType(filePath) {
         case 'models': return 'model'
         case 'sounds': return 'sound'
         case 'textures': return 'texture'
+        case 'item_catalog': return 'item_catalog'
     }
 
     throw new Error(`Unable to identify type for ${folderName}`)

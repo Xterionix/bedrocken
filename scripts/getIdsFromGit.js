@@ -43,6 +43,11 @@ https.get(langFile, (response) => {
         } catch (error) {
             console.error('Error parsing JSON:', error);
         }
+        try {
+            fs.writeFileSync(`./mojang-groups.txt`, data.split("\n").filter(entry => entry.toLowerCase().includes('itemgroup.name')).map(x => '"' + x.split('=')[0] + '"').join(","));
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+        }
     });
 }).on('error', (err) => {
     console.error('Error fetching the JSON file:', err);

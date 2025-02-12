@@ -85,6 +85,7 @@ async function activate(context) {
 			await system.processDirectory(path.join(bpPath, 'items'), 'item');
 			await system.processDirectory(path.join(bpPath, 'blocks'), 'block');
 			await system.processDirectory(path.join(bpPath, 'features'), 'feature');
+			await system.processDirectory(path.join(bpPath, 'item_catalog'), 'item_catalog');
 			await system.processDirectory(path.join(bpPath, 'structures'), 'structure');
 			await system.processGlob(bpPath, 'loot_tables/**/*.json', 'loot_table')
 			await system.processGlob(bpPath, 'trading/**/*.json', 'trade_table')

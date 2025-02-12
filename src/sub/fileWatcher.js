@@ -85,6 +85,8 @@ class Filewatcher {
                 break;
             case 'sound_definition': this.system.getCache().sound_definitions = []; this.system.processFile(path.join(this.rpPath, 'sounds/sound_definitions.json'), 'sound_definition')
                 break;
+            case 'item_catalog': this.system.getCache().groups = []; this.system.processFile(readPath, 'item_catalog');
+                break;
             case 'bp_manifest':
                 const manifest = parse((await fs.promises.readFile(path.join(this.bpPath, 'manifest.json'))).toString())
                 vscode.commands.executeCommand('setContext', 'bedrocken.can_add_scripts', !manifest["modules"]?.map(obj => obj.type).includes('script'))
