@@ -18,3 +18,8 @@ All notable changes to the "bedrocken" extension will be documented in this file
 ## [1.2.0]
 
 - Added support for `minecraft:item_visual`
+
+## [1.3.0]
+
+- Added support for item crafting catalog files
+- Added caching and completion for block sounds

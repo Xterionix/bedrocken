@@ -43,6 +43,8 @@ Supports the following:
 - Adding and removing component groups
 - Loot table items
 - Rawtext translation from scripts
+- Catalog files
+- Block sounds defined in `sounds.json > block_sounds`
 
 ### Presets
 

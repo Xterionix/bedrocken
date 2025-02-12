@@ -3,7 +3,7 @@
   "publisher": "Xterionix",
   "displayName": "Bedrocken",
   "description": "A simple extension to help with bedrock addon development",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "engines": {
     "vscode": "^1.87.0"
   },
