@@ -82,6 +82,7 @@ function identifyFileType(filePath) {
         case 'sounds': return 'sound'
         case 'textures': return 'texture'
         case 'item_catalog': return 'item_catalog'
+        case 'functions': return 'function'
     }
 
     throw new Error(`Unable to identify type for ${folderName}`)
