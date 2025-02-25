@@ -23,3 +23,10 @@ All notable changes to the "bedrocken" extension will be documented in this file
 
 - Added support for item crafting catalog files
 - Added caching and completion for block sounds
+
+## [1.4.0]
+
+- Added attachable, function file type
+- Added completion for initial state in animation controllers
+- Fixed function cache not being updated
+- Made § get removed when parsing pack.name for exports
