@@ -31,7 +31,8 @@
 * 'rp_manifest'|
 * 'sounds'|
 * 'blocks'|
-* 'item_catalog'
+* 'item_catalog'|
+* 'attachable'
 * } FileType
 */
 
@@ -83,6 +84,7 @@ function identifyFileType(filePath) {
         case 'textures': return 'texture'
         case 'item_catalog': return 'item_catalog'
         case 'functions': return 'function'
+        case 'attachables': return 'attachable'
     }
 
     throw new Error(`Unable to identify type for ${folderName}`)
