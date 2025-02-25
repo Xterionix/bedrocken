@@ -63,6 +63,7 @@ function createJsonProvider(system) {
                 .replace(/minecraft:geometry$/gm, 'minecraft:geometry[|]identifier')
                 .replace(/(?<=minecraft:ageable\[\|])feed_items$/gm, 'feed_items[|]item')
                 .replace(/(?<=animation_controllers\[\|]).*?(?=states)/g, '')
+                .replace(/(?<=animation_controllers\[\|]).*?(?=initial_state)/g, '')
                 .replace(/(?<=states\[\|]).*?(?=transitions)/g, '')
                 .replace(/(?<=states\[\|\]transitions).*/g, '')
                 .replace(/(?<=single_block_feature\[\|\]may_attach_to).*/g, '')
@@ -751,6 +752,7 @@ function createJsonProvider(system) {
                     }
                 },
                 animation_controllers: {
+                    initial_state: jsonInDoc['animation_controllers'] ? Object.keys(valueFromJsonPath([...actualPath.slice(0, 2), 'states'], jsonInDoc)) : [],
                     states: {
                         transitions: jsonInDoc['animation_controllers'] ? Object.keys(valueFromJsonPath(actualPath.slice(0, -4), jsonInDoc)) : []
                     }
