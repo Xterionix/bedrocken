@@ -47,6 +47,8 @@ class Filewatcher {
                 break;
             case 'feature': this.system.getCache().features = []; this.system.processDirectory(readPath, 'feature')
                 break;
+            case 'function': this.system.getCache().functions = []; this.system.processGlob(this.bpPath, 'functions/**/*.mcfunction', 'function')
+                break;
             case 'loot_table': this.system.getCache().loot_tables = []; this.system.processGlob(this.bpPath, 'loot_tables/**/*.json', 'loot_table');
                 break;
             case 'trade_table': this.system.getCache().trade_tables = []; this.system.processGlob(this.bpPath, 'trade_tables/**/*.json', 'trade_table');
