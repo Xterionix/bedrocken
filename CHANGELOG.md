@@ -30,3 +30,8 @@ All notable changes to the "bedrocken" extension will be documented in this file
 - Added completion for initial state in animation controllers
 - Fixed function cache not being updated
 - Made § get removed when parsing pack.name for exports
+
+### [1.4.1]
+
+- Fixed x:a preventing x:a_b from showing in lang completion
+- Fixed error when parsing `sounds.json` & `sound_definitions.json`
