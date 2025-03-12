@@ -200,11 +200,7 @@ class CacheSystem {
     }
 
     #processSoundsFile(json) {
-        try {
-            this.#cache.block_sounds = Object.keys(json['block_sounds'])
-        } catch (error) {
-            console.log(error)
-        }
+        this.#cache.block_sounds = typeof json['block_sounds'] == 'object' ? Object.keys(json['block_sounds']) : []
     }
     #processCatalog(json) {
         try {
@@ -224,7 +220,7 @@ class CacheSystem {
         this.#cache.models.push(...text.match(/"geometry\.([^"]*)"/g).map(x => x.slice(1, -1)).map(x => x.includes(':geometry') ? x.split(':geometry')[0] : x))
     }
     #processSoundDefinitions(json) {
-        this.#cache.sound_definitions = Object.keys(json["sound_definitions"]).sort()
+        this.#cache.sound_definitions = typeof json['sound_definitions'] == 'object' ? Object.keys(json["sound_definitions"]).sort() : []
     }
     #processBlockCullingRule(json) {
         const identifier = json["minecraft:block_culling_rules"]["description"]["identifier"]
