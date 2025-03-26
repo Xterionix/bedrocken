@@ -35,3 +35,7 @@ All notable changes to the "bedrocken" extension will be documented in this file
 
 - Fixed x:a preventing x:a_b from showing in lang completion
 - Fixed error when parsing `sounds.json` & `sound_definitions.json`
+
+### [1.4.2]
+
+- Added vanilla data for the "Spring to Life" drop
