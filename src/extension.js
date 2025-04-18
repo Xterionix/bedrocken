@@ -139,7 +139,7 @@ async function activate(context) {
 	const setProjectPrefixCommand = vscode.commands.registerCommand('bedrocken.projectPrefix', () => chooseProjectPrefix())
 
 	const dynamicAutocomplete = createJsonProvider(system)
-	const langAutocomplete = createLangProvider(system)
+	const langAutocomplete = createLangProvider(system, bpPath)
 
 	if (vscode.workspace.getConfiguration('bedrocken').get('jsonAutocomplete')) context.subscriptions.push(dynamicAutocomplete)
 	if (vscode.workspace.getConfiguration('bedrocken').get('langAutocomplete')) context.subscriptions.push(langAutocomplete)

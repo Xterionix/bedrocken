@@ -4,8 +4,9 @@ const vscode = require('vscode');
 
 /**
  * @param {CacheSystem} system
+ * @param {string} bpPath 
  */
-function createLangProvider(system) {
+function createLangProvider(system, bpPath) {
     return vscode.languages.registerCompletionItemProvider(
         [
             { scheme: 'file', language: 'bc-minecraft-language' },
@@ -17,6 +18,8 @@ function createLangProvider(system) {
             const line = document.getText(new vscode.Range(new vscode.Position(position.line, 0), position)).replace('.name', '')
 
             if (!document.fileName.endsWith('.lang')) return;
+
+            if (document.fileName.startsWith(bpPath)) return;
 
             if (line.includes('=')) {
                 let completion;
