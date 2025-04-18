@@ -47,7 +47,7 @@ function createLangProvider(system) {
                 if (!text.some(x => x.startsWith(`item.${id}=`))) suggestions.push(new vscode.CompletionItem(`item.${id}`, vscode.CompletionItemKind.Class))
             })
             system.getCache().block.ids.filter(id => !itemIds.includes(id)).forEach(id => {
-                if (!text.some(x => x.startsWith(`tile.${id}=`))) suggestions.push(new vscode.CompletionItem(`tile.${id}.name`, vscode.CompletionItemKind.Class))
+                if (!text.some(x => x.startsWith(`tile.${id}.name=`))) suggestions.push(new vscode.CompletionItem(`tile.${id}.name`, vscode.CompletionItemKind.Class))
             })
             system.getCache().texts.forEach(id => {
                 if (!text.some(x => x.startsWith(`${id}=`)) && !system.getVanillaData().texts.includes(id)) suggestions.push(new vscode.CompletionItem(id, vscode.CompletionItemKind.Enum))
