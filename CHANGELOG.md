@@ -39,3 +39,8 @@ All notable changes to the "bedrocken" extension will be documented in this file
 ### [1.4.2]
 
 - Added vanilla data for the "Spring to Life" drop
+
+### [1.4.3]
+
+- Fixed lang autocomplete showing for BP files
+- Fixed lang autocomplete for blocks showing despite already being added in the file
