@@ -43,7 +43,7 @@ function createJsonProvider(system) {
                 .replace('minecraft:item_visual[|]material_instances', 'minecraft:material_instances')
                 .replace('permutations[|]', '')
                 .replace(/(?<=minecraft:material_instances\[\|\]).*?(?=\[\|\]texture)/g, '*')
-                .replace(/_groups\[\|\][a-zA-Z0-9$!_]+/g, 's')
+                .replace(/_groups\[\|\](.*?)\[\|\]/g, 's[|]')
                 .replace(/(?<=minecraft:entity).*?(?=filters)/g, '[|]')
                 .replace(/(?<=events).*?(?=component_groups)/g, '[|]')
                 .replace(/(?<=events).*?(?=set_property)/g, '[|]')
