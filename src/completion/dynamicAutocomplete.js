@@ -23,7 +23,7 @@ function createJsonProvider(system) {
             const suggestions = [];
             const prefix = vscode.workspace.getConfiguration('bedrocken').get('projectPrefix', 'bedrocken');
             const fileBasedIdentifier = prefix + ':' + path.basename(document.fileName).replace('.json', '');
-            const folderRelativeIdentifier = prefix + ':' + path.relative(path.join(getBpPath(), path.relative(getBpPath(), document.fileName).split(path.sep)[0]), document.fileName).replace('.json', '')
+            const folderRelativeIdentifier = prefix + ':' + path.relative(path.join(getBpPath(), path.relative(getBpPath(), document.fileName).split(path.sep)[0]), document.fileName).replace('.json', '').replaceAll(path.sep, '/')
 
             const allItems = Array.from(system.getCache().item.ids).concat(Array.from(system.getCache().block.ids)).concat(Array.from(system.getCache().entity.spawnable_ids).map(entityId => entityId + '_spawn_egg')).concat(system.getVanillaData().item.ids)
             const allBlocks = Array.from(system.getCache().block.ids).concat(system.getVanillaData().block.ids)
