@@ -859,6 +859,9 @@ function createJsonProvider(system) {
                         if (jsonPath.length == 2 && jsonPath[1] == 'textures') value = Array.from(system.getCache().textures.terrain)
                         if (jsonPath.length == 3 && jsonPath[1] == 'textures' && !isInProperty) value = Array.from(system.getCache().textures.terrain)
                         break;
+                    case 'sound_definitions.json':
+                        if (jsonPath.length == 2) value = Array.from(system.getCache().sounds)
+                        break;
                     default:
                         if (isPropertyCompletion && !isInProperty && !(typeof actualPath.slice().reverse()[0] == 'number' && valueFromJsonPath(jsonPath, bothCompletion))) return;
                         if (!isPropertyCompletion && isInProperty) return;
