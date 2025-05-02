@@ -67,6 +67,6 @@ Supports the following:
 - `item_texture.json`
 - `terrain_texture.json`
 
-### Add Block Icon
+### Add Block Item
 
 By right clicking a `block.json`, you'll be prompted with the option to pick an item short name or a texture path. If you chose the texture path, it'll be registered to the item atlas. Lastly, it'll create an `item.json` using that data

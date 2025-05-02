@@ -44,3 +44,15 @@ All notable changes to the "bedrocken" extension will be documented in this file
 
 - Fixed lang autocomplete showing for BP files
 - Fixed lang autocomplete for blocks showing despite already being added in the file
+
+### [1.5.0]
+
+- Added autocomplete for sound file paths in `sound_definitions.json`
+- Changed addBlockIcon to addBlockItem
+- Changed structure suggestions to relative path from BP/structures
+- Changed feature identifer suggestions to relative path from BP/features
+- Changed feature rule identifer suggestions to relative path from BP/features_rules
+- Changed autocomplete entries to fully replace values within strings
+- Fixed duplicate suggestions
+- Fixed entity component suggestions within namespaced component groups
+- Fixed edits being made to `block.json` through the addBlockIcon command even though no changes were actually made
