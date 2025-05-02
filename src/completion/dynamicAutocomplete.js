@@ -74,10 +74,11 @@ function createJsonProvider(system) {
             let value = [];
             let inQuotes = false;
             let quoteStart;
+            let quoteEnd;
 
             visit(document.getText(), {
-                onLiteralValue: (value, offset, length, line, char) => { inQuotes = !inQuotes ? isInQuotes(value, offset, length, document, position) : true; if (inQuotes && !quoteStart) quoteStart = new vscode.Position(line, char) },
-                onObjectProperty: (value, offset, length, line, char) => { inQuotes = !inQuotes ? isInQuotes(value, offset, length, document, position) : true; if (inQuotes && !quoteStart) quoteStart = new vscode.Position(line, char) },
+                onLiteralValue: (value, offset, length, line, char) => { inQuotes = !inQuotes ? isInQuotes(value, offset, length, document, position) : true; if (inQuotes && !quoteStart) {quoteStart = new vscode.Position(line, char); quoteEnd = new vscode.Position(line, char + length)} },
+                onObjectProperty: (value, offset, length, line, char) => { inQuotes = !inQuotes ? isInQuotes(value, offset, length, document, position) : true; if (inQuotes && !quoteStart) {quoteStart = new vscode.Position(line, char); quoteEnd = new vscode.Position(line, char + length)} },
             });
 
             if (!inQuotes) return;
@@ -872,7 +873,7 @@ function createJsonProvider(system) {
             
             value.forEach(x => {
                 const item = new vscode.CompletionItem(x, vscode.CompletionItemKind.Enum)
-                item.range = new vscode.Range(position, quoteStart.translate(0, 1));
+                item.range = new vscode.Range(quoteStart.translate(0, 1), quoteEnd.translate(0, -1));
                 suggestions.push(item)
             })
 
