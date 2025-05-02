@@ -1,3 +1,4 @@
+const { getBpPath } = require('./globalVars');
 const path = require('path')
 const fs = require('fs')
 const { glob } = require('glob');
@@ -140,7 +141,7 @@ class CacheSystem {
                     break;
                 case 'script': this.#processScriptFile(text)
                     break;
-                case 'structure': this.#processStructureFile(fileName)
+                case 'structure': this.#processStructureFile(file)
                     break;
                 case 'bp_animation': this.#processBpAnimationfile(json)
                     break;
@@ -243,8 +244,8 @@ Object.keys(json["animation_controllers"]).sort().forEach(id => this.#cache.bp_a
         if (!identifier || identifier.includes('minecraft:')) return;
         this.#cache.features.add(identifier)
     }
-    #processStructureFile(name) {
-        this.#cache.structures.add('mystructure:' + name.split('.')[0])
+    #processStructureFile(filePath) {
+        this.#cache.structures.add('mystructure:' + path.relative(path.join(getBpPath(), 'structures') ,filePath).replace('.mcstructure','').replaceAll(path.sep, '/'))
     }
     #processFogFile(json) {
         const identifier = json["minecraft:fog_settings"]?.["description"]?.["identifier"]
