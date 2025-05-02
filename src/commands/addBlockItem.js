@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const { parse, stringify } = require('comment-json');
 
-async function addBlockIcon(filePath, bpPath, rpPath, system) {
+async function addBlockItem(filePath, bpPath, rpPath, system) {
 
     if (!filePath) { vscode.window.showErrorMessage('This command can only be executed via the right-click context menu'); return }
     if (!rpPath) { vscode.window.showErrorMessage('No resource pack found'); return; }
@@ -16,13 +16,11 @@ async function addBlockIcon(filePath, bpPath, rpPath, system) {
     const itemAtlasPath = path.join(rpPath, 'textures/item_texture.json');
     const itemAtlas = await exists(itemAtlasPath) ? parse((await fs.promises.readFile(itemAtlasPath)).toString()) : { resource_pack_name: "rp", texture_name: "atlas.items", texture_data: {} };
 
-    const answer = (await new Form([{ label: 'Icon Texture', description: 'Either a short name defined in the atlas or a texture path', type: 'radio', options: system.getCache().textures.items.concat(system.getCache().textures.paths) }]).show()).toString()
+    const answer = (await new Form([{ label: 'Icon Texture', description: 'Either a short name defined in the atlas, a texture path or None', type: 'radio', options: ["None"].concat(Array.from(system.getCache().textures.items).concat(Array.from(system.getCache().textures.paths))) }]).show()).toString()
 
-    if (!answer) return;
+    let key = answer != "None" ? answer : undefined;
 
-    let key = answer;
-
-    if (answer.startsWith('textures/')) {
+    if (answer?.startsWith('textures/')) {
         key = path.basename(answer.toString())
         if (system.getCache().textures.items.includes(key)) key += '1'
         itemAtlas['texture_data'][key] = {
@@ -52,18 +50,20 @@ async function addBlockIcon(filePath, bpPath, rpPath, system) {
                 "identifier": blockJson['minecraft:block']['description']['identifier']
             },
             "components": {
-                "minecraft:icon": key,
                 "minecraft:block_placer": {
-                    "block": blockJson['minecraft:block']['description']['identifier']
+                    "block": blockJson['minecraft:block']['description']['identifier'],
+                    "replace_block_item": true
                 }
             }
         }
     }
 
+    if (key) itemJson["minecraft:item"]["components"]["minecraft:icon"] = key;
+
     await fs.promises.writeFile(path.join(bpPath, `items/${blockJson['minecraft:block']['description']['identifier'].split(':')[1]}.json`), JSON.stringify(itemJson, null, 4))
 
-    vscode.window.setStatusBarMessage('Icon added to ' + blockJson['minecraft:block']['description']['identifier'], 2000)
+    vscode.window.setStatusBarMessage('Block Item created for ' + blockJson['minecraft:block']['description']['identifier'], 2000)
 
 }
 
-module.exports = { addBlockIcon }
+module.exports = { addBlockItem }
