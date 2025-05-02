@@ -23,12 +23,12 @@ function createJsonProvider(system) {
             const prefix = vscode.workspace.getConfiguration('bedrocken').get('projectPrefix', 'bedrocken');
             const fileBasedIdentifier = prefix + ':' + path.basename(document.fileName).replace('.json', '');
 
-            const allItems = system.getCache().item.ids.concat(system.getCache().block.ids).concat(system.getCache().entity.spawnable_ids.map(entityId => entityId + '_spawn_egg')).concat(system.getVanillaData().item.ids)
-            const allBlocks = system.getCache().block.ids.concat(system.getVanillaData().block.ids)
-            const allEntities = system.getCache().entity.ids.concat(system.getVanillaData().entity.ids)
-            const allSounds = system.getCache().sound_definitions
-            const allGroups = system.getCache().groups.concat(system.getVanillaData().groups.slice().map(id => 'minecraft:' + id))
-            const allBlockSounds = system.getCache().block_sounds.concat(system.getVanillaData().block_sounds)
+            const allItems = Array.from(system.getCache().item.ids).concat(Array.from(system.getCache().block.ids)).concat(Array.from(system.getCache().entity.spawnable_ids).map(entityId => entityId + '_spawn_egg')).concat(system.getVanillaData().item.ids)
+            const allBlocks = Array.from(system.getCache().block.ids).concat(system.getVanillaData().block.ids)
+            const allEntities = Array.from(system.getCache().entity.ids).concat(system.getVanillaData().entity.ids)
+            const allSounds = Array.from(system.getCache().sound_definitions)
+            const allGroups = Array.from(system.getCache().groups).concat(system.getVanillaData().groups.slice().map(id => 'minecraft:' + id))
+            const allBlockSounds = Array.from(system.getCache().block_sounds).concat(system.getVanillaData().block_sounds)
 
             const location = getLocation(document.getText(), document.offsetAt(position))
             const actualPath = location.path;
@@ -101,7 +101,7 @@ function createJsonProvider(system) {
                 "minecraft:entity": {
                     description: {
                         identifier: fileBasedIdentifier,
-                        animations: system.getCache().bp_animations.concat(system.getCache().bp_animationcontrollers),
+                        animations: Array.from(system.getCache().bp_animations).concat(Array.from(system.getCache().bp_animationcontrollers)),
                         scripts: {
                             animate: jsonInDoc["minecraft:entity"]?.["description"]?.["animations"] ? Object.keys(jsonInDoc["minecraft:entity"]["description"]["animations"]) : []
                         }
@@ -130,7 +130,7 @@ function createJsonProvider(system) {
                             aggro_sound: allSounds,
                         },
                         "minecraft:behavior.drop_item_for": {
-                            loot_table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
+                            loot_table: system.getCache().loot_tables
                         },
                         "minecraft:behavior.eat_block": {
                             eat_and_replace_block_pairs: {
@@ -140,7 +140,7 @@ function createJsonProvider(system) {
                         },
                         "minecraft:behavior.eat_mob": {
                             eat_mob_sound: allSounds,
-                            loot_table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
+                            loot_table: system.getCache().loot_tables
                         },
                         "minecraft:behavior.jump_to_block": {
                             forbidden_blocks: allBlocks,
@@ -168,7 +168,7 @@ function createJsonProvider(system) {
                             items: allItems
                         },
                         "minecraft:behavior.sneeze": {
-                            loot_table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities')),
+                            loot_table: system.getCache().loot_tables,
                             prepare_sound: allSounds,
                             sound: allSounds
                         },
@@ -205,7 +205,7 @@ function createJsonProvider(system) {
                             angry_sound: allSounds
                         },
                         "minecraft:barter": {
-                            barter_table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
+                            barter_table: system.getCache().loot_tables
                         },
                         "minecraft:block_sensor": {
                             on_break: {
@@ -254,7 +254,7 @@ function createJsonProvider(system) {
                             excluded_items: allItems
                         },
                         "minecraft:equipment": {
-                            table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
+                            table: system.getCache().loot_tables
                         },
                         "minecraft:equippable": {
                             slots: {
@@ -282,7 +282,7 @@ function createJsonProvider(system) {
                         "minecraft:interact": {
                             interactions: {
                                 add_items: {
-                                    table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
+                                    table: system.getCache().loot_tables
                                 },
                                 particle_on_start: {
                                     particle_type: system.getCache().particles
@@ -290,7 +290,7 @@ function createJsonProvider(system) {
                                 play_sounds: allSounds,
                                 spawn_entities: allEntities,
                                 spawn_items: {
-                                    table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
+                                    table: system.getCache().loot_tables
                                 },
                                 transform_to_item: allItems
                             }
@@ -299,7 +299,7 @@ function createJsonProvider(system) {
                             control_items: allItems
                         },
                         'minecraft:loot': {
-                            table: system.getCache().loot_tables.filter(x => x.startsWith('loot_tables/entities'))
+                            table: system.getCache().loot_tables
                         },
                         "minecraft:preferred_path": {
                             preferred_path_blocks: {
@@ -365,7 +365,7 @@ function createJsonProvider(system) {
                     },
                     filters: {
                         value: {
-                            enum_property: system.getCache().entity.enum_properties.filter(x => x.id == valueFromJsonPath(actualPath.slice(0, -1).concat(["domain"]), jsonInDoc))[0]?.value,
+                            enum_property: Array.from(system.getCache().entity.enum_properties).filter(x => x.id == valueFromJsonPath(actualPath.slice(0, -1).concat(["domain"]), jsonInDoc))[0]?.value,
                             bool_property: [true, false],
                             is_family: system.getCache().entity.families
                         },
@@ -373,7 +373,7 @@ function createJsonProvider(system) {
                             bool_property: system.getCache().entity.boolean_properties,
                             int_property: system.getCache().entity.integer_properties,
                             float_property: system.getCache().entity.float_properties,
-                            enum_property: system.getCache().entity.enum_properties.map(x => x.id)
+                            enum_property: Array.from(system.getCache().entity.enum_properties).map(x => x.id)
                         }
                     },
                     events: {
@@ -384,7 +384,7 @@ function createJsonProvider(system) {
                 "minecraft:client_entity": {
                     description: {
                         identifier: system.getCache().entity.ids,
-                        animations: system.getCache().rp_animations.concat(system.getCache().rp_animationcontrollers),
+                        animations: Array.from(system.getCache().rp_animations).concat(Array.from(system.getCache().rp_animationcontrollers)),
                         geometry: system.getCache().models,
                         sound_effects: allSounds,
                         particle_effects: system.getCache().particles,
@@ -401,7 +401,7 @@ function createJsonProvider(system) {
                 "minecraft:attachable": {
                     description: {
                         identifier: system.getCache().item.ids,
-                        animations: system.getCache().rp_animations.concat(system.getCache().rp_animationcontrollers),
+                        animations: Array.from(system.getCache().rp_animations).concat(Array.from(system.getCache().rp_animationcontrollers)),
                         geometry: system.getCache().models,
                         sound_effects: allSounds,
                         particle_effects: system.getCache().particles,
@@ -851,10 +851,10 @@ function createJsonProvider(system) {
 
                 switch (document.fileName.split('\\').pop()) {
                     case 'blocks.json':
-                        if (jsonPath.length == 1) value = system.getCache().block.ids.filter(id => !jsonInDoc[id])
+                        if (jsonPath.length == 1) value = Array.from(system.getCache().block.ids).filter(id => !jsonInDoc[id])
                         if (jsonPath.length == 2 && jsonPath[1] == 'sound' && !isInProperty) value = allBlockSounds
-                        if (jsonPath.length == 2 && jsonPath[1] == 'textures') value = system.getCache().textures.terrain
-                        if (jsonPath.length == 3 && jsonPath[1] == 'textures' && !isInProperty) value = system.getCache().textures.terrain
+                        if (jsonPath.length == 2 && jsonPath[1] == 'textures') value = Array.from(system.getCache().textures.terrain)
+                        if (jsonPath.length == 3 && jsonPath[1] == 'textures' && !isInProperty) value = Array.from(system.getCache().textures.terrain)
                         break;
                     default:
                         if (isPropertyCompletion && !isInProperty && !(typeof actualPath.slice().reverse()[0] == 'number' && valueFromJsonPath(jsonPath, bothCompletion))) return;
@@ -867,9 +867,7 @@ function createJsonProvider(system) {
             }
 
             if (typeof value == 'string') value = [value];
-
-            value = Array.from(new Set(value)) //TODO: Figure out why duplicate items are stored in the cache
-
+            
             value.forEach(x => {
                 const item = new vscode.CompletionItem(x, vscode.CompletionItemKind.Enum)
                 item.range = new vscode.Range(position, quoteStart.translate(0, 1));
