@@ -34,14 +34,17 @@ async function addBlockItem(filePath, bpPath, rpPath, system) {
         await vscode.workspace.applyEdit(edit)
     }
 
-    const blockJson = parse((await fs.promises.readFile(filePath)).toString());
+    const blockText = (await fs.promises.readFile(filePath)).toString()
+    const blockJson = parse(blockText);
     delete blockJson['minecraft:block']['description']['menu_category']
     const blockEdit = new vscode.WorkspaceEdit()
     const uri = vscode.Uri.file(filePath);
     const blockOutput = stringify(blockJson, null, 4)
 
-    blockEdit.replace(uri, new vscode.Range(new vscode.Position(0, 0), new vscode.Position(blockOutput.length, 0)), blockOutput)
-    await vscode.workspace.applyEdit(blockEdit)
+    if (blockText != blockOutput) {
+        blockEdit.replace(uri, new vscode.Range(new vscode.Position(0, 0), new vscode.Position(blockOutput.length, 0)), blockOutput)
+        await vscode.workspace.applyEdit(blockEdit)
+    }
 
     const itemJson = {
         "format_version": "1.21.50",
