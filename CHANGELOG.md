@@ -56,3 +56,9 @@ All notable changes to the "bedrocken" extension will be documented in this file
 - Fixed duplicate suggestions
 - Fixed entity component suggestions within namespaced component groups
 - Fixed edits being made to `block.json` through the addBlockIcon command even though no changes were actually made
+
+### [1.5.1]
+
+- Fixed custom component suggestions
+- Fixed newly added sound files not being recognized
+- Fixed items/blocks with `minecraft:display_name` suggesting original keys
