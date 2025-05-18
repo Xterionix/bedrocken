@@ -47,11 +47,15 @@ class CacheSystem {
         },
         item: {
             ids: new Set(),
-            custom_components: new Set()
+            translatable_ids: new Set(),
+            custom_components: new Set(),
+            display_names: new Set()
         },
         block: {
             ids: new Set(),
-            custom_components: new Set()
+            translatable_ids: new Set(),
+            custom_components: new Set(),
+            display_names: new Set()
         },
         textures: {
             paths: new Set(),
@@ -200,6 +204,24 @@ class CacheSystem {
         }
     }
 
+    resetItemCache() {
+        this.#cache.item = {
+            ids: new Set(),
+            translatable_ids: new Set(),
+            custom_components: new Set(),
+            display_names: new Set()
+        }
+    }
+
+    resetBlockCache() {
+        this.#cache.block = {
+            ids: new Set(),
+            translatable_ids: new Set(),
+            custom_components: new Set(),
+            display_names: new Set()
+        }
+    }
+
     #processSoundsFile(json) {
         this.#cache.block_sounds = typeof json['block_sounds'] == 'object' ? new Set(Object.keys(json['block_sounds'])) : new Set()
     }
@@ -228,10 +250,10 @@ class CacheSystem {
         if (identifier) this.#cache.block_culling_rules.add(identifier)
     }
     #processBpAnimationfile(json) {
-       Object.keys(json["animations"]).sort().forEach(id => this.#cache.bp_animations.add(id))
+        Object.keys(json["animations"]).sort().forEach(id => this.#cache.bp_animations.add(id))
     }
     #processBpAnimationControllerfile(json) {
-Object.keys(json["animation_controllers"]).sort().forEach(id => this.#cache.bp_animationcontrollers.add(id))
+        Object.keys(json["animation_controllers"]).sort().forEach(id => this.#cache.bp_animationcontrollers.add(id))
     }
     #processRpAnimationfile(json) {
         Object.keys(json["animations"]).sort().forEach(id => this.#cache.rp_animations.add(id))
@@ -245,7 +267,7 @@ Object.keys(json["animation_controllers"]).sort().forEach(id => this.#cache.bp_a
         this.#cache.features.add(identifier)
     }
     #processStructureFile(filePath) {
-        this.#cache.structures.add('mystructure:' + path.relative(path.join(getBpPath(), 'structures') ,filePath).replace('.mcstructure','').replaceAll(path.sep, '/'))
+        this.#cache.structures.add('mystructure:' + path.relative(path.join(getBpPath(), 'structures'), filePath).replace('.mcstructure', '').replaceAll(path.sep, '/'))
     }
     #processFogFile(json) {
         const identifier = json["minecraft:fog_settings"]?.["description"]?.["identifier"]
@@ -303,11 +325,21 @@ Object.keys(json["animation_controllers"]).sort().forEach(id => this.#cache.bp_a
     }
     #proceessItemFile(json) {
         const identifier = json["minecraft:item"]["description"]["identifier"]
-        if (identifier) this.#cache.item.ids.add(identifier)
+        if (identifier) {
+            this.#cache.item.ids.add(identifier)
+            const displayName = json['minecraft:item']?.['components']?.['minecraft:display_name']?.['value']
+            if (typeof displayName == 'string') this.#cache.item.display_names.add(displayName)
+            else this.#cache.item.translatable_ids.add(identifier)
+        }
     }
     #processBlockFile(json) {
         const identifier = json["minecraft:block"]["description"]["identifier"]
-        if (identifier) this.#cache.block.ids.add(identifier)
+        if (identifier) {
+            this.#cache.item.ids.add(identifier)
+            const displayName = json['minecraft:block']?.['components']?.['minecraft:display_name']?.['value']
+            if (typeof displayName == 'string') this.#cache.block.display_names.add(displayName)
+            else this.#cache.block.translatable_ids.add(identifier)
+        }
     }
     #processScriptFile(text) {
         (text.match(/(?:blockComponentRegistry|event\.blockTypeRegistry|blockTypeRegistry)\.registerCustomComponent\(['"]([^'"]*)['"]/g) || []).forEach(match => {

@@ -39,11 +39,11 @@ class Filewatcher {
         const fileType = identifyFileType(e.fsPath);
 
         switch (fileType) {
-            case 'item': this.system.getCache().item.ids = new Set(); this.system.processDirectory(readPath, 'item');
+            case 'item': this.system.resetItemCache(); this.system.processDirectory(readPath, 'item');
                 break;
             case 'entity': this.system.resetEntityCache(); this.system.processDirectory(readPath, 'entity');
                 break;
-            case 'block': this.system.getCache().block.ids = new Set(); this.system.processDirectory(readPath, 'block');
+            case 'block': this.system.resetBlockCache(); this.system.processDirectory(readPath, 'block');
                 break;
             case 'feature': this.system.getCache().features = new Set(); this.system.processDirectory(readPath, 'feature')
                 break;

@@ -46,10 +46,10 @@ function createLangProvider(system, bpPath) {
                 if (!text.some(x => x.startsWith(`action.hint.exit.${id}=`))) suggestions.push(new vscode.CompletionItem(`action.hint.exit.${id}`, vscode.CompletionItemKind.Class))
             })
             const itemIds = system.getCache().item.ids;
-            itemIds.forEach(id => {
+            system.getCache().item.translatable_ids.forEach(id => {
                 if (!text.some(x => x.startsWith(`item.${id}=`))) suggestions.push(new vscode.CompletionItem(`item.${id}`, vscode.CompletionItemKind.Class))
             })
-            Array.from(system.getCache().block.ids).filter(id => !itemIds.has(id)).forEach(id => {
+            Array.from(system.getCache().block.translatable_ids).filter(id => !itemIds.has(id)).forEach(id => {
                 if (!text.some(x => x.startsWith(`tile.${id}.name=`))) suggestions.push(new vscode.CompletionItem(`tile.${id}.name`, vscode.CompletionItemKind.Class))
             })
             system.getCache().texts.forEach(id => {
