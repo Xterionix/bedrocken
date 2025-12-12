@@ -5,6 +5,7 @@ const { valueFromJsonPath } = require('../sub/util')
 const path = require('path');
 const vscode = require('vscode');
 const { parse, getLocation, visit } = require('jsonc-parser');
+const { MinecraftData } =  require('bc-minecraft-bedrock-vanilla-data');
 
 //TODO: Tree feature
 
@@ -369,7 +370,8 @@ function createJsonProvider(system) {
                         value: {
                             enum_property: Array.from(system.getCache().entity.enum_properties).filter(x => x.id == valueFromJsonPath(actualPath.slice(0, -1).concat(["domain"]), jsonInDoc))[0]?.value,
                             bool_property: [true, false],
-                            is_family: system.getCache().entity.families
+                            is_family: system.getCache().entity.families,
+                            has_biome_tag: system.getVanillaData().biome.tags
                         },
                         domain: {
                             bool_property: system.getCache().entity.boolean_properties,
