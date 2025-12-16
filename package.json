@@ -175,7 +175,7 @@
     "@types/vscode": "^1.87.0",
     "@vscode/test-cli": "^0.0.8",
     "@vscode/test-electron": "^2.3.9",
-    "esbuild": "^0.20.2",
+    "esbuild": "^0.25.0",
     "eslint": "^8.57.0",
     "typescript": "^5.3.3"
   },
@@ -183,7 +183,7 @@
     "archiver": "^7.0.1",
     "bc-minecraft-bedrock-vanilla-data": "^1.21.80-11",
     "comment-json": "^4.2.3",
-    "glob": "^10.4.2",
+    "glob": "^10.5.0",
     "jsonc-parser": "^3.2.1",
     "uuid": "^9.0.1"
   }
