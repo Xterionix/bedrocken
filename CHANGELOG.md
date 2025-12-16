@@ -62,3 +62,9 @@ All notable changes to the "bedrocken" extension will be documented in this file
 - Fixed custom component suggestions
 - Fixed newly added sound files not being recognized
 - Fixed items/blocks with `minecraft:display_name` suggesting original keys
+
+### [1.5.2]
+
+- Fixed block identifiers not being suggested
+- Added autocompletele for vanilla biome tags
+- Moved away from hardcoding vanilla-data
