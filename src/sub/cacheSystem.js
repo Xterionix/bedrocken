@@ -339,7 +339,7 @@ class CacheSystem {
     #processBlockFile(json) {
         const identifier = json["minecraft:block"]["description"]["identifier"]
         if (identifier) {
-            this.#cache.item.ids.add(identifier)
+            this.#cache.block.ids.add(identifier)
             const displayName = json['minecraft:block']?.['components']?.['minecraft:display_name']?.['value']
             if (typeof displayName == 'string') this.#cache.block.display_names.add(displayName)
             else this.#cache.block.translatable_ids.add(identifier)
