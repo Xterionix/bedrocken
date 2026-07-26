@@ -48,8 +48,8 @@ async function projectSwitcher(context, workspacesPath) {
                 for (const bpFile of bpFiles) {
                     if (bpFile.isDirectory()) {
                         options.push(bpFile.name)
-                        const manifest = parse((await fs.promises.readFile(path.join(bpFile.path, bpFile.name, 'manifest.json'))).toString())
-                        allData[bpFile.name] = { name: bpFile.name, bp: path.join(bpFile.path, bpFile.name), bpUuid: manifest?.header?.uuid || '', rp: '', rpUuid: manifest?.dependencies?.filter(x => Object.hasOwn(x, 'uuid'))[0]?.uuid || '' }
+                        const manifest = parse((await fs.promises.readFile(path.join(bpFile.parentPath, bpFile.name, 'manifest.json'))).toString())
+                        allData[bpFile.name] = { name: bpFile.name, bp: path.join(bpFile.parentPath, bpFile.name), bpUuid: manifest?.header?.uuid || '', rp: '', rpUuid: manifest?.dependencies?.filter(x => Object.hasOwn(x, 'uuid'))[0]?.uuid || '' }
                     }
                 }
 
@@ -57,10 +57,10 @@ async function projectSwitcher(context, workspacesPath) {
 
                 for (const rpFile of rpfiles) {
                     if (rpFile.isDirectory()) {
-                        const manifest = parse((await fs.promises.readFile(path.join(rpFile.path, rpFile.name, 'manifest.json'))).toString())
+                        const manifest = parse((await fs.promises.readFile(path.join(rpFile.parentPath, rpFile.name, 'manifest.json'))).toString())
                         const match = Object.values(allData).filter(packData => packData.rpUuid === manifest?.header?.uuid)[0]
                         if (match) {
-                            allData[match.name].rp = path.join(rpFile.path, rpFile.name)
+                            allData[match.name].rp = path.join(rpFile.parentPath, rpFile.name)
                         }
                     }
                 }
