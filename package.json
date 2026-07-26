@@ -181,7 +181,7 @@
   },
   "dependencies": {
     "archiver": "^7.0.1",
-    "bc-minecraft-bedrock-vanilla-data": "^1.21.80-11",
+    "bc-minecraft-bedrock-vanilla-data": "^1.24.0-7",
     "comment-json": "^4.2.3",
     "glob": "^10.5.0",
     "jsonc-parser": "^3.2.1",
