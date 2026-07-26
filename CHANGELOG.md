@@ -68,3 +68,9 @@ All notable changes to the "bedrocken" extension will be documented in this file
 - Fixed block identifiers not being suggested
 - Added autocompletele for vanilla biome tags
 - Moved away from hardcoding vanilla-data
+
+### [1.5.3]
+
+- Fix project switcher
+- Made features no longer provide folder relative identifer suggestions
+- Updated vanilla data to latest
